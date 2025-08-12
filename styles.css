@@ -1211,11 +1211,11 @@ body {
     
     .card {
         width: 280px;
-        height: 380px;
+        height: 480px; /* Increased height for better mobile experience while still compact */
     }
     
     .cards-container {
-        height: 400px;
+        height: 520px; /* Adjusted to match card height */
         margin-top: 45px; /* Adjusted for closer button positioning */
         clear: both; /* Ensure cards don't overlap with fixed elements */
     }
@@ -1333,19 +1333,19 @@ body {
         margin: 3px;
     }
     
-    /* Mobile-optimized card dimensions - significantly taller for better mobile experience */
+    /* Mobile-optimized card dimensions - compact for better mobile experience */
     .cards-container {
         margin-top: 0px !important; /* No margin to close gap with header */
-        height: calc(100vh - 60px) !important; /* Reduced height to remove excess space */
-        min-height: calc(100vh - 60px) !important;
+        height: calc(100vh - 120px) !important; /* More space for navigation and footer */
+        min-height: calc(100vh - 120px) !important;
     }
     
     .card {
         width: 320px !important; /* Fixed width - never gets slimmer */
         max-width: 450px !important; /* Maximum width cap */
         min-width: 320px !important; /* Minimum width enforced */
-        height: calc(100vh - 90px) !important; /* Further reduced to remove more excess space at bottom */
-        min-height: calc(100vh - 90px) !important; /* Ensure minimum height fills screen */
+        height: calc(100vh - 180px) !important; /* Compact height to fit screen without scrolling */
+        min-height: calc(100vh - 180px) !important; /* Ensure cards fit in viewport */
         margin: 0 auto !important; /* Center the cards */
     }
     
@@ -1461,18 +1461,21 @@ button, .btn, .control-btn, .refresh-btn, .play-btn, .voice-selector, select, in
     .card {
         width: 320px !important; /* Fixed width - never gets slimmer */
         min-width: 320px !important; /* Minimum width enforced */
-        height: 520px; /* Further reduced to remove more excess space at bottom */
-        min-height: 520px;
+        height: calc(100vh - 200px) !important; /* Compact height to fit screen without scrolling */
+        min-height: calc(100vh - 200px) !important; /* Ensure cards fit in viewport */
         margin: 15px;
     }
     
     .card-content {
         padding: 20px;
         line-height: 1.6;
+        height: calc(100% - 60px) !important; /* Adjust content height */
+        overflow-y: auto !important; /* Enable scrolling within card if needed */
     }
     
     .cards-container {
-        height: 550px; /* Further reduced container height to match shorter cards */
+        height: calc(100vh - 160px) !important; /* Container height to match cards */
+        min-height: calc(100vh - 160px) !important;
     }
     
     /* Larger chess board for mobile */
