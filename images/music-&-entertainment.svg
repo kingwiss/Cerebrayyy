@@ -1,133 +1,289 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
   <defs>
-    <linearGradient id="noteGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#9b59b6;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#8e44ad;stop-opacity:1" />
+    <linearGradient id="musicGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#9B59B6;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#8E44AD;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#663399;stop-opacity:1" />
     </linearGradient>
-    <radialGradient id="speakerGradient" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" style="stop-color:#34495e;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#2c3e50;stop-opacity:1" />
+    <radialGradient id="soundWave" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#FFD700;stop-opacity:0.8" />
+      <stop offset="50%" style="stop-color:#9B59B6;stop-opacity:0.4" />
+      <stop offset="100%" style="stop-color:#663399;stop-opacity:0" />
     </radialGradient>
+    <linearGradient id="rhythmGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#FF6B6B;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#9B59B6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4ECDC4;stop-opacity:1" />
+    </linearGradient>
+    <filter id="musicGlow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
   </defs>
   
-  <!-- Background -->
-  <rect width="100" height="100" fill="#2c3e50"/>
+  <!-- Animated musical background with rhythm -->
+  <circle cx="50" cy="50" r="45" fill="url(#musicGrad)" opacity="0.1">
+    <animate attributeName="opacity" values="0.1; 0.3; 0.1" dur="2s" repeatCount="indefinite"/>
+    <animateTransform attributeName="transform" type="rotate" values="0 50 50; 360 50 50" dur="30s" repeatCount="indefinite"/>
+  </circle>
   
-  <!-- Musical note 1 -->
-  <g transform="translate(25,40)">
-    <!-- Note head -->
-    <ellipse cx="0" cy="8" rx="4" ry="3" fill="url(#noteGradient)" transform="rotate(-20)"/>
-    <!-- Note stem -->
-    <rect x="3" y="-8" width="1.5" height="16" fill="#8e44ad"/>
-    <!-- Note flag -->
-    <path d="M4.5,-8 Q10,-6 8,0 Q6,2 4.5,0" fill="#8e44ad"/>
-  </g>
+  <!-- Sound wave center with beat -->
+  <circle cx="50" cy="50" r="15" fill="url(#soundWave)" opacity="0.6">
+    <animate attributeName="r" values="15; 25; 15" dur="1.5s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.6; 1; 0.6" dur="1s" repeatCount="indefinite"/>
+    <animateTransform attributeName="transform" type="rotate" values="0 50 50; 360 50 50" dur="10s" repeatCount="indefinite"/>
+  </circle>
   
-  <!-- Musical note 2 -->
-  <g transform="translate(40,25)">
-    <!-- Note head -->
-    <ellipse cx="0" cy="8" rx="4" ry="3" fill="url(#noteGradient)" transform="rotate(-20)"/>
-    <!-- Note stem -->
-    <rect x="3" y="-12" width="1.5" height="20" fill="#8e44ad"/>
-    <!-- Note flag -->
-    <path d="M4.5,-12 Q10,-10 8,-4 Q6,-2 4.5,-4" fill="#8e44ad"/>
-  </g>
-  
-  <!-- Treble clef -->
-  <g transform="translate(65,45)">
-    <path d="M0,15 Q-8,15 -8,5 Q-8,-5 0,-5 Q8,-5 8,5 Q8,10 5,10 Q2,10 2,7 Q2,4 5,4 Q8,4 8,7 Q8,15 0,15 Q-5,15 -5,10 L-5,-10 Q-5,-15 0,-15 Q5,-15 5,-10" 
-          fill="#e74c3c" stroke="#c0392b" stroke-width="0.5"/>
-  </g>
-  
-  <!-- Speaker -->
-  <g transform="translate(20,75)">
-    <rect x="-8" y="-8" width="16" height="16" fill="url(#speakerGradient)" rx="2"/>
-    <!-- Speaker cone -->
-    <circle cx="0" cy="0" r="6" fill="#95a5a6" stroke="#7f8c8d" stroke-width="1"/>
-    <circle cx="0" cy="0" r="3" fill="#bdc3c7"/>
-    <circle cx="0" cy="0" r="1" fill="#34495e"/>
-    <!-- Sound waves -->
-    <g stroke="#3498db" stroke-width="1.5" fill="none" opacity="0.7">
-      <path d="M8,0 Q12,-4 16,0 Q12,4 8,0"/>
-      <path d="M10,0 Q13,-2 16,0 Q13,2 10,0"/>
-    </g>
-  </g>
-  
-  <!-- Microphone -->
-  <g transform="translate(75,30)">
-    <!-- Mic head -->
-    <ellipse cx="0" cy="-5" rx="4" ry="8" fill="#95a5a6" stroke="#7f8c8d" stroke-width="1"/>
-    <!-- Mic grille -->
-    <g stroke="#7f8c8d" stroke-width="0.5">
-      <line x1="-2" y1="-10" x2="-2" y2="0"/>
-      <line x1="0" y1="-12" x2="0" y2="2"/>
-      <line x1="2" y1="-10" x2="2" y2="0"/>
-    </g>
-    <!-- Mic stand -->
-    <rect x="-0.5" y="3" width="1" height="8" fill="#34495e"/>
-    <!-- Mic base -->
-    <ellipse cx="0" cy="11" rx="3" ry="1" fill="#2c3e50"/>
-  </g>
-  
-  <!-- Guitar -->
-  <g transform="translate(80,70)">
-    <!-- Guitar body -->
-    <ellipse cx="0" cy="0" rx="6" ry="8" fill="#d35400" stroke="#a0522d" stroke-width="1"/>
-    <!-- Sound hole -->
-    <circle cx="0" cy="0" r="2" fill="#2c3e50"/>
-    <!-- Guitar neck -->
-    <rect x="-1" y="-12" width="2" height="12" fill="#8b4513"/>
-    <!-- Guitar strings -->
-    <g stroke="#ecf0f1" stroke-width="0.3">
-      <line x1="-0.6" y1="-12" x2="-0.6" y2="8"/>
-      <line x1="-0.2" y1="-12" x2="-0.2" y2="8"/>
-      <line x1="0.2" y1="-12" x2="0.2" y2="8"/>
-      <line x1="0.6" y1="-12" x2="0.6" y2="8"/>
-    </g>
-    <!-- Frets -->
-    <g stroke="#a0522d" stroke-width="0.5">
-      <line x1="-1" y1="-10" x2="1" y2="-10"/>
-      <line x1="-1" y1="-8" x2="1" y2="-8"/>
-      <line x1="-1" y1="-6" x2="1" y2="-6"/>
-    </g>
-  </g>
-  
-  <!-- Theater masks -->
-  <g transform="translate(50,75)">
-    <!-- Happy mask -->
-    <g transform="translate(-6,0)">
-      <circle cx="0" cy="0" r="5" fill="#f1c40f" stroke="#f39c12" stroke-width="1"/>
-      <!-- Eyes -->
-      <circle cx="-1.5" cy="-1" r="0.8" fill="#2c3e50"/>
-      <circle cx="1.5" cy="-1" r="0.8" fill="#2c3e50"/>
-      <!-- Smile -->
-      <path d="M-2,1 Q0,3 2,1" stroke="#2c3e50" stroke-width="1" fill="none"/>
+  <!-- Enhanced musical notes with dancing animation -->
+  <g fill="url(#musicGrad)" opacity="0.8" filter="url(#musicGlow)">
+    <!-- Quarter note with bounce -->
+    <g>
+      <circle cx="25" cy="35" r="3">
+        <animateTransform attributeName="transform" type="translate" values="0,0; 0,-2; 0,0" dur="1.5s" repeatCount="indefinite"/>
+        <animate attributeName="r" values="3; 4; 3" dur="1.5s" repeatCount="indefinite"/>
+        <animate attributeName="fill" values="url(#musicGrad); #FFD700; url(#musicGrad)" dur="1.5s" repeatCount="indefinite"/>
+      </circle>
+      <rect x="28" y="20" width="2" height="15">
+        <animateTransform attributeName="transform" type="translate" values="0,0; 0,-2; 0,0" dur="1.5s" repeatCount="indefinite"/>
+        <animate attributeName="fill" values="url(#musicGrad); #FFD700; url(#musicGrad)" dur="1.5s" repeatCount="indefinite"/>
+      </rect>
     </g>
     
-    <!-- Sad mask -->
-    <g transform="translate(6,0)">
-      <circle cx="0" cy="0" r="5" fill="#3498db" stroke="#2980b9" stroke-width="1"/>
-      <!-- Eyes -->
-      <circle cx="-1.5" cy="-1" r="0.8" fill="#2c3e50"/>
-      <circle cx="1.5" cy="-1" r="0.8" fill="#2c3e50"/>
-      <!-- Frown -->
-      <path d="M-2,2 Q0,0 2,2" stroke="#2c3e50" stroke-width="1" fill="none"/>
+    <!-- Eighth note with rhythm -->
+    <g>
+      <circle cx="35" cy="45" r="2.5">
+        <animateTransform attributeName="transform" type="translate" values="0,0; 1,-3; 0,0" dur="2s" repeatCount="indefinite"/>
+        <animate attributeName="r" values="2.5; 3.5; 2.5" dur="2s" repeatCount="indefinite"/>
+        <animate attributeName="fill" values="url(#musicGrad); #4ECDC4; url(#musicGrad)" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <rect x="37.5" y="30" width="1.5" height="15">
+        <animateTransform attributeName="transform" type="translate" values="0,0; 1,-3; 0,0" dur="2s" repeatCount="indefinite"/>
+        <animate attributeName="fill" values="url(#musicGrad); #4ECDC4; url(#musicGrad)" dur="2s" repeatCount="indefinite"/>
+      </rect>
+      <path d="M 39,30 Q 42,28 45,30 L 45,35" stroke="url(#musicGrad)" stroke-width="1.5" fill="none">
+        <animateTransform attributeName="transform" type="translate" values="0,0; 1,-3; 0,0" dur="2s" repeatCount="indefinite"/>
+        <animate attributeName="stroke" values="url(#musicGrad); #4ECDC4; url(#musicGrad)" dur="2s" repeatCount="indefinite"/>
+      </path>
+    </g>
+    
+    <!-- Another quarter note with swing -->
+    <g>
+      <circle cx="65" cy="40" r="3">
+        <animateTransform attributeName="transform" type="translate" values="0,0; -1,-2; 0,0" dur="1.8s" repeatCount="indefinite"/>
+        <animate attributeName="r" values="3; 4; 3" dur="1.8s" repeatCount="indefinite"/>
+        <animate attributeName="fill" values="url(#musicGrad); #FF6B6B; url(#musicGrad)" dur="1.8s" repeatCount="indefinite"/>
+      </circle>
+      <rect x="68" y="25" width="2" height="15">
+        <animateTransform attributeName="transform" type="translate" values="0,0; -1,-2; 0,0" dur="1.8s" repeatCount="indefinite"/>
+        <animate attributeName="fill" values="url(#musicGrad); #FF6B6B; url(#musicGrad)" dur="1.8s" repeatCount="indefinite"/>
+      </rect>
+    </g>
+    
+    <!-- Enhanced treble clef with flow -->
+    <path d="M 75,25 Q 80,20 82,25 Q 80,30 75,28 Q 73,35 75,40 Q 78,45 75,50" 
+          stroke="url(#rhythmGrad)" stroke-width="2" fill="none" filter="url(#musicGlow)">
+      <animate attributeName="stroke-dasharray" values="0,50; 25,25; 50,0; 0,50" dur="3s" repeatCount="indefinite"/>
+      <animate attributeName="stroke-width" values="2; 3; 2" dur="2s" repeatCount="indefinite"/>
+      <animateTransform attributeName="transform" type="rotate" values="0 78 37; 5 78 37; 0 78 37" dur="4s" repeatCount="indefinite"/>
+    </path>
+  </g>
+  
+  <!-- Enhanced speaker with dynamic sound waves -->
+  <g transform="translate(20,65)">
+    <rect x="0" y="0" width="8" height="12" fill="url(#musicGrad)" opacity="0.7" rx="1">
+      <animate attributeName="fill" values="url(#musicGrad); #FFD700; url(#musicGrad)" dur="2s" repeatCount="indefinite"/>
+      <animateTransform attributeName="transform" type="scale" values="1; 1.1; 1" dur="1.5s" repeatCount="indefinite"/>
+    </rect>
+    <polygon points="8,3 12,0 12,12 8,9" fill="url(#musicGrad)" opacity="0.7">
+      <animate attributeName="fill" values="url(#musicGrad); #FFD700; url(#musicGrad)" dur="2s" repeatCount="indefinite"/>
+      <animateTransform attributeName="transform" type="scale" values="1; 1.1; 1" dur="1.5s" repeatCount="indefinite"/>
+    </polygon>
+    
+    <!-- Enhanced sound waves with rhythm -->
+    <path d="M 14,6 Q 16,4 18,6 Q 16,8 14,6" stroke="url(#soundWave)" stroke-width="2" fill="none" opacity="0.5">
+      <animate attributeName="opacity" values="0.5;1;0.5" dur="1s" repeatCount="indefinite"/>
+      <animate attributeName="stroke-width" values="2; 4; 2" dur="1s" repeatCount="indefinite"/>
+      <animateTransform attributeName="transform" type="scale" values="1; 1.3; 1" dur="1s" repeatCount="indefinite"/>
+    </path>
+    <path d="M 16,6 Q 19,3 22,6 Q 19,9 16,6" stroke="url(#soundWave)" stroke-width="2" fill="none" opacity="0.4">
+      <animate attributeName="opacity" values="0.4;0.8;0.4" dur="1.2s" repeatCount="indefinite"/>
+      <animate attributeName="stroke-width" values="2; 4; 2" dur="1.2s" repeatCount="indefinite"/>
+      <animateTransform attributeName="transform" type="scale" values="1; 1.4; 1" dur="1.2s" repeatCount="indefinite"/>
+    </path>
+    <path d="M 18,6 Q 22,2 26,6 Q 22,10 18,6" stroke="url(#soundWave)" stroke-width="1" fill="none" opacity="0.3">
+      <animate attributeName="opacity" values="0.3;0.7;0.3" dur="1.4s" repeatCount="indefinite"/>
+      <animate attributeName="stroke-width" values="1; 3; 1" dur="1.4s" repeatCount="indefinite"/>
+      <animateTransform attributeName="transform" type="scale" values="1; 1.5; 1" dur="1.4s" repeatCount="indefinite"/>
+    </path>
+  </g>
+  
+  <!-- Enhanced microphone with performance animation -->
+  <g transform="translate(70,60)">
+    <ellipse cx="0" cy="0" rx="3" ry="6" fill="url(#musicGrad)" opacity="0.8">
+      <animate attributeName="fill" values="url(#musicGrad); #FF6B6B; url(#musicGrad)" dur="2.5s" repeatCount="indefinite"/>
+      <animate attributeName="rx" values="3; 4; 3" dur="1.5s" repeatCount="indefinite"/>
+      <animateTransform attributeName="transform" type="rotate" values="0 0 0; 5 0 0; 0 0 0" dur="3s" repeatCount="indefinite"/>
+    </ellipse>
+    <rect x="-1" y="6" width="2" height="8" fill="url(#musicGrad)" opacity="0.6">
+      <animate attributeName="fill" values="url(#musicGrad); #FF6B6B; url(#musicGrad)" dur="2.5s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="-3" y="14" width="6" height="2" fill="url(#musicGrad)" opacity="0.6">
+      <animate attributeName="fill" values="url(#musicGrad); #FF6B6B; url(#musicGrad)" dur="2.5s" repeatCount="indefinite"/>
+    </rect>
+    <!-- Microphone sound waves -->
+    <g opacity="0.5">
+      <circle cx="0" cy="-3" r="8" fill="none" stroke="#FFD700" stroke-width="1">
+        <animate attributeName="r" values="8; 12; 8" dur="2s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.5; 0; 0.5" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="0" cy="-3" r="10" fill="none" stroke="#FFD700" stroke-width="1">
+        <animate attributeName="r" values="10; 15; 10" dur="2.5s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.5; 0; 0.5" dur="2.5s" begin="0.5s" repeatCount="indefinite"/>
+      </circle>
     </g>
   </g>
   
-  <!-- Musical staff -->
-  <g transform="translate(10,10)" stroke="#ecf0f1" stroke-width="0.5" opacity="0.6">
-    <line x1="0" y1="0" x2="30" y2="0"/>
-    <line x1="0" y1="3" x2="30" y2="3"/>
-    <line x1="0" y1="6" x2="30" y2="6"/>
-    <line x1="0" y1="9" x2="30" y2="9"/>
-    <line x1="0" y1="12" x2="30" y2="12"/>
+  <!-- Enhanced guitar with strumming animation -->
+  <g transform="translate(15,15)">
+    <ellipse cx="0" cy="0" rx="4" ry="6" fill="url(#musicGrad)" opacity="0.6">
+      <animate attributeName="fill" values="url(#musicGrad); #4ECDC4; url(#musicGrad)" dur="3s" repeatCount="indefinite"/>
+      <animateTransform attributeName="transform" type="rotate" values="0 0 0; 3 0 0; 0 0 0" dur="2s" repeatCount="indefinite"/>
+    </ellipse>
+    <rect x="-1" y="-6" width="2" height="12" fill="url(#musicGrad)" opacity="0.5">
+      <animate attributeName="fill" values="url(#musicGrad); #4ECDC4; url(#musicGrad)" dur="3s" repeatCount="indefinite"/>
+    </rect>
+    <circle cx="0" cy="-8" r="2" fill="url(#musicGrad)" opacity="0.7">
+      <animate attributeName="fill" values="url(#musicGrad); #4ECDC4; url(#musicGrad)" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <!-- Guitar strings vibration -->
+    <g stroke="#FFD700" stroke-width="0.5" opacity="0.6">
+      <line x1="-3" y1="-4" x2="-3" y2="4">
+        <animate attributeName="stroke-width" values="0.5; 1; 0.5" dur="0.8s" repeatCount="indefinite"/>
+        <animateTransform attributeName="transform" type="translate" values="0,0; 0.5,0; 0,0" dur="0.8s" repeatCount="indefinite"/>
+      </line>
+      <line x1="-1" y1="-4" x2="-1" y2="4">
+        <animate attributeName="stroke-width" values="0.5; 1; 0.5" dur="0.9s" repeatCount="indefinite"/>
+        <animateTransform attributeName="transform" type="translate" values="0,0; -0.5,0; 0,0" dur="0.9s" repeatCount="indefinite"/>
+      </line>
+      <line x1="1" y1="-4" x2="1" y2="4">
+        <animate attributeName="stroke-width" values="0.5; 1; 0.5" dur="1s" repeatCount="indefinite"/>
+        <animateTransform attributeName="transform" type="translate" values="0,0; 0.5,0; 0,0" dur="1s" repeatCount="indefinite"/>
+      </line>
+      <line x1="3" y1="-4" x2="3" y2="4">
+        <animate attributeName="stroke-width" values="0.5; 1; 0.5" dur="1.1s" repeatCount="indefinite"/>
+        <animateTransform attributeName="transform" type="translate" values="0,0; -0.5,0; 0,0" dur="1.1s" repeatCount="indefinite"/>
+      </line>
+    </g>
   </g>
   
-  <!-- Sparkles -->
-  <g fill="#f1c40f" opacity="0.8">
-    <polygon points="15,60 16,62 18,61 17,63 19,64 17,63 16,65 15,63 13,64 15,62 14,60 16,61"/>
-    <polygon points="85,15 86,16 87,15 86,17 88,17 86,17 86,18 85,17 84,17 85,16 84,15 86,15"/>
-    <polygon points="90,85 91,86 92,85 91,87 93,87 91,87 91,88 90,87 89,87 90,86 89,85 91,85"/>
+  <!-- Enhanced theater masks with emotion animation -->
+  <g transform="translate(80,15)">
+    <!-- Happy mask with joy animation -->
+    <circle cx="0" cy="0" r="4" fill="url(#musicGrad)" opacity="0.6">
+      <animate attributeName="fill" values="url(#musicGrad); #FFD700; url(#musicGrad)" dur="3s" repeatCount="indefinite"/>
+      <animateTransform attributeName="transform" type="scale" values="1; 1.1; 1" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <path d="M -2,-1 Q 0,1 2,-1" stroke="#333" stroke-width="0.5" fill="none">
+      <animate attributeName="stroke-width" values="0.5; 1; 0.5" dur="2s" repeatCount="indefinite"/>
+    </path>
+    <circle cx="-1" cy="-1" r="0.5" fill="#333">
+      <animate attributeName="r" values="0.5; 0.8; 0.5" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1" cy="-1" r="0.5" fill="#333">
+      <animate attributeName="r" values="0.5; 0.8; 0.5" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    
+    <!-- Sad mask with melancholy animation -->
+    <circle cx="8" cy="0" r="4" fill="url(#musicGrad)" opacity="0.6">
+      <animate attributeName="fill" values="url(#musicGrad); #4ECDC4; url(#musicGrad)" dur="3.5s" repeatCount="indefinite"/>
+      <animateTransform attributeName="transform" type="scale" values="1; 0.9; 1" dur="2.5s" repeatCount="indefinite"/>
+    </circle>
+    <path d="M 6,1 Q 8,-1 10,1" stroke="#333" stroke-width="0.5" fill="none">
+      <animate attributeName="stroke-width" values="0.5; 1; 0.5" dur="2.5s" repeatCount="indefinite"/>
+    </path>
+    <circle cx="7" cy="-1" r="0.5" fill="#333">
+      <animate attributeName="r" values="0.5; 0.8; 0.5" dur="2.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="9" cy="-1" r="0.5" fill="#333">
+      <animate attributeName="r" values="0.5; 0.8; 0.5" dur="2.5s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+  
+  <!-- Enhanced musical staff with flowing notes -->
+  <g stroke="url(#rhythmGrad)" stroke-width="0.5" opacity="0.3">
+    <line x1="10" y1="80" x2="90" y2="80">
+      <animate attributeName="stroke-dasharray" values="0,80; 40,40; 80,0; 0,80" dur="4s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.3; 0.7; 0.3" dur="2s" repeatCount="indefinite"/>
+    </line>
+    <line x1="10" y1="82" x2="90" y2="82">
+      <animate attributeName="stroke-dasharray" values="80,0; 40,40; 0,80; 80,0" dur="4.5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.3; 0.7; 0.3" dur="2.2s" begin="0.5s" repeatCount="indefinite"/>
+    </line>
+    <line x1="10" y1="84" x2="90" y2="84">
+      <animate attributeName="stroke-dasharray" values="0,80; 40,40; 80,0; 0,80" dur="5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.3; 0.7; 0.3" dur="2.5s" begin="1s" repeatCount="indefinite"/>
+    </line>
+    <line x1="10" y1="86" x2="90" y2="86">
+      <animate attributeName="stroke-dasharray" values="80,0; 40,40; 0,80; 80,0" dur="5.5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.3; 0.7; 0.3" dur="2.8s" begin="1.5s" repeatCount="indefinite"/>
+    </line>
+    <line x1="10" y1="88" x2="90" y2="88">
+      <animate attributeName="stroke-dasharray" values="0,80; 40,40; 80,0; 0,80" dur="6s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.3; 0.7; 0.3" dur="3s" begin="2s" repeatCount="indefinite"/>
+    </line>
+  </g>
+  
+  <!-- Enhanced sparkles with musical magic -->
+  <g fill="url(#rhythmGrad)" opacity="0.6" filter="url(#musicGlow)">
+    <path d="M 45,15 L 46,17 L 48,16 L 46,18 L 45,20 L 44,18 L 42,16 L 44,17 Z">
+      <animate attributeName="opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite"/>
+      <animateTransform attributeName="transform" type="rotate" values="0 45 17; 360 45 17" dur="4s" repeatCount="indefinite"/>
+      <animate attributeName="fill" values="url(#rhythmGrad); #FFD700; url(#rhythmGrad)" dur="2s" repeatCount="indefinite"/>
+    </path>
+    <path d="M 55,25 L 56,27 L 58,26 L 56,28 L 55,30 L 54,28 L 52,26 L 54,27 Z">
+      <animate attributeName="opacity" values="0.6;1;0.6" dur="2.5s" repeatCount="indefinite"/>
+      <animateTransform attributeName="transform" type="rotate" values="360 55 27; 0 55 27" dur="5s" repeatCount="indefinite"/>
+      <animate attributeName="fill" values="url(#rhythmGrad); #4ECDC4; url(#rhythmGrad)" dur="2.5s" repeatCount="indefinite"/>
+    </path>
+    <path d="M 30,75 L 31,77 L 33,76 L 31,78 L 30,80 L 29,78 L 27,76 L 29,77 Z">
+      <animate attributeName="opacity" values="0.6;1;0.6" dur="1.8s" repeatCount="indefinite"/>
+      <animateTransform attributeName="transform" type="rotate" values="0 30 77; 360 30 77" dur="3.5s" repeatCount="indefinite"/>
+      <animate attributeName="fill" values="url(#rhythmGrad); #FF6B6B; url(#rhythmGrad)" dur="1.8s" repeatCount="indefinite"/>
+    </path>
+    <path d="M 85,75 L 86,77 L 88,76 L 86,78 L 85,80 L 84,78 L 82,76 L 84,77 Z">
+      <animate attributeName="opacity" values="0.6;1;0.6" dur="2.2s" repeatCount="indefinite"/>
+      <animateTransform attributeName="transform" type="rotate" values="360 85 77; 0 85 77" dur="4.5s" repeatCount="indefinite"/>
+      <animate attributeName="fill" values="url(#rhythmGrad); #9B59B6; url(#rhythmGrad)" dur="2.2s" repeatCount="indefinite"/>
+    </path>
+  </g>
+  
+  <!-- Floating musical symbols -->
+  <g fill="#FFD700" opacity="0.5">
+    <text x="40" y="60" font-family="serif" font-size="8" font-weight="bold">♪</text>
+    <animateMotion dur="6s" repeatCount="indefinite" path="M 40,60 Q 60,40 80,60 Q 60,80 40,60"/>
+    <animate attributeName="opacity" values="0.5; 1; 0.5" dur="3s" repeatCount="indefinite"/>
+    
+    <text x="60" y="70" font-family="serif" font-size="6" font-weight="bold">♫</text>
+    <animateMotion dur="8s" repeatCount="indefinite" path="M 60,70 Q 40,50 20,70 Q 40,90 60,70"/>
+    <animate attributeName="opacity" values="0.5; 1; 0.5" dur="4s" begin="1s" repeatCount="indefinite"/>
+  </g>
+  
+  <!-- Rhythm pulse waves -->
+  <g stroke="url(#soundWave)" stroke-width="1" fill="none" opacity="0.4">
+    <circle cx="50" cy="50" r="20">
+      <animate attributeName="r" values="20; 30; 20" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.4; 0; 0.4" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="50" cy="50" r="25">
+      <animate attributeName="r" values="25; 35; 25" dur="2.5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.4; 0; 0.4" dur="2.5s" begin="0.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="50" cy="50" r="30">
+      <animate attributeName="r" values="30; 40; 30" dur="3s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.4; 0; 0.4" dur="3s" begin="1s" repeatCount="indefinite"/>
+    </circle>
   </g>
 </svg>

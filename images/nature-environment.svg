@@ -4,48 +4,183 @@
             <stop offset="0%" style="stop-color:#00b894;stop-opacity:1" />
             <stop offset="100%" style="stop-color:#00cec9;stop-opacity:1" />
         </linearGradient>
+        <radialGradient id="sunGlow" cx="50%" cy="30%" r="40%">
+            <stop offset="0%" style="stop-color:#FFD700;stop-opacity:0.8" />
+            <stop offset="100%" style="stop-color:#FFA500;stop-opacity:0" />
+        </radialGradient>
+        <linearGradient id="waterGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#87CEEB;stop-opacity:0.8" />
+            <stop offset="50%" style="stop-color:#4682B4;stop-opacity:0.6" />
+            <stop offset="100%" style="stop-color:#1E90FF;stop-opacity:0.8" />
+        </linearGradient>
+        <filter id="leafGlow">
+            <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+            <feMerge> 
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
     </defs>
-    <circle cx="100" cy="100" r="90" fill="url(#natureGradient)" opacity="0.1"/>
+    
+    <!-- Enhanced background with day/night cycle -->
+    <circle cx="100" cy="100" r="90" fill="url(#natureGradient)" opacity="0.1">
+        <animate attributeName="opacity" values="0.1; 0.3; 0.1" dur="8s" repeatCount="indefinite"/>
+        <animateTransform attributeName="transform" type="rotate" values="0 100 100; 360 100 100" dur="60s" repeatCount="indefinite"/>
+    </circle>
+    
+    <!-- Sun with animated rays -->
+    <circle cx="50" cy="50" r="12" fill="url(#sunGlow)">
+        <animate attributeName="r" values="12; 15; 12" dur="4s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.8; 1; 0.8" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <g stroke="#FFD700" stroke-width="2" opacity="0.6">
+        <line x1="50" y1="25" x2="50" y2="15">
+            <animate attributeName="opacity" values="0.6; 1; 0.6" dur="2s" repeatCount="indefinite"/>
+        </line>
+        <line x1="50" y1="75" x2="50" y2="85">
+            <animate attributeName="opacity" values="0.6; 1; 0.6" dur="2.2s" repeatCount="indefinite"/>
+        </line>
+        <line x1="25" y1="50" x2="15" y2="50">
+            <animate attributeName="opacity" values="0.6; 1; 0.6" dur="2.4s" repeatCount="indefinite"/>
+        </line>
+        <line x1="75" y1="50" x2="85" y2="50">
+            <animate attributeName="opacity" values="0.6; 1; 0.6" dur="2.6s" repeatCount="indefinite"/>
+        </line>
+    </g>
+    
+    <!-- Flowing water stream -->
+    <path d="M 20,170 Q 60,160 100,170 Q 140,180 180,170" fill="none" stroke="url(#waterGrad)" stroke-width="6" opacity="0.7">
+        <animate attributeName="stroke-dasharray" values="0,40; 20,20; 40,0; 0,40" dur="3s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.7; 1; 0.7" dur="2s" repeatCount="indefinite"/>
+    </path>
+    <path d="M 30,175 Q 70,165 110,175 Q 150,185 170,175" fill="none" stroke="url(#waterGrad)" stroke-width="4" opacity="0.5">
+        <animate attributeName="stroke-dasharray" values="40,0; 20,20; 0,40; 40,0" dur="3.5s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.5; 0.8; 0.5" dur="2.2s" begin="0.5s" repeatCount="indefinite"/>
+    </path>
+    
     <g transform="translate(100,100)">
-        <rect x="-5" y="10" width="10" height="20" fill="#8b4513"/>
-        <g fill="url(#natureGradient)">
+        <!-- Enhanced tree trunk with growth animation -->
+        <rect x="-5" y="10" width="10" height="20" fill="#8b4513">
+            <animateTransform attributeName="transform" type="scale" values="1; 1.05; 1" dur="6s" repeatCount="indefinite"/>
+            <animate attributeName="fill" values="#8b4513; #A0522D; #8b4513" dur="4s" repeatCount="indefinite"/>
+        </rect>
+        
+        <!-- Tree crown with seasonal changes and glow effect -->
+        <g fill="url(#natureGradient)" filter="url(#leafGlow)">
             <circle cx="0" cy="0" r="15">
-                <animate attributeName="r" values="15;18;15" dur="3s" repeatCount="indefinite"/>
+                <animate attributeName="r" values="15;20;15" dur="3s" repeatCount="indefinite"/>
+                <animate attributeName="fill" values="url(#natureGradient); #90EE90; url(#natureGradient)" dur="10s" repeatCount="indefinite"/>
+                <animateTransform attributeName="transform" type="rotate" values="0 0 0; 5 0 0; 0 0 0" dur="8s" repeatCount="indefinite"/>
             </circle>
             <circle cx="-10" cy="-8" r="8">
-                <animate attributeName="r" values="8;10;8" dur="2.5s" repeatCount="indefinite"/>
+                <animate attributeName="r" values="8;12;8" dur="2.5s" repeatCount="indefinite"/>
+                <animateTransform attributeName="transform" type="translate" values="0,0; 2,1; 0,0" dur="5s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0.8; 1; 0.8" dur="3s" repeatCount="indefinite"/>
             </circle>
             <circle cx="10" cy="-8" r="8">
-                <animate attributeName="r" values="8;10;8" dur="2.8s" repeatCount="indefinite"/>
+                <animate attributeName="r" values="8;12;8" dur="2.8s" repeatCount="indefinite"/>
+                <animateTransform attributeName="transform" type="translate" values="0,0; -2,1; 0,0" dur="4.5s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0.8; 1; 0.8" dur="3.5s" begin="0.5s" repeatCount="indefinite"/>
             </circle>
         </g>
+        
+        <!-- Enhanced flowers with wind animation -->
         <g opacity="0.7">
             <circle cx="-20" cy="15" r="3" fill="#feca57">
                 <animate attributeName="fill" values="#feca57;#fdcb6e;#feca57" dur="2s" repeatCount="indefinite"/>
+                <animate attributeName="r" values="3; 5; 3" dur="4s" repeatCount="indefinite"/>
+                <animateTransform attributeName="transform" type="translate" values="0,0; 1,2; 0,0" dur="3s" repeatCount="indefinite"/>
             </circle>
             <circle cx="20" cy="15" r="3" fill="#fd79a8">
                 <animate attributeName="fill" values="#fd79a8;#ff6b6b;#fd79a8" dur="2.2s" repeatCount="indefinite"/>
+                <animate attributeName="r" values="3; 5; 3" dur="4.5s" repeatCount="indefinite"/>
+                <animateTransform attributeName="transform" type="translate" values="0,0; -1,2; 0,0" dur="3.5s" repeatCount="indefinite"/>
             </circle>
             <circle cx="-15" cy="-25" r="2" fill="#74b9ff">
                 <animate attributeName="fill" values="#74b9ff;#0984e3;#74b9ff" dur="1.8s" repeatCount="indefinite"/>
+                <animate attributeName="r" values="2; 4; 2" dur="3s" repeatCount="indefinite"/>
+                <animateTransform attributeName="transform" type="translate" values="0,0; 2,1; 0,0" dur="4s" repeatCount="indefinite"/>
             </circle>
             <circle cx="15" cy="-25" r="2" fill="#a29bfe">
                 <animate attributeName="fill" values="#a29bfe;#6c5ce7;#a29bfe" dur="2.3s" repeatCount="indefinite"/>
+                <animate attributeName="r" values="2; 4; 2" dur="3.5s" repeatCount="indefinite"/>
+                <animateTransform attributeName="transform" type="translate" values="0,0; -2,1; 0,0" dur="4.5s" repeatCount="indefinite"/>
             </circle>
         </g>
+        
+        <!-- Enhanced grass with wind effects -->
         <g transform="translate(0,35)">
-            <ellipse cx="0" cy="0" rx="30" ry="5" fill="url(#natureGradient)" opacity="0.3"/>
+            <ellipse cx="0" cy="0" rx="30" ry="5" fill="url(#natureGradient)" opacity="0.3">
+                <animate attributeName="rx" values="30; 35; 30" dur="5s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0.3; 0.6; 0.3" dur="3s" repeatCount="indefinite"/>
+            </ellipse>
             <g fill="url(#natureGradient)" opacity="0.6">
-                <rect x="-25" y="-2" width="3" height="4"/>
-                <rect x="-15" y="-1" width="2" height="3"/>
-                <rect x="-5" y="-2" width="3" height="4"/>
-                <rect x="5" y="-1" width="2" height="3"/>
-                <rect x="15" y="-2" width="3" height="4"/>
-                <rect x="25" y="-1" width="2" height="3"/>
+                <rect x="-25" y="-2" width="3" height="4">
+                    <animateTransform attributeName="transform" type="skewX" values="0; 10; 0" dur="3s" repeatCount="indefinite"/>
+                    <animate attributeName="height" values="4; 6; 4" dur="2s" repeatCount="indefinite"/>
+                </rect>
+                <rect x="-15" y="-1" width="2" height="3">
+                    <animateTransform attributeName="transform" type="skewX" values="0; -8; 0" dur="3.5s" repeatCount="indefinite"/>
+                    <animate attributeName="height" values="3; 5; 3" dur="2.5s" repeatCount="indefinite"/>
+                </rect>
+                <rect x="-5" y="-2" width="3" height="4">
+                    <animateTransform attributeName="transform" type="skewX" values="0; 12; 0" dur="2.8s" repeatCount="indefinite"/>
+                    <animate attributeName="height" values="4; 6; 4" dur="2.2s" repeatCount="indefinite"/>
+                </rect>
+                <rect x="5" y="-1" width="2" height="3">
+                    <animateTransform attributeName="transform" type="skewX" values="0; -10; 0" dur="3.2s" repeatCount="indefinite"/>
+                    <animate attributeName="height" values="3; 5; 3" dur="2.8s" repeatCount="indefinite"/>
+                </rect>
+                <rect x="15" y="-2" width="3" height="4">
+                    <animateTransform attributeName="transform" type="skewX" values="0; 8; 0" dur="3.8s" repeatCount="indefinite"/>
+                    <animate attributeName="height" values="4; 6; 4" dur="2.3s" repeatCount="indefinite"/>
+                </rect>
+                <rect x="25" y="-1" width="2" height="3">
+                    <animateTransform attributeName="transform" type="skewX" values="0; -12; 0" dur="3.3s" repeatCount="indefinite"/>
+                    <animate attributeName="height" values="3; 5; 3" dur="2.7s" repeatCount="indefinite"/>
+                </rect>
             </g>
         </g>
     </g>
+    
+    <!-- Flying birds -->
+    <g fill="#333" opacity="0.6">
+        <path d="M 30,60 Q 32,58 34,60 Q 32,62 30,60">
+            <animateMotion dur="8s" repeatCount="indefinite" path="M 30,60 Q 80,40 130,60 Q 170,80 190,60"/>
+            <animate attributeName="opacity" values="0.6; 1; 0.6" dur="2s" repeatCount="indefinite"/>
+        </path>
+        <path d="M 170,70 Q 172,68 174,70 Q 172,72 170,70">
+            <animateMotion dur="10s" repeatCount="indefinite" path="M 170,70 Q 120,50 70,70 Q 30,90 10,70"/>
+            <animate attributeName="opacity" values="0.6; 1; 0.6" dur="2.5s" begin="1s" repeatCount="indefinite"/>
+        </path>
+    </g>
+    
+    <!-- Floating pollen/seeds -->
+    <g fill="#FFD700" opacity="0.4">
+        <circle cx="60" cy="100" r="2">
+            <animateMotion dur="6s" repeatCount="indefinite" path="M 60,100 Q 80,80 100,100 Q 120,120 140,100"/>
+            <animate attributeName="r" values="2; 4; 2" dur="3s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="140" cy="90" r="2">
+            <animateMotion dur="7s" repeatCount="indefinite" path="M 140,90 Q 120,70 100,90 Q 80,110 60,90"/>
+            <animate attributeName="r" values="2; 4; 2" dur="3.5s" begin="1s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="120" cy="110" r="2">
+            <animateMotion dur="8s" repeatCount="indefinite" path="M 120,110 Q 100,90 80,110 Q 60,130 40,110"/>
+            <animate attributeName="r" values="2; 4; 2" dur="4s" begin="2s" repeatCount="indefinite"/>
+        </circle>
+    </g>
+    
+    <!-- Ecosystem energy flow -->
+    <circle cx="100" cy="100" r="70" fill="none" stroke="url(#natureGradient)" stroke-width="2" opacity="0.3" stroke-dasharray="6,6">
+        <animateTransform attributeName="transform" type="rotate" values="0 100 100; 360 100 100" dur="15s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.3; 0.6; 0.3" dur="5s" repeatCount="indefinite"/>
+    </circle>
+    
+    <!-- Enhanced animated border with nature pattern -->
     <circle cx="100" cy="100" r="85" fill="none" stroke="url(#natureGradient)" stroke-width="1" opacity="0.3" stroke-dasharray="5,5">
         <animate attributeName="stroke-dashoffset" values="0;10" dur="2s" repeatCount="indefinite"/>
+        <animate attributeName="stroke-dasharray" values="5,5; 10,2; 5,5" dur="8s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.3; 0.7; 0.3" dur="6s" repeatCount="indefinite"/>
     </circle>
 </svg>

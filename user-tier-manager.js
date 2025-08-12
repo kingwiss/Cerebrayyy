@@ -108,6 +108,40 @@ class UserTierManager {
         return this.getCurrentTier() === 'premium';
     }
 
+    // Alias for isPremiumUser (for compatibility)
+    isPremium() {
+        return this.isPremiumUser();
+    }
+
+    // Get cards used today
+    getCardsUsedToday() {
+        const usage = this.getTodayUsage();
+        return usage.cardsGenerated || 0;
+    }
+
+    // Check if user has reached daily limit
+    hasReachedDailyLimit() {
+        const usage = this.getTodayUsage();
+        const limit = this.getDailyCardLimit();
+        return usage.cardsGenerated >= limit;
+    }
+
+    // Track card usage (for testing)
+    trackCardUsage(count) {
+        const usage = this.getTodayUsage();
+        usage.cardsGenerated = Math.min(usage.cardsGenerated + count, this.getDailyCardLimit());
+        this.saveUserTierData();
+    }
+
+    // Get total cards generated across all days
+    getTotalCardsGenerated() {
+        let total = 0;
+        Object.values(this.userTierData.dailyUsage).forEach(dayUsage => {
+            total += dayUsage.cardsGenerated || 0;
+        });
+        return total;
+    }
+
     // Get daily card limit for current tier
     getDailyCardLimit() {
         const tier = this.getCurrentTier();
@@ -290,7 +324,9 @@ class UserTierManager {
             subscriptionEndDate: this.userTierData.subscriptionEndDate,
             trialUsed: this.userTierData.trialUsed,
             paymentHistory: this.userTierData.paymentHistory,
-            features: this.getTierFeatures()
+            features: this.getTierFeatures(),
+            totalCardsGenerated: this.getTotalCardsGenerated(),
+            daysActive: Object.keys(this.userTierData.dailyUsage).length
         };
     }
 

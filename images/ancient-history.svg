@@ -1,38 +1,48 @@
 <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
     <defs>
-        <linearGradient id="historyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:#e17055;stop-opacity:1" />
-            <stop offset="100%" style="stop-color:#fdcb6e;stop-opacity:1" />
+        <linearGradient id="ancientGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#d4a574;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#8b6914;stop-opacity:1" />
+        </linearGradient>
+        <linearGradient id="scrollGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#f4e4bc;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#e6d3a3;stop-opacity:1" />
+        </linearGradient>
+        <linearGradient id="columnGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#bdc3c7;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#95a5a6;stop-opacity:1" />
         </linearGradient>
     </defs>
-    <circle cx="100" cy="100" r="90" fill="url(#historyGradient)" opacity="0.1"/>
-    <g transform="translate(100,100)">
-        <polygon points="-20,-30 20,-30 15,-10 -15,-10" fill="url(#historyGradient)" opacity="0.7"/>
-        <rect x="-15" y="-10" width="30" height="40" fill="url(#historyGradient)" opacity="0.5"/>
-        <g fill="#2d3436" opacity="0.8">
-            <rect x="-12" y="-5" width="4" height="25"/>
-            <rect x="-4" y="-5" width="4" height="25"/>
-            <rect x="4" y="-5" width="4" height="25"/>
-            <rect x="12" y="-5" width="4" height="25"/>
-        </g>
-        <circle cx="0" cy="-35" r="8" fill="#feca57">
-            <animate attributeName="fill" values="#feca57;#fdcb6e;#feca57" dur="3s" repeatCount="indefinite"/>
-        </circle>
-        <g opacity="0.6">
-            <circle cx="-25" cy="0" r="3" fill="#ff6b6b">
-                <animate attributeName="r" values="3;5;3" dur="2s" repeatCount="indefinite"/>
-            </circle>
-            <circle cx="25" cy="0" r="3" fill="#4ecdc4">
-                <animate attributeName="r" values="3;5;3" dur="2.5s" repeatCount="indefinite"/>
-            </circle>
-        </g>
-        <path d="M -30 30 L 30 30" stroke="url(#historyGradient)" stroke-width="3" opacity="0.7"/>
-        <g transform="translate(0,35)">
-            <rect x="-5" y="0" width="10" height="8" fill="url(#historyGradient)" opacity="0.6"/>
-            <rect x="-3" y="2" width="6" height="4" fill="#2d3436" opacity="0.3"/>
-        </g>
-    </g>
-    <circle cx="100" cy="100" r="85" fill="none" stroke="url(#historyGradient)" stroke-width="1" opacity="0.3" stroke-dasharray="4,4">
-        <animate attributeName="stroke-dashoffset" values="0;8" dur="2s" repeatCount="indefinite"/>
+    <circle cx="100" cy="100" r="90" fill="url(#ancientGradient)" opacity="0.1"/>
+    
+    <!-- Ancient columns -->
+    <rect x="40" y="60" width="8" height="80" fill="url(#columnGradient)"/>
+    <rect x="55" y="60" width="8" height="80" fill="url(#columnGradient)"/>
+    <rect x="70" y="60" width="8" height="80" fill="url(#columnGradient)"/>
+    <rect x="35" y="55" width="50" height="8" rx="2" fill="url(#columnGradient)"/>
+    
+    <!-- Ancient scroll -->
+    <ellipse cx="130" cy="100" rx="25" ry="35" fill="url(#scrollGradient)"/>
+    <rect x="120" y="75" width="20" height="50" fill="url(#scrollGradient)"/>
+    <circle cx="115" cy="85" r="3" fill="url(#ancientGradient)"/>
+    <circle cx="115" cy="115" r="3" fill="url(#ancientGradient)"/>
+    <circle cx="145" cy="85" r="3" fill="url(#ancientGradient)"/>
+    <circle cx="145" cy="115" r="3" fill="url(#ancientGradient)"/>
+    
+    <!-- Ancient text lines -->
+    <line x1="125" y1="90" x2="135" y2="90" stroke="url(#ancientGradient)" stroke-width="1"/>
+    <line x1="125" y1="95" x2="135" y2="95" stroke="url(#ancientGradient)" stroke-width="1"/>
+    <line x1="125" y1="100" x2="135" y2="100" stroke="url(#ancientGradient)" stroke-width="1"/>
+    <line x1="125" y1="105" x2="135" y2="105" stroke="url(#ancientGradient)" stroke-width="1"/>
+    <line x1="125" y1="110" x2="135" y2="110" stroke="url(#ancientGradient)" stroke-width="1"/>
+    
+    <!-- Decorative elements -->
+    <circle cx="100" cy="40" r="8" fill="url(#ancientGradient)" opacity="0.7">
+        <animate attributeName="opacity" values="0.7;1;0.7" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <polygon points="100,35 105,45 95,45" fill="url(#scrollGradient)"/>
+    
+    <circle cx="100" cy="100" r="85" fill="none" stroke="url(#ancientGradient)" stroke-width="1" opacity="0.3" stroke-dasharray="5,5">
+        <animate attributeName="stroke-dashoffset" values="0;10" dur="4s" repeatCount="indefinite"/>
     </circle>
 </svg>

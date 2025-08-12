@@ -40,7 +40,7 @@ class DailyContentBackend {
                     action: 'play',
                     gameType: 'tictactoe',
                     category: 'tictactoe',
-                    image: 'images/tictactoe.svg'
+                    image: this.getCardImage('Game', 'tictactoe')
                 },
                 {
                     type: 'Game',
@@ -49,7 +49,7 @@ class DailyContentBackend {
                     action: 'play',
                     gameType: 'connect4',
                     category: 'connect4',
-                    image: 'images/connect4.svg'
+                    image: this.getCardImage('Game', 'connect4')
                 },
                 {
                     type: 'Chess Puzzle',
@@ -58,7 +58,7 @@ class DailyContentBackend {
                     action: 'play',
                     gameType: 'chess',
                     category: 'chess',
-                    image: 'images/chess.svg'
+                    image: this.getCardImage('Game', 'chess')
                 }
             ],
             funFacts: {
@@ -459,7 +459,6 @@ class DailyContentBackend {
                         type: category,
                         title: this.generateFactTitle(category),
                         description: fact.content,
-                        image: this.getCardImage(category),
                         action: 'read',
                         category: 'content',
                         contentId: fact.id,
@@ -487,7 +486,6 @@ class DailyContentBackend {
                         type: 'Activity',
                         title: this.generateActivityTitle(category),
                         description: activity.content,
-                        image: this.getCardImage('Activity', category),
                         action: 'try',
                         category: 'content',
                         contentId: activity.id,
@@ -517,7 +515,6 @@ class DailyContentBackend {
                         description: item.content.question,
                         answer: item.content.answer,
                         solution: item.content.explanation,
-                        image: this.getCardImage('Riddle'),
                         action: 'solve',
                         category: 'content',
                         contentId: item.id,
@@ -530,7 +527,6 @@ class DailyContentBackend {
                         description: item.content.question,
                         answer: item.content.answer,
                         solution: item.content.explanation,
-                        image: this.getCardImage('Math Challenge'),
                         action: 'solve',
                         category: 'content',
                         contentId: item.id,
@@ -644,18 +640,109 @@ class DailyContentBackend {
 
     // Get appropriate image for card type
     getCardImage(type, category = null) {
+        // Comprehensive image mapping with multiple fallback options
         const imageMap = {
-            'Ancient History': 'images/ancient-history.svg',
-            'Modern Science': 'images/technology-science.svg',
-            'Space Wonders': 'images/space-mysteries.svg',
-            'Animal Kingdom': 'images/animal-kingdom.svg',
-            'Human Body': 'images/human-body.svg',
-            'Activity': 'images/literature-arts.svg',
-            'Riddle': 'images/riddle.svg',
-            'Math Challenge': 'images/math-challenge.svg'
+            // Game images with fallbacks
+            'Game': {
+                'tictactoe': ['images/tictactoe.svg'],
+                'connect4': ['images/connect4.svg'],
+                'chess': ['images/chess.svg'],
+                'flappy': ['images/flappy.svg'],
+                'sudoku': ['images/sudoku.svg'],
+                'crossword': ['images/crossword.svg'],
+                'pacman': ['images/pacman.svg'],
+                'tetris': ['images/tetris.svg'],
+                'galaga': ['images/galaga.svg'],
+                'snake': ['images/snake.svg'],
+                'breakout': ['images/breakout.svg'],
+                'memory': ['images/memory.svg', 'images/memory-training.svg'],
+                'wordsearch': ['images/wordsearch.svg', 'images/word-games.svg'],
+                'solitaire': ['images/solitaire.svg'],
+                'minesweeper': ['images/minesweeper.svg']
+            },
+            
+            // Fun Facts images with multiple fallback options
+            'Ocean Life': ['images/ocean-life.svg', 'images/nature-&-environment.svg', 'images/nature-environment.svg'],
+            'Space Mysteries': ['images/space-mysteries.svg', 'images/mysteries-&-unexplained.svg'],
+            'Animal Kingdom': ['images/animal-kingdom.svg', 'images/nature-&-environment.svg'],
+            'Human Body': ['images/human-body.svg', 'images/physics-chemistry.svg'],
+            'Technology & Science': ['images/technology-science.svg', 'images/technology-&-digital.svg', 'images/physics-chemistry.svg'],
+            'Ancient History': ['images/ancient-history.svg', 'images/trivia-&-facts.svg'],
+            'Medieval Times': ['images/medieval-times.svg', 'images/ancient-history.svg'],
+            'Modern History': ['images/modern-history.svg', 'images/trivia-&-facts.svg'],
+            'World Geography': ['images/world-geography.svg', 'images/geography-world.svg', 'images/trivia-&-facts.svg'],
+            'Literature & Arts': ['images/literature-arts.svg', 'images/music-&-entertainment.svg'],
+            'Psychology & Mind': ['images/psychology-mind.svg', 'images/personal-development.svg'],
+            'Food & Culture': ['images/food-culture.svg', 'images/trivia-&-facts.svg'],
+            'Amazing Fact': ['images/technology-science.svg', 'images/trivia-&-facts.svg', 'images/weird-science.svg'],
+            'Plants & Nature': ['images/plants-nature.svg', 'images/nature-&-environment.svg'],
+            'Weather & Climate': ['images/weather-climate.svg', 'images/nature-&-environment.svg'],
+            
+            // Riddle images with fallbacks
+            'Riddle': ['images/riddle.svg', 'images/mathematics-&-logic.svg'],
+            'Mystery Challenge': ['images/riddle.svg', 'images/mysteries-&-unexplained.svg'],
+            'Word Puzzle': ['images/riddle.svg', 'images/word-games.svg'],
+            'Logic Puzzle': ['images/riddle.svg', 'images/mathematics-&-logic.svg'],
+            
+            // Math Challenge images with fallbacks
+            'Math Challenge': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            'Math Puzzle': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            'Pattern Puzzle': ['images/math-challenge.svg', 'images/visual-perception.svg'],
+            'Number Quest': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            'Pattern Detective': ['images/math-challenge.svg', 'images/visual-perception.svg'],
+            'Sequence Solver': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            'Pattern Quest': ['images/math-challenge.svg', 'images/visual-perception.svg'],
+            'Number Patterns': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            'Logic Challenge': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            'Brain Teaser': ['images/math-challenge.svg', 'images/psychology-mind.svg'],
+            'Think Tank': ['images/math-challenge.svg', 'images/strategy-planning.svg'],
+            'Arithmetic Master': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            'Number Wizard': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            'Quick Math': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            'Math Quest': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            'Number Challenge': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            'Math Mystery': ['images/math-challenge.svg', 'images/mysteries-&-unexplained.svg'],
+            'Calculation Quest': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            'Number Puzzle': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            
+            // Activity images with comprehensive fallbacks
+            'Activity': {
+                'Creative Arts': ['images/creative-arts.svg', 'images/literature-arts.svg', 'images/music-&-entertainment.svg'],
+                'Learning Adventures': ['images/learning-adventures.svg', 'images/language-learning.svg', 'images/trivia-knowledge.svg'],
+                'Physical Challenges': ['images/physical-challenges.svg', 'images/sports-&-records.svg', 'images/sports-fitness.svg'],
+                'Communication Skills': ['images/communication-skills.svg', 'images/language-learning.svg'],
+                'Life Skills': ['images/life-skills.svg', 'images/personal-development.svg'],
+                'Mental Exercises': ['images/mental-exercises.svg', 'images/memory-training.svg', 'images/psychology-mind.svg'],
+                'Mindfulness & Reflection': ['images/mindfulness-&-reflection.svg', 'images/mindfulness.svg', 'images/personal-development.svg'],
+                'Nature Connection': ['images/nature-connection.svg', 'images/nature-&-environment.svg', 'images/nature-environment.svg'],
+                'Problem Solving': ['images/problem-solving.svg', 'images/strategy-planning.svg', 'images/mathematics-&-logic.svg'],
+                'Social Experiments': ['images/social-experiments.svg', 'images/psychology-mind.svg'],
+                'Storytelling': ['images/storytelling.svg', 'images/literature-arts.svg'],
+                'Observation Games': ['images/observation-games.svg', 'images/visual-perception.svg']
+            }
         };
         
-        return imageMap[type] || 'images/literature-arts.svg';
+        // Helper function to get the first available image from a list
+        const getFirstAvailableImage = (imageList) => {
+            if (!Array.isArray(imageList)) return imageList;
+            return imageList[0]; // Return the first one
+        };
+        
+        // For games, use the category (gameType) to get specific image
+        if (type === 'Game' && category) {
+            const gameImages = imageMap['Game'][category];
+            return getFirstAvailableImage(gameImages) || 'images/tictactoe.svg';
+        }
+        
+        // For activities, use the category to get specific image
+        if (type === 'Activity' && category) {
+            const activityImages = imageMap['Activity'][category];
+            return getFirstAvailableImage(activityImages) || 'images/literature-arts.svg';
+        }
+        
+        // For other types, use the type directly
+        const typeImages = imageMap[type];
+        return getFirstAvailableImage(typeImages) || 'images/riddle.svg';
     }
 
     // Get today's cards for the user

@@ -374,7 +374,7 @@ class PremiumContentBackend {
                     action: 'play',
                     gameType: 'tictactoe',
                     category: 'Strategy',
-                    image: 'images/tictactoe.svg'
+                    image: this.getCardImage('Game', 'tictactoe')
                 },
                 { 
                     type: 'Game', 
@@ -383,7 +383,7 @@ class PremiumContentBackend {
                     action: 'play',
                     gameType: 'connect4',
                     category: 'Strategy',
-                    image: 'images/connect4.svg'
+                    image: this.getCardImage('Game', 'connect4')
                 },
                 { 
                     type: 'Game', 
@@ -392,7 +392,7 @@ class PremiumContentBackend {
                     action: 'play',
                     gameType: 'chess',
                     category: 'Strategy',
-                    image: 'images/chess.svg'
+                    image: this.getCardImage('Game', 'chess')
                 },
                 { 
                     type: 'Game', 
@@ -401,7 +401,7 @@ class PremiumContentBackend {
                     action: 'play',
                     gameType: 'flappy',
                     category: 'Arcade',
-                    image: 'images/flappy.svg'
+                    image: this.getCardImage('Game', 'flappy')
                 },
                 
                 // New Premium Games
@@ -412,7 +412,7 @@ class PremiumContentBackend {
                     action: 'play',
                     gameType: 'sudoku',
                     category: 'Puzzle',
-                    image: 'images/sudoku.svg'
+                    image: this.getCardImage('Game', 'sudoku')
                 },
                 { 
                     type: 'Game', 
@@ -421,7 +421,7 @@ class PremiumContentBackend {
                     action: 'play',
                     gameType: 'crossword',
                     category: 'Word',
-                    image: 'images/crossword.svg'
+                    image: this.getCardImage('Game', 'crossword')
                 },
                 { 
                     type: 'Game', 
@@ -430,7 +430,7 @@ class PremiumContentBackend {
                     action: 'play',
                     gameType: 'pacman',
                     category: 'Arcade',
-                    image: 'images/pacman.svg'
+                    image: this.getCardImage('Game', 'pacman')
                 },
                 { 
                     type: 'Game', 
@@ -439,7 +439,7 @@ class PremiumContentBackend {
                     action: 'play',
                     gameType: 'tetris',
                     category: 'Puzzle',
-                    image: 'images/tetris.svg'
+                    image: this.getCardImage('Game', 'tetris')
                 },
                 { 
                     type: 'Game', 
@@ -448,7 +448,7 @@ class PremiumContentBackend {
                     action: 'play',
                     gameType: 'galaga',
                     category: 'Arcade',
-                    image: 'images/galaga.svg'
+                    image: this.getCardImage('Game', 'galaga')
                 },
                 { 
                     type: 'Game', 
@@ -457,7 +457,7 @@ class PremiumContentBackend {
                     action: 'play',
                     gameType: 'snake',
                     category: 'Arcade',
-                    image: 'images/snake.svg'
+                    image: this.getCardImage('Game', 'snake')
                 },
                 { 
                     type: 'Game', 
@@ -466,7 +466,7 @@ class PremiumContentBackend {
                     action: 'play',
                     gameType: 'breakout',
                     category: 'Arcade',
-                    image: 'images/breakout.svg'
+                    image: this.getCardImage('Game', 'breakout')
                 },
                 { 
                     type: 'Game', 
@@ -475,7 +475,7 @@ class PremiumContentBackend {
                     action: 'play',
                     gameType: 'memory',
                     category: 'Memory',
-                    image: 'images/memory.svg'
+                    image: this.getCardImage('Game', 'memory')
                 },
                 { 
                     type: 'Game', 
@@ -484,7 +484,7 @@ class PremiumContentBackend {
                     action: 'play',
                     gameType: 'wordsearch',
                     category: 'Word',
-                    image: 'images/wordsearch.svg'
+                    image: this.getCardImage('Game', 'wordsearch')
                 },
                 { 
                     type: 'Game', 
@@ -493,7 +493,7 @@ class PremiumContentBackend {
                     action: 'play',
                     gameType: 'solitaire',
                     category: 'Card',
-                    image: 'images/solitaire.svg'
+                    image: this.getCardImage('Game', 'solitaire')
                 },
                 { 
                     type: 'Game', 
@@ -502,7 +502,7 @@ class PremiumContentBackend {
                     action: 'play',
                     gameType: 'minesweeper',
                     category: 'Logic',
-                    image: 'images/minesweeper.svg'
+                    image: this.getCardImage('Game', 'minesweeper')
                 }
             ],
             
@@ -696,7 +696,7 @@ class PremiumContentBackend {
                     title: `${category} Fact`,
                     description: fact,
                     action: 'Learn More',
-                    image: `images/${category.toLowerCase().replace(/\s+/g, '-')}.svg`,
+                    image: this.getCardImage(category),
                     isNew: !this.userProgress.seenContent.has(contentId)
                 });
             });
@@ -713,7 +713,7 @@ class PremiumContentBackend {
                     title: activity.title,
                     description: activity.description,
                     action: 'Try This',
-                    image: `images/${category.toLowerCase().replace(/\s+/g, '-')}.svg`,
+                    image: this.getCardImage('Activity'),
                     isNew: !this.userProgress.seenContent.has(contentId)
                 });
             });
@@ -730,7 +730,7 @@ class PremiumContentBackend {
                 description: riddle.question,
                 action: 'Show Answer',
                 solution: riddle.answer,
-                image: 'images/riddle.svg',
+                image: this.getCardImage('Riddle'),
                 isNew: !this.userProgress.seenContent.has(contentId)
             });
         });
@@ -747,7 +747,7 @@ class PremiumContentBackend {
                 action: 'Show Solution',
                 solution: challenge.answer,
                 explanation: challenge.explanation,
-                image: 'images/math-challenge.svg',
+                image: this.getCardImage('Math Challenge'),
                 isNew: !this.userProgress.seenContent.has(contentId)
             });
         });
@@ -904,6 +904,115 @@ class PremiumContentBackend {
         });
         
         return stats;
+    }
+    
+    // Get appropriate image for card type
+    getCardImage(type, category = null) {
+        // Comprehensive image mapping with multiple fallback options
+        const imageMap = {
+            // Game images with fallbacks
+            'Game': {
+                'tictactoe': ['images/tictactoe.svg'],
+                'connect4': ['images/connect4.svg'],
+                'chess': ['images/chess.svg'],
+                'flappy': ['images/flappy.svg'],
+                'sudoku': ['images/sudoku.svg'],
+                'crossword': ['images/crossword.svg'],
+                'pacman': ['images/pacman.svg'],
+                'tetris': ['images/tetris.svg'],
+                'galaga': ['images/galaga.svg'],
+                'snake': ['images/snake.svg'],
+                'breakout': ['images/breakout.svg'],
+                'memory': ['images/memory.svg', 'images/memory-training.svg'],
+                'wordsearch': ['images/wordsearch.svg', 'images/word-games.svg'],
+                'solitaire': ['images/solitaire.svg'],
+                'minesweeper': ['images/minesweeper.svg']
+            },
+            
+            // Fun Facts images with multiple fallback options
+            'Ocean Life': ['images/ocean-life.svg', 'images/nature-&-environment.svg', 'images/nature-environment.svg'],
+            'Space Mysteries': ['images/space-mysteries.svg', 'images/mysteries-&-unexplained.svg'],
+            'Animal Kingdom': ['images/animal-kingdom.svg', 'images/nature-&-environment.svg'],
+            'Human Body': ['images/human-body.svg', 'images/physics-chemistry.svg'],
+            'Technology & Science': ['images/technology-science.svg', 'images/technology-&-digital.svg', 'images/physics-chemistry.svg'],
+            'Ancient History': ['images/ancient-history.svg', 'images/trivia-&-facts.svg'],
+            'Medieval Times': ['images/medieval-times.svg', 'images/ancient-history.svg'],
+            'Modern History': ['images/modern-history.svg', 'images/trivia-&-facts.svg'],
+            'World Geography': ['images/world-geography.svg', 'images/geography-world.svg', 'images/trivia-&-facts.svg'],
+            'Literature & Arts': ['images/literature-arts.svg', 'images/music-&-entertainment.svg'],
+            'Psychology & Mind': ['images/psychology-mind.svg', 'images/personal-development.svg'],
+            'Food & Culture': ['images/food-culture.svg', 'images/trivia-&-facts.svg'],
+            'Amazing Fact': ['images/technology-science.svg', 'images/trivia-&-facts.svg', 'images/weird-science.svg'],
+            'Plants & Nature': ['images/plants-nature.svg', 'images/nature-&-environment.svg'],
+            'Weather & Climate': ['images/weather-climate.svg', 'images/nature-&-environment.svg'],
+            'Inventions & Innovation': ['images/technology-science.svg', 'images/trivia-&-facts.svg'],
+            'Sports & Records': ['images/sports-&-records.svg', 'images/sports-fitness.svg'],
+            
+            // Riddle images with fallbacks
+            'Riddle': ['images/riddle.svg', 'images/mathematics-&-logic.svg'],
+            'Mystery Challenge': ['images/riddle.svg', 'images/mysteries-&-unexplained.svg'],
+            'Word Puzzle': ['images/riddle.svg', 'images/word-games.svg'],
+            'Logic Puzzle': ['images/riddle.svg', 'images/mathematics-&-logic.svg'],
+            'Brain Teaser': ['images/riddle.svg', 'images/psychology-mind.svg'],
+            
+            // Math Challenge images with fallbacks
+            'Math Challenge': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            'Math Puzzle': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            'Pattern Puzzle': ['images/math-challenge.svg', 'images/visual-perception.svg'],
+            'Number Quest': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            'Pattern Detective': ['images/math-challenge.svg', 'images/visual-perception.svg'],
+            'Sequence Solver': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            'Pattern Quest': ['images/math-challenge.svg', 'images/visual-perception.svg'],
+            'Number Patterns': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            'Logic Challenge': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            'Think Tank': ['images/math-challenge.svg', 'images/strategy-planning.svg'],
+            'Arithmetic Master': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            'Number Wizard': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            'Quick Math': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            'Math Quest': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            'Number Challenge': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            'Math Mystery': ['images/math-challenge.svg', 'images/mysteries-&-unexplained.svg'],
+            'Calculation Quest': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            'Number Puzzle': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            
+            // Activity images with comprehensive fallbacks
+            'Activity': {
+                'Creative Arts': ['images/creative-arts.svg', 'images/literature-arts.svg', 'images/music-&-entertainment.svg'],
+                'Learning Adventures': ['images/learning-adventures.svg', 'images/language-learning.svg', 'images/trivia-knowledge.svg'],
+                'Physical Challenges': ['images/physical-challenges.svg', 'images/sports-&-records.svg', 'images/sports-fitness.svg'],
+                'Communication Skills': ['images/communication-skills.svg', 'images/language-learning.svg'],
+                'Life Skills': ['images/life-skills.svg', 'images/personal-development.svg'],
+                'Mental Exercises': ['images/mental-exercises.svg', 'images/memory-training.svg', 'images/psychology-mind.svg'],
+                'Mindfulness & Reflection': ['images/mindfulness-&-reflection.svg', 'images/mindfulness.svg', 'images/personal-development.svg'],
+                'Nature Connection': ['images/nature-connection.svg', 'images/nature-&-environment.svg', 'images/nature-environment.svg'],
+                'Problem Solving': ['images/problem-solving.svg', 'images/strategy-planning.svg', 'images/mathematics-&-logic.svg'],
+                'Social Experiments': ['images/social-experiments.svg', 'images/psychology-mind.svg'],
+                'Storytelling': ['images/storytelling.svg', 'images/literature-arts.svg'],
+                'Observation Games': ['images/observation-games.svg', 'images/visual-perception.svg']
+            }
+        };
+        
+        // Helper function to get the first available image from a list
+        const getFirstAvailableImage = (imageList) => {
+            if (!Array.isArray(imageList)) return imageList;
+            return imageList[0]; // Return the first one
+        };
+        
+        // For games, use the category (gameType) to get specific image
+        if (type === 'Game' && category) {
+            const gameImages = imageMap['Game'][category];
+            return getFirstAvailableImage(gameImages) || 'images/tictactoe.svg';
+        }
+        
+        // For activities, use the category to get specific image
+        if (type === 'Activity' && category) {
+            const activityImages = imageMap['Activity'][category];
+            return getFirstAvailableImage(activityImages) || 'images/literature-arts.svg';
+        }
+        
+        // For other types, use the type directly
+        const typeImages = imageMap[type];
+        return getFirstAvailableImage(typeImages) || 'images/riddle.svg';
     }
 }
 

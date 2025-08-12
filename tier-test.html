@@ -147,6 +147,12 @@
             <button class="test-btn primary" onclick="updateStats()">
                 <i class="fas fa-chart-bar"></i> Update Stats
             </button>
+            <button class="test-btn premium" onclick="testCardGeneration()">
+                <i class="fas fa-magic"></i> Test Card Generation
+            </button>
+            <button class="test-btn primary" onclick="verifyTierLimits()">
+                <i class="fas fa-check-circle"></i> Verify Tier Limits
+            </button>
         </div>
 
         <div class="stats-display" id="statsDisplay">
@@ -311,6 +317,143 @@
             } catch (error) {
                 log(`❌ Error updating stats: ${error.message}`);
                 document.getElementById('statsContent').innerHTML = '<p>Error loading statistics</p>';
+            }
+        }
+
+        async function testCardGeneration() {
+            if (!tierManager) {
+                log('❌ Please initialize the tier manager first');
+                return;
+            }
+            
+            try {
+                log('🎯 Testing card generation for current tier...');
+                const currentTier = tierManager.getCurrentTier();
+                const expectedLimit = tierManager.getDailyCardLimit();
+                
+                log(`📊 Current tier: ${currentTier} (Expected limit: ${expectedLimit} cards)`);
+                
+                // Get today's cards
+                const cards = await tierManager.getTodaysCards();
+                
+                log(`✅ Generated ${cards.length} cards for ${currentTier} tier`);
+                log(`📈 Expected: ${expectedLimit}, Actual: ${cards.length}`);
+                
+                // Verify card count matches tier limit
+                if (cards.length === expectedLimit) {
+                    log(`✅ PASS: Card count matches tier limit (${expectedLimit})`);
+                } else {
+                    log(`❌ FAIL: Card count mismatch! Expected ${expectedLimit}, got ${cards.length}`);
+                }
+                
+                // Check for SVG images
+                const cardsWithSvg = cards.filter(card => card.image && card.image.includes('.svg'));
+                log(`🖼️ Cards with SVG images: ${cardsWithSvg.length}/${cards.length}`);
+                
+                // Check content types
+                const contentTypes = {};
+                cards.forEach(card => {
+                    const type = card.type || 'Unknown';
+                    contentTypes[type] = (contentTypes[type] || 0) + 1;
+                });
+                
+                log('📋 Content breakdown:');
+                Object.entries(contentTypes).forEach(([type, count]) => {
+                    log(`   - ${type}: ${count} cards`);
+                });
+                
+                // Check new content ratio
+                const newCards = cards.filter(card => card.isNew);
+                const newContentRatio = Math.round((newCards.length / cards.length) * 100);
+                const expectedRatio = currentTier === 'premium' ? 90 : 80;
+                
+                log(`🆕 New content: ${newCards.length}/${cards.length} (${newContentRatio}%)`);
+                log(`📊 Expected ratio: ${expectedRatio}%, Actual: ${newContentRatio}%`);
+                
+                if (newContentRatio >= expectedRatio - 10) { // Allow 10% tolerance
+                    log(`✅ PASS: New content ratio meets expectations`);
+                } else {
+                    log(`⚠️ WARNING: New content ratio below expected (${newContentRatio}% < ${expectedRatio}%)`);
+                }
+                
+                updateStats();
+                
+            } catch (error) {
+                log(`❌ Error testing card generation: ${error.message}`);
+            }
+        }
+
+        async function verifyTierLimits() {
+            if (!tierManager) {
+                log('❌ Please initialize the tier manager first');
+                return;
+            }
+            
+            try {
+                log('🔍 Comprehensive tier limits verification...');
+                
+                // Test Basic Tier
+                log('📝 Testing Basic Tier (40 cards)...');
+                await tierManager.downgradeTier();
+                await new Promise(resolve => setTimeout(resolve, 100)); // Small delay
+                
+                const basicCards = await tierManager.getTodaysCards();
+                const basicLimit = tierManager.getDailyCardLimit();
+                
+                log(`   Basic tier limit: ${basicLimit}`);
+                log(`   Basic cards generated: ${basicCards.length}`);
+                
+                if (basicCards.length === 40 && basicLimit === 40) {
+                    log('✅ PASS: Basic tier generates exactly 40 cards');
+                } else {
+                    log(`❌ FAIL: Basic tier issue - Expected 40, got ${basicCards.length} (limit: ${basicLimit})`);
+                }
+                
+                // Test Premium Tier
+                log('📝 Testing Premium Tier (100 cards)...');
+                const upgradeResult = tierManager.upgradeToPremium({
+                    startDate: new Date().toISOString(),
+                    endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 days
+                    amount: 9.99,
+                    transactionId: 'test_' + Date.now()
+                });
+                
+                await new Promise(resolve => setTimeout(resolve, 100)); // Small delay
+                
+                const premiumCards = await tierManager.getTodaysCards();
+                const premiumLimit = tierManager.getDailyCardLimit();
+                
+                log(`   Premium tier limit: ${premiumLimit}`);
+                log(`   Premium cards generated: ${premiumCards.length}`);
+                
+                if (premiumCards.length === 100 && premiumLimit === 100) {
+                    log('✅ PASS: Premium tier generates exactly 100 cards');
+                } else {
+                    log(`❌ FAIL: Premium tier issue - Expected 100, got ${premiumCards.length} (limit: ${premiumLimit})`);
+                }
+                
+                // Verify SVG images are included
+                const basicSvgs = basicCards.filter(card => card.image && card.image.includes('.svg')).length;
+                const premiumSvgs = premiumCards.filter(card => card.image && card.image.includes('.svg')).length;
+                
+                log(`🖼️ SVG images - Basic: ${basicSvgs}/${basicCards.length}, Premium: ${premiumSvgs}/${premiumCards.length}`);
+                
+                if (basicSvgs > 0 && premiumSvgs > 0) {
+                    log('✅ PASS: Both tiers include SVG images');
+                } else {
+                    log('⚠️ WARNING: Some tiers missing SVG images');
+                }
+                
+                // Final summary
+                log('📊 VERIFICATION SUMMARY:');
+                log(`   ✓ Basic Tier: ${basicCards.length === 40 ? 'PASS' : 'FAIL'} (40 cards)`);
+                log(`   ✓ Premium Tier: ${premiumCards.length === 100 ? 'PASS' : 'FAIL'} (100 cards)`);
+                log(`   ✓ SVG Images: ${(basicSvgs > 0 && premiumSvgs > 0) ? 'PASS' : 'FAIL'}`);
+                
+                updateStats();
+                
+            } catch (error) {
+                log(`❌ Error verifying tier limits: ${error.message}`);
             }
         }
 

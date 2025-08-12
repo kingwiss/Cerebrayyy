@@ -1,43 +1,67 @@
 <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
     <defs>
         <linearGradient id="foodGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:#e17055;stop-opacity:1" />
+            <stop offset="0%" style="stop-color:#fd79a8;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#e84393;stop-opacity:1" />
+        </linearGradient>
+        <linearGradient id="plateGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#f8f9fa;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#e9ecef;stop-opacity:1" />
+        </linearGradient>
+        <linearGradient id="appleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#ff6b6b;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#ee5a52;stop-opacity:1" />
+        </linearGradient>
+        <linearGradient id="cheeseGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#ffeaa7;stop-opacity:1" />
             <stop offset="100%" style="stop-color:#fdcb6e;stop-opacity:1" />
         </linearGradient>
     </defs>
     <circle cx="100" cy="100" r="90" fill="url(#foodGradient)" opacity="0.1"/>
-    <g transform="translate(100,100)">
-        <ellipse cx="0" cy="10" rx="25" ry="15" fill="url(#foodGradient)" opacity="0.7"/>
-        <ellipse cx="0" cy="5" rx="20" ry="12" fill="#feca57"/>
-        <circle cx="-10" cy="0" r="4" fill="#e17055">
-            <animate attributeName="fill" values="#e17055;#ff6b6b;#e17055" dur="2s" repeatCount="indefinite"/>
-        </circle>
-        <circle cx="0" cy="-2" r="3" fill="#00b894">
-            <animate attributeName="fill" values="#00b894;#4ecdc4;#00b894" dur="2.5s" repeatCount="indefinite"/>
-        </circle>
-        <circle cx="8" cy="2" r="3" fill="#fd79a8">
-            <animate attributeName="fill" values="#fd79a8;#a29bfe;#fd79a8" dur="1.8s" repeatCount="indefinite"/>
-        </circle>
-        <g transform="translate(-20,-20)">
-            <rect x="0" y="0" width="3" height="15" fill="#00b894"/>
-            <ellipse cx="1.5" cy="-3" rx="4" ry="2" fill="#00b894"/>
-        </g>
-        <g transform="translate(20,-20)">
-            <rect x="0" y="0" width="2" height="12" fill="#636e72"/>
-            <rect x="-3" y="0" width="8" height="2" fill="#636e72"/>
-            <rect x="-2" y="2" width="6" height="1" fill="#636e72"/>
-            <rect x="-1" y="3" width="4" height="1" fill="#636e72"/>
-        </g>
-        <g opacity="0.6">
-            <circle cx="-30" cy="20" r="2" fill="#feca57">
-                <animate attributeName="r" values="2;4;2" dur="2s" repeatCount="indefinite"/>
-            </circle>
-            <circle cx="30" cy="20" r="2" fill="#ff6b6b">
-                <animate attributeName="r" values="2;4;2" dur="2.3s" repeatCount="indefinite"/>
-            </circle>
-        </g>
+    
+    <!-- Plate -->
+    <ellipse cx="100" cy="120" rx="60" ry="15" fill="url(#plateGradient)" opacity="0.8"/>
+    <ellipse cx="100" cy="115" rx="55" ry="12" fill="url(#plateGradient)"/>
+    
+    <!-- Apple -->
+    <circle cx="80" cy="105" r="12" fill="url(#appleGradient)"/>
+    <ellipse cx="80" cy="100" rx="10" ry="12" fill="url(#appleGradient)"/>
+    <path d="M 80 88 Q 82 85 85 88" stroke="#2d3436" stroke-width="2" fill="none"/>
+    <ellipse cx="82" cy="90" rx="2" ry="3" fill="#00b894"/>
+    
+    <!-- Cheese -->
+    <polygon points="110,105 125,105 120,115 105,115" fill="url(#cheeseGradient)"/>
+    <circle cx="115" cy="108" r="2" fill="#fff" opacity="0.8"/>
+    <circle cx="118" cy="112" r="1.5" fill="#fff" opacity="0.8"/>
+    
+    <!-- Bread -->
+    <ellipse cx="100" cy="110" rx="15" ry="8" fill="#d4a574"/>
+    <ellipse cx="100" cy="108" rx="12" ry="6" fill="#e6d3a3"/>
+    
+    <!-- Fork and knife -->
+    <g transform="translate(60,80)">
+        <line x1="0" y1="0" x2="0" y2="25" stroke="#95a5a6" stroke-width="2"/>
+        <line x1="-2" y1="0" x2="-2" y2="8" stroke="#95a5a6" stroke-width="1"/>
+        <line x1="2" y1="0" x2="2" y2="8" stroke="#95a5a6" stroke-width="1"/>
+        <line x1="0" y1="0" x2="0" y2="8" stroke="#95a5a6" stroke-width="1"/>
     </g>
-    <circle cx="100" cy="100" r="85" fill="none" stroke="url(#foodGradient)" stroke-width="1" opacity="0.3" stroke-dasharray="5,5">
-        <animate attributeName="stroke-dashoffset" values="0;10" dur="2s" repeatCount="indefinite"/>
+    
+    <g transform="translate(140,80)">
+        <line x1="0" y1="0" x2="0" y2="25" stroke="#95a5a6" stroke-width="2"/>
+        <path d="M -3 0 L 3 0 L 2 8 L -2 8 Z" fill="#95a5a6"/>
+    </g>
+    
+    <!-- Cultural symbols -->
+    <g opacity="0.6">
+        <circle cx="50" cy="50" r="3" fill="url(#foodGradient)">
+            <animate attributeName="r" values="3;5;3" dur="2s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="150" cy="60" r="2" fill="url(#foodGradient)">
+            <animate attributeName="r" values="2;4;2" dur="2.5s" repeatCount="indefinite"/>
+        </circle>
+    </g>
+    
+    <circle cx="100" cy="100" r="85" fill="none" stroke="url(#foodGradient)" stroke-width="1" opacity="0.3" stroke-dasharray="4,4">
+        <animate attributeName="stroke-dashoffset" values="0;8" dur="3s" repeatCount="indefinite"/>
     </circle>
 </svg>

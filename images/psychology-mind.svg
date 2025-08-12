@@ -1,56 +1,230 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
   <defs>
     <linearGradient id="psychGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#FF69B4;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#C71585;stop-opacity:1" />
+      <stop offset="0%" style="stop-color:#FF6B9D;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#C44569;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8B2635;stop-opacity:1" />
     </linearGradient>
+    <radialGradient id="mindGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#FF6B9D;stop-opacity:0.6" />
+      <stop offset="100%" style="stop-color:#8B2635;stop-opacity:0" />
+    </radialGradient>
+    <filter id="thoughtGlow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="neuralPulse">
+      <feGaussianBlur stdDeviation="1" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 3 -1"/>
+    </filter>
   </defs>
   
-  <!-- Background circle -->
-  <circle cx="100" cy="100" r="90" fill="url(#psychGrad)" stroke="#8B008B" stroke-width="3"/>
+  <!-- Animated consciousness background -->
+  <circle cx="50" cy="50" r="45" fill="url(#psychGrad)" opacity="0.1">
+    <animate attributeName="opacity" values="0.1; 0.3; 0.1" dur="6s" repeatCount="indefinite"/>
+    <animateTransform attributeName="transform" type="rotate" values="0 50 50; 360 50 50" dur="40s" repeatCount="indefinite"/>
+  </circle>
   
-  <!-- Brain outline -->
-  <path d="M70,80 Q60,70 70,60 Q80,50 100,55 Q120,50 130,60 Q140,70 130,80 Q135,90 130,100 Q125,110 115,115 Q100,120 85,115 Q75,110 70,100 Q65,90 70,80" 
-        fill="#FFB6C1" stroke="#8B008B" stroke-width="3"/>
+  <!-- Mind aura with pulsing effect -->
+  <circle cx="50" cy="50" r="35" fill="url(#mindGlow)">
+    <animate attributeName="r" values="35; 42; 35" dur="4s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.4; 0.8; 0.4" dur="3s" repeatCount="indefinite"/>
+  </circle>
   
-  <!-- Brain divisions -->
-  <path d="M100,55 Q110,65 115,80 Q110,95 100,105 Q90,95 85,80 Q90,65 100,55" 
-        stroke="#8B008B" stroke-width="2" fill="none"/>
+  <!-- Enhanced brain outline with neural activity -->
+  <path d="M 30,40 Q 25,35 30,30 Q 35,25 45,30 Q 55,25 65,30 Q 70,35 65,40 Q 70,45 65,50 Q 70,55 65,60 Q 60,65 50,60 Q 40,65 35,60 Q 30,55 35,50 Q 30,45 30,40 Z" 
+        fill="none" stroke="url(#psychGrad)" stroke-width="2" filter="url(#thoughtGlow)">
+    <animate attributeName="stroke-width" values="2; 3; 2" dur="2.5s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.8; 1; 0.8" dur="2s" repeatCount="indefinite"/>
+  </path>
   
-  <!-- Brain folds -->
-  <path d="M75,70 Q85,75 95,70" stroke="#8B008B" stroke-width="1.5" fill="none"/>
-  <path d="M105,70 Q115,75 125,70" stroke="#8B008B" stroke-width="1.5" fill="none"/>
-  <path d="M80,85 Q90,90 100,85" stroke="#8B008B" stroke-width="1.5" fill="none"/>
-  <path d="M100,85 Q110,90 120,85" stroke="#8B008B" stroke-width="1.5" fill="none"/>
-  <path d="M85,100 Q95,105 105,100" stroke="#8B008B" stroke-width="1.5" fill="none"/>
+  <!-- Animated brain divisions with thought flow -->
+  <path d="M 45,30 Q 50,35 50,45 Q 50,55 45,60" fill="none" stroke="url(#psychGrad)" stroke-width="1" opacity="0.7">
+    <animate attributeName="stroke-dasharray" values="0,20; 10,10; 20,0; 0,20" dur="3s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.7; 1; 0.7" dur="2.2s" repeatCount="indefinite"/>
+  </path>
+  <path d="M 55,30 Q 50,35 50,45" fill="none" stroke="url(#psychGrad)" stroke-width="1" opacity="0.7">
+    <animate attributeName="stroke-dasharray" values="20,0; 10,10; 0,20; 20,0" dur="3.2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.7; 1; 0.7" dur="2.4s" begin="0.5s" repeatCount="indefinite"/>
+  </path>
   
-  <!-- Thought bubbles -->
-  <circle cx="60" cy="50" r="8" fill="#E6E6FA" stroke="#8B008B" stroke-width="2" opacity="0.8"/>
-  <circle cx="50" cy="40" r="6" fill="#E6E6FA" stroke="#8B008B" stroke-width="2" opacity="0.8"/>
-  <circle cx="45" cy="30" r="4" fill="#E6E6FA" stroke="#8B008B" stroke-width="2" opacity="0.8"/>
+  <!-- Enhanced brain folds with cognitive patterns -->
+  <path d="M 35,35 Q 40,38 45,35" fill="none" stroke="url(#psychGrad)" stroke-width="1" opacity="0.5">
+    <animate attributeName="stroke-width" values="1; 2; 1" dur="1.8s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.5; 0.9; 0.5" dur="1.5s" repeatCount="indefinite"/>
+  </path>
+  <path d="M 55,35 Q 60,38 65,35" fill="none" stroke="url(#psychGrad)" stroke-width="1" opacity="0.5">
+    <animate attributeName="stroke-width" values="1; 2; 1" dur="2s" begin="0.3s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.5; 0.9; 0.5" dur="1.7s" begin="0.3s" repeatCount="indefinite"/>
+  </path>
+  <path d="M 35,50 Q 40,53 45,50" fill="none" stroke="url(#psychGrad)" stroke-width="1" opacity="0.5">
+    <animate attributeName="stroke-width" values="1; 2; 1" dur="2.2s" begin="0.6s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.5; 0.9; 0.5" dur="1.9s" begin="0.6s" repeatCount="indefinite"/>
+  </path>
+  <path d="M 55,50 Q 60,53 65,50" fill="none" stroke="url(#psychGrad)" stroke-width="1" opacity="0.5">
+    <animate attributeName="stroke-width" values="1; 2; 1" dur="2.4s" begin="0.9s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.5; 0.9; 0.5" dur="2.1s" begin="0.9s" repeatCount="indefinite"/>
+  </path>
   
-  <circle cx="140" cy="50" r="8" fill="#E6E6FA" stroke="#8B008B" stroke-width="2" opacity="0.8"/>
-  <circle cx="150" cy="40" r="6" fill="#E6E6FA" stroke="#8B008B" stroke-width="2" opacity="0.8"/>
-  <circle cx="155" cy="30" r="4" fill="#E6E6FA" stroke="#8B008B" stroke-width="2" opacity="0.8"/>
+  <!-- Enhanced thought bubbles with floating animation -->
+  <circle cx="25" cy="25" r="3" fill="url(#psychGrad)" opacity="0.6" filter="url(#neuralPulse)">
+    <animateTransform attributeName="transform" type="translate" values="0,0; -2,2; 0,0" dur="4s" repeatCount="indefinite"/>
+    <animate attributeName="r" values="3; 4; 3" dur="2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.6; 1; 0.6" dur="1.8s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="20" cy="20" r="2" fill="url(#psychGrad)" opacity="0.4">
+    <animateTransform attributeName="transform" type="translate" values="0,0; -1,1; 0,0" dur="4.2s" repeatCount="indefinite"/>
+    <animate attributeName="r" values="2; 3; 2" dur="2.2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.4; 0.8; 0.4" dur="2s" begin="0.2s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="15" cy="15" r="1" fill="url(#psychGrad)" opacity="0.3">
+    <animateTransform attributeName="transform" type="translate" values="0,0; -0.5,0.5; 0,0" dur="4.4s" repeatCount="indefinite"/>
+    <animate attributeName="r" values="1; 2; 1" dur="2.4s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.3; 0.7; 0.3" dur="2.2s" begin="0.4s" repeatCount="indefinite"/>
+  </circle>
   
-  <!-- Lightbulb (idea) -->
-  <circle cx="100" cy="150" r="12" fill="#FFFF00" stroke="#FFD700" stroke-width="2"/>
-  <rect x="95" y="160" width="10" height="8" fill="#C0C0C0" stroke="#696969" stroke-width="1"/>
-  <line x1="85" y1="145" x2="90" y2="150" stroke="#FFD700" stroke-width="2"/>
-  <line x1="110" y1="150" x2="115" y2="145" stroke="#FFD700" stroke-width="2"/>
-  <line x1="85" y1="155" x2="90" y2="150" stroke="#FFD700" stroke-width="2"/>
-  <line x1="110" y1="150" x2="115" y2="155" stroke="#FFD700" stroke-width="2"/>
+  <circle cx="75" cy="25" r="3" fill="url(#psychGrad)" opacity="0.6" filter="url(#neuralPulse)">
+    <animateTransform attributeName="transform" type="translate" values="0,0; 2,2; 0,0" dur="4.6s" repeatCount="indefinite"/>
+    <animate attributeName="r" values="3; 4; 3" dur="2.6s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.6; 1; 0.6" dur="2.4s" begin="0.6s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="80" cy="20" r="2" fill="url(#psychGrad)" opacity="0.4">
+    <animateTransform attributeName="transform" type="translate" values="0,0; 1,1; 0,0" dur="4.8s" repeatCount="indefinite"/>
+    <animate attributeName="r" values="2; 3; 2" dur="2.8s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.4; 0.8; 0.4" dur="2.6s" begin="0.8s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="85" cy="15" r="1" fill="url(#psychGrad)" opacity="0.3">
+    <animateTransform attributeName="transform" type="translate" values="0,0; 0.5,0.5; 0,0" dur="5s" repeatCount="indefinite"/>
+    <animate attributeName="r" values="1; 2; 1" dur="3s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.3; 0.7; 0.3" dur="2.8s" begin="1s" repeatCount="indefinite"/>
+  </circle>
   
-  <!-- Gears (thinking process) -->
-  <circle cx="160" cy="120" r="10" fill="#C0C0C0" stroke="#696969" stroke-width="2"/>
-  <polygon points="160,110 165,115 160,120 155,115" fill="#696969"/>
-  <polygon points="150,120 155,125 160,120 155,115" fill="#696969"/>
-  <polygon points="160,130 165,125 160,120 155,125" fill="#696969"/>
-  <polygon points="170,120 165,115 160,120 165,125" fill="#696969"/>
+  <!-- Enhanced lightbulb with eureka moment animation -->
+  <circle cx="50" cy="75" r="4" fill="none" stroke="url(#psychGrad)" stroke-width="1" filter="url(#thoughtGlow)">
+    <animate attributeName="r" values="4; 6; 4" dur="3s" repeatCount="indefinite"/>
+    <animate attributeName="stroke-width" values="1; 2; 1" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <rect x="48" y="78" width="4" height="3" fill="none" stroke="url(#psychGrad)" stroke-width="1">
+    <animate attributeName="stroke-width" values="1; 1.5; 1" dur="2.2s" repeatCount="indefinite"/>
+  </rect>
+  <line x1="46" y1="75" x2="54" y2="75" stroke="url(#psychGrad)" stroke-width="1">
+    <animate attributeName="stroke-width" values="1; 2; 1" dur="1.8s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.8; 1; 0.8" dur="1.5s" repeatCount="indefinite"/>
+  </line>
+  <line x1="47" y1="72" x2="53" y2="72" stroke="url(#psychGrad)" stroke-width="1">
+    <animate attributeName="stroke-width" values="1; 2; 1" dur="2s" begin="0.3s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.8; 1; 0.8" dur="1.7s" begin="0.3s" repeatCount="indefinite"/>
+  </line>
   
-  <circle cx="40" cy="120" r="8" fill="#C0C0C0" stroke="#696969" stroke-width="2"/>
-  <polygon points="40,112 44,116 40,120 36,116" fill="#696969"/>
-  <polygon points="32,120 36,124 40,120 36,116" fill="#696969"/>
-  <polygon points="40,128 44,124 40,120 36,124" fill="#696969"/>
-  <polygon points="48,120 44,116 40,120 44,124" fill="#696969"/>
+  <!-- Inspiration rays -->
+  <g opacity="0.6">
+    <line x1="50" y1="70" x2="45" y2="65" stroke="url(#psychGrad)" stroke-width="1">
+      <animate attributeName="opacity" values="0; 1; 0" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="stroke-width" values="1; 2; 1" dur="1.5s" repeatCount="indefinite"/>
+    </line>
+    <line x1="50" y1="70" x2="55" y2="65" stroke="url(#psychGrad)" stroke-width="1">
+      <animate attributeName="opacity" values="0; 1; 0" dur="2.2s" begin="0.2s" repeatCount="indefinite"/>
+      <animate attributeName="stroke-width" values="1; 2; 1" dur="1.7s" begin="0.2s" repeatCount="indefinite"/>
+    </line>
+    <line x1="50" y1="70" x2="42" y2="68" stroke="url(#psychGrad)" stroke-width="1">
+      <animate attributeName="opacity" values="0; 1; 0" dur="2.4s" begin="0.4s" repeatCount="indefinite"/>
+      <animate attributeName="stroke-width" values="1; 2; 1" dur="1.9s" begin="0.4s" repeatCount="indefinite"/>
+    </line>
+    <line x1="50" y1="70" x2="58" y2="68" stroke="url(#psychGrad)" stroke-width="1">
+      <animate attributeName="opacity" values="0; 1; 0" dur="2.6s" begin="0.6s" repeatCount="indefinite"/>
+      <animate attributeName="stroke-width" values="1; 2; 1" dur="2.1s" begin="0.6s" repeatCount="indefinite"/>
+    </line>
+  </g>
+  
+  <!-- Enhanced gears with cognitive processing animation -->
+  <g transform="translate(75,75)">
+    <circle cx="0" cy="0" r="5" fill="none" stroke="url(#psychGrad)" stroke-width="1" filter="url(#neuralPulse)">
+      <animateTransform attributeName="transform" type="rotate" values="0; 360" dur="8s" repeatCount="indefinite"/>
+      <animate attributeName="stroke-width" values="1; 2; 1" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="0" cy="0" r="2" fill="url(#psychGrad)" opacity="0.3">
+      <animate attributeName="opacity" values="0.3; 0.8; 0.3" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="r" values="2; 3; 2" dur="2.5s" repeatCount="indefinite"/>
+    </circle>
+    <rect x="-1" y="-6" width="2" height="2" fill="url(#psychGrad)">
+      <animateTransform attributeName="transform" type="rotate" values="0; 360" dur="8s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.8; 1; 0.8" dur="1.5s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="-1" y="4" width="2" height="2" fill="url(#psychGrad)">
+      <animateTransform attributeName="transform" type="rotate" values="0; 360" dur="8s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.8; 1; 0.8" dur="1.7s" begin="0.2s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="-6" y="-1" width="2" height="2" fill="url(#psychGrad)">
+      <animateTransform attributeName="transform" type="rotate" values="0; 360" dur="8s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.8; 1; 0.8" dur="1.9s" begin="0.4s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="4" y="-1" width="2" height="2" fill="url(#psychGrad)">
+      <animateTransform attributeName="transform" type="rotate" values="0; 360" dur="8s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.8; 1; 0.8" dur="2.1s" begin="0.6s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+  
+  <g transform="translate(85,85)">
+    <circle cx="0" cy="0" r="3" fill="none" stroke="url(#psychGrad)" stroke-width="1">
+      <animateTransform attributeName="transform" type="rotate" values="360; 0" dur="6s" repeatCount="indefinite"/>
+      <animate attributeName="stroke-width" values="1; 1.5; 1" dur="2.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="0" cy="0" r="1" fill="url(#psychGrad)" opacity="0.3">
+      <animate attributeName="opacity" values="0.3; 0.7; 0.3" dur="1.8s" repeatCount="indefinite"/>
+      <animate attributeName="r" values="1; 1.5; 1" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <rect x="-0.5" y="-4" width="1" height="1" fill="url(#psychGrad)">
+      <animateTransform attributeName="transform" type="rotate" values="360; 0" dur="6s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.8; 1; 0.8" dur="1.3s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="-0.5" y="3" width="1" height="1" fill="url(#psychGrad)">
+      <animateTransform attributeName="transform" type="rotate" values="360; 0" dur="6s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.8; 1; 0.8" dur="1.5s" begin="0.2s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="-4" y="-0.5" width="1" height="1" fill="url(#psychGrad)">
+      <animateTransform attributeName="transform" type="rotate" values="360; 0" dur="6s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.8; 1; 0.8" dur="1.7s" begin="0.4s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="3" y="-0.5" width="1" height="1" fill="url(#psychGrad)">
+      <animateTransform attributeName="transform" type="rotate" values="360; 0" dur="6s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.8; 1; 0.8" dur="1.9s" begin="0.6s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+  
+  <!-- Cognitive flow particles -->
+  <g opacity="0.7">
+    <circle cx="30" cy="45" r="1" fill="#FF6B9D">
+      <animateMotion dur="5s" repeatCount="indefinite">
+        <mpath href="#cognitiveFlow1"/>
+      </animateMotion>
+      <animate attributeName="r" values="1; 2; 1" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="70" cy="45" r="1" fill="#C44569">
+      <animateMotion dur="6s" repeatCount="indefinite">
+        <mpath href="#cognitiveFlow2"/>
+      </animateMotion>
+      <animate attributeName="r" values="1; 2; 1" dur="2.2s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+  
+  <!-- Mental state indicators -->
+  <g fill="#FF6B9D" opacity="0.5">
+    <circle cx="15" cy="50" r="1">
+      <animate attributeName="cy" values="50; 45; 50" dur="3s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.5; 1; 0.5" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="85" cy="50" r="1">
+      <animate attributeName="cy" values="50; 55; 50" dur="3.5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.5; 1; 0.5" dur="2.2s" begin="0.5s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+  
+  <!-- Hidden paths for cognitive flow -->
+  <defs>
+    <path id="cognitiveFlow1" d="M 30,45 Q 40,35 50,45 Q 60,55 70,45"/>
+    <path id="cognitiveFlow2" d="M 70,45 Q 60,35 50,45 Q 40,55 30,45"/>
+  </defs>
 </svg>

@@ -1,0 +1,258 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="skyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#87CEEB;stop-opacity:1" />
+            <stop offset="50%" style="stop-color:#B0E0E6;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#E0F6FF;stop-opacity:1" />
+        </linearGradient>
+        <radialGradient id="sunGradient" cx="50%" cy="50%">
+            <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+            <stop offset="70%" style="stop-color:#FFA500;stop-opacity:0.8" />
+            <stop offset="100%" style="stop-color:#FF8C00;stop-opacity:0.4" />
+        </radialGradient>
+        <linearGradient id="cloudGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+            <stop offset="50%" style="stop-color:#F0F8FF;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#E6E6FA;stop-opacity:1" />
+        </linearGradient>
+        <linearGradient id="stormCloudGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#696969;stop-opacity:1" />
+            <stop offset="50%" style="stop-color:#2F4F4F;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#191970;stop-opacity:1" />
+        </linearGradient>
+        <linearGradient id="rainbowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#FF0000;stop-opacity:0.8" />
+            <stop offset="16.66%" style="stop-color:#FF8C00;stop-opacity:0.8" />
+            <stop offset="33.33%" style="stop-color:#FFD700;stop-opacity:0.8" />
+            <stop offset="50%" style="stop-color:#32CD32;stop-opacity:0.8" />
+            <stop offset="66.66%" style="stop-color:#00BFFF;stop-opacity:0.8" />
+            <stop offset="83.33%" style="stop-color:#4169E1;stop-opacity:0.8" />
+            <stop offset="100%" style="stop-color:#8A2BE2;stop-opacity:0.8" />
+        </linearGradient>
+    </defs>
+    
+    <!-- Background -->
+    <rect width="200" height="200" fill="url(#skyGradient)"/>
+    
+    <!-- Sun -->
+    <g transform="translate(160, 40)">
+        <circle cx="0" cy="0" r="20" fill="url(#sunGradient)"/>
+        
+        <!-- Sun rays -->
+        <g stroke="#FFD700" stroke-width="2" opacity="0.7">
+            <line x1="0" y1="-30" x2="0" y2="-35">
+                <animateTransform attributeName="transform" type="rotate" values="0; 360" dur="10s" repeatCount="indefinite"/>
+            </line>
+            <line x1="21" y1="-21" x2="25" y2="-25">
+                <animateTransform attributeName="transform" type="rotate" values="0; 360" dur="10s" repeatCount="indefinite"/>
+            </line>
+            <line x1="30" y1="0" x2="35" y2="0">
+                <animateTransform attributeName="transform" type="rotate" values="0; 360" dur="10s" repeatCount="indefinite"/>
+            </line>
+            <line x1="21" y1="21" x2="25" y2="25">
+                <animateTransform attributeName="transform" type="rotate" values="0; 360" dur="10s" repeatCount="indefinite"/>
+            </line>
+            <line x1="0" y1="30" x2="0" y2="35">
+                <animateTransform attributeName="transform" type="rotate" values="0; 360" dur="10s" repeatCount="indefinite"/>
+            </line>
+            <line x1="-21" y1="21" x2="-25" y2="25">
+                <animateTransform attributeName="transform" type="rotate" values="0; 360" dur="10s" repeatCount="indefinite"/>
+            </line>
+            <line x1="-30" y1="0" x2="-35" y2="0">
+                <animateTransform attributeName="transform" type="rotate" values="0; 360" dur="10s" repeatCount="indefinite"/>
+            </line>
+            <line x1="-21" y1="-21" x2="-25" y2="-25">
+                <animateTransform attributeName="transform" type="rotate" values="0; 360" dur="10s" repeatCount="indefinite"/>
+            </line>
+        </g>
+        
+        <!-- Sun face -->
+        <circle cx="-6" cy="-5" r="2" fill="#FF8C00"/> <!-- Left eye -->
+        <circle cx="6" cy="-5" r="2" fill="#FF8C00"/>  <!-- Right eye -->
+        <path d="M-8 5 Q0 12 8 5" stroke="#FF8C00" stroke-width="2" fill="none"/> <!-- Smile -->
+    </g>
+    
+    <!-- Fluffy clouds -->
+    <g transform="translate(60, 50)">
+        <animateTransform attributeName="transform" type="translate" 
+            values="60,50; 70,48; 60,50; 50,52; 60,50" 
+            dur="8s" repeatCount="indefinite"/>
+        
+        <!-- Cloud shape -->
+        <circle cx="0" cy="0" r="12" fill="url(#cloudGradient)"/>
+        <circle cx="15" cy="0" r="15" fill="url(#cloudGradient)"/>
+        <circle cx="30" cy="0" r="12" fill="url(#cloudGradient)"/>
+        <circle cx="8" cy="-8" r="10" fill="url(#cloudGradient)"/>
+        <circle cx="22" cy="-8" r="10" fill="url(#cloudGradient)"/>
+        <ellipse cx="15" cy="5" rx="20" ry="8" fill="url(#cloudGradient)"/>
+    </g>
+    
+    <!-- Storm cloud with lightning -->
+    <g transform="translate(40, 120)">
+        <animateTransform attributeName="transform" type="translate" 
+            values="40,120; 45,118; 40,120; 35,122; 40,120" 
+            dur="6s" repeatCount="indefinite"/>
+        
+        <!-- Storm cloud -->
+        <circle cx="0" cy="0" r="15" fill="url(#stormCloudGradient)"/>
+        <circle cx="20" cy="0" r="18" fill="url(#stormCloudGradient)"/>
+        <circle cx="40" cy="0" r="15" fill="url(#stormCloudGradient)"/>
+        <circle cx="10" cy="-10" r="12" fill="url(#stormCloudGradient)"/>
+        <circle cx="30" cy="-10" r="12" fill="url(#stormCloudGradient)"/>
+        <ellipse cx="20" cy="8" rx="25" ry="10" fill="url(#stormCloudGradient)"/>
+        
+        <!-- Lightning bolt -->
+        <path d="M15 18 L12 25 L18 25 L15 35 L20 28 L16 28 L19 20 Z" fill="#FFD700">
+            <animate attributeName="opacity" values="0;1;0;1;0" dur="2s" repeatCount="indefinite"/>
+        </path>
+        
+        <!-- Rain -->
+        <g stroke="#4682B4" stroke-width="1" opacity="0.7">
+            <line x1="5" y1="18" x2="3" y2="30">
+                <animate attributeName="y1" values="18;30;18" dur="1s" repeatCount="indefinite"/>
+                <animate attributeName="y2" values="30;42;30" dur="1s" repeatCount="indefinite"/>
+            </line>
+            <line x1="15" y1="20" x2="13" y2="32">
+                <animate attributeName="y1" values="20;32;20" dur="1.2s" repeatCount="indefinite"/>
+                <animate attributeName="y2" values="32;44;32" dur="1.2s" repeatCount="indefinite"/>
+            </line>
+            <line x1="25" y1="18" x2="23" y2="30">
+                <animate attributeName="y1" values="18;30;18" dur="0.8s" repeatCount="indefinite"/>
+                <animate attributeName="y2" values="30;42;30" dur="0.8s" repeatCount="indefinite"/>
+            </line>
+            <line x1="35" y1="20" x2="33" y2="32">
+                <animate attributeName="y1" values="20;32;20" dur="1.1s" repeatCount="indefinite"/>
+                <animate attributeName="y2" values="32;44;32" dur="1.1s" repeatCount="indefinite"/>
+            </line>
+            <line x1="45" y1="18" x2="43" y2="30">
+                <animate attributeName="y1" values="18;30;18" dur="0.9s" repeatCount="indefinite"/>
+                <animate attributeName="y2" values="30;42;30" dur="0.9s" repeatCount="indefinite"/>
+            </line>
+        </g>
+    </g>
+    
+    <!-- Snow cloud -->
+    <g transform="translate(140, 90)">
+        <animateTransform attributeName="transform" type="translate" 
+            values="140,90; 145,88; 140,90; 135,92; 140,90" 
+            dur="7s" repeatCount="indefinite"/>
+        
+        <!-- Snow cloud -->
+        <circle cx="0" cy="0" r="12" fill="url(#cloudGradient)"/>
+        <circle cx="15" cy="0" r="15" fill="url(#cloudGradient)"/>
+        <circle cx="30" cy="0" r="12" fill="url(#cloudGradient)"/>
+        <circle cx="8" cy="-8" r="10" fill="url(#cloudGradient)"/>
+        <circle cx="22" cy="-8" r="10" fill="url(#cloudGradient)"/>
+        <ellipse cx="15" cy="5" rx="20" ry="8" fill="url(#cloudGradient)"/>
+        
+        <!-- Snowflakes -->
+        <g fill="white" opacity="0.9">
+            <g transform="translate(5, 18)">
+                <circle cx="0" cy="0" r="1">
+                    <animate attributeName="cy" values="0;20;0" dur="3s" repeatCount="indefinite"/>
+                </circle>
+                <line x1="-2" y1="0" x2="2" y2="0" stroke="white" stroke-width="0.5">
+                    <animate attributeName="transform" type="rotate" values="0; 360" dur="2s" repeatCount="indefinite"/>
+                </line>
+                <line x1="0" y1="-2" x2="0" y2="2" stroke="white" stroke-width="0.5">
+                    <animate attributeName="transform" type="rotate" values="0; 360" dur="2s" repeatCount="indefinite"/>
+                </line>
+            </g>
+            <g transform="translate(15, 20)">
+                <circle cx="0" cy="0" r="1">
+                    <animate attributeName="cy" values="0;25;0" dur="3.5s" repeatCount="indefinite"/>
+                </circle>
+                <line x1="-2" y1="0" x2="2" y2="0" stroke="white" stroke-width="0.5">
+                    <animate attributeName="transform" type="rotate" values="0; 360" dur="2.5s" repeatCount="indefinite"/>
+                </line>
+                <line x1="0" y1="-2" x2="0" y2="2" stroke="white" stroke-width="0.5">
+                    <animate attributeName="transform" type="rotate" values="0; 360" dur="2.5s" repeatCount="indefinite"/>
+                </line>
+            </g>
+            <g transform="translate(25, 18)">
+                <circle cx="0" cy="0" r="1">
+                    <animate attributeName="cy" values="0;22;0" dur="2.8s" repeatCount="indefinite"/>
+                </circle>
+                <line x1="-2" y1="0" x2="2" y2="0" stroke="white" stroke-width="0.5">
+                    <animate attributeName="transform" type="rotate" values="0; 360" dur="1.8s" repeatCount="indefinite"/>
+                </line>
+                <line x1="0" y1="-2" x2="0" y2="2" stroke="white" stroke-width="0.5">
+                    <animate attributeName="transform" type="rotate" values="0; 360" dur="1.8s" repeatCount="indefinite"/>
+                </line>
+            </g>
+        </g>
+    </g>
+    
+    <!-- Rainbow -->
+    <g transform="translate(100, 160)" opacity="0.8">
+        <path d="M-60 0 Q0 -40 60 0" stroke="url(#rainbowGradient)" stroke-width="8" fill="none"/>
+        <path d="M-55 0 Q0 -35 55 0" stroke="url(#rainbowGradient)" stroke-width="6" fill="none" opacity="0.7"/>
+    </g>
+    
+    <!-- Wind lines -->
+    <g stroke="#87CEEB" stroke-width="2" fill="none" opacity="0.6">
+        <path d="M20 80 Q30 75 40 80">
+            <animate attributeName="d" values="M20 80 Q30 75 40 80; M25 80 Q35 75 45 80; M20 80 Q30 75 40 80" dur="2s" repeatCount="indefinite"/>
+        </path>
+        <path d="M15 90 Q25 85 35 90">
+            <animate attributeName="d" values="M15 90 Q25 85 35 90; M20 90 Q30 85 40 90; M15 90 Q25 85 35 90" dur="2.5s" repeatCount="indefinite"/>
+        </path>
+        <path d="M25 100 Q35 95 45 100">
+            <animate attributeName="d" values="M25 100 Q35 95 45 100; M30 100 Q40 95 50 100; M25 100 Q35 95 45 100" dur="1.8s" repeatCount="indefinite"/>
+        </path>
+    </g>
+    
+    <!-- Thermometer -->
+    <g transform="translate(20, 160)">
+        <!-- Thermometer body -->
+        <rect x="-2" y="-30" width="4" height="35" fill="#E6E6FA" stroke="#4169E1" stroke-width="1" rx="2"/>
+        
+        <!-- Mercury -->
+        <rect x="-1" y="-10" width="2" height="15" fill="#DC143C">
+            <animate attributeName="height" values="15;25;15" dur="4s" repeatCount="indefinite"/>
+            <animate attributeName="y" values="-10;-20;-10" dur="4s" repeatCount="indefinite"/>
+        </rect>
+        
+        <!-- Bulb -->
+        <circle cx="0" cy="8" r="4" fill="#DC143C"/>
+        
+        <!-- Scale marks -->
+        <g stroke="#4169E1" stroke-width="0.5">
+            <line x1="2" y1="-25" x2="4" y2="-25"/>
+            <line x1="2" y1="-20" x2="3" y2="-20"/>
+            <line x1="2" y1="-15" x2="4" y2="-15"/>
+            <line x1="2" y1="-10" x2="3" y2="-10"/>
+            <line x1="2" y1="-5" x2="4" y2="-5"/>
+            <line x1="2" y1="0" x2="3" y2="0"/>
+        </g>
+        
+        <!-- Temperature labels -->
+        <text x="6" y="-23" font-family="Arial, sans-serif" font-size="4" fill="#4169E1">30°</text>
+        <text x="6" y="-13" font-family="Arial, sans-serif" font-size="4" fill="#4169E1">20°</text>
+        <text x="6" y="-3" font-family="Arial, sans-serif" font-size="4" fill="#4169E1">10°</text>
+    </g>
+    
+    <!-- Weather vane -->
+    <g transform="translate(180, 160)">
+        <!-- Pole -->
+        <line x1="0" y1="0" x2="0" y2="20" stroke="#8B4513" stroke-width="2"/>
+        
+        <!-- Arrow -->
+        <g>
+            <animateTransform attributeName="transform" type="rotate" values="0; 45; 90; 135; 180; 225; 270; 315; 360" dur="8s" repeatCount="indefinite"/>
+            <polygon points="0,-15 -3,-10 0,-12 3,-10" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
+            <polygon points="0,10 -5,15 0,12 5,15" fill="#FFD700" stroke="#FFA500" stroke-width="0.5"/>
+            <line x1="0" y1="-15" x2="0" y2="15" stroke="#FFA500" stroke-width="1"/>
+        </g>
+        
+        <!-- Compass directions -->
+        <text x="0" y="-20" font-family="Arial, sans-serif" font-size="6" font-weight="bold" text-anchor="middle" fill="#8B4513">N</text>
+        <text x="18" y="3" font-family="Arial, sans-serif" font-size="6" font-weight="bold" text-anchor="middle" fill="#8B4513">E</text>
+        <text x="0" y="30" font-family="Arial, sans-serif" font-size="6" font-weight="bold" text-anchor="middle" fill="#8B4513">S</text>
+        <text x="-18" y="3" font-family="Arial, sans-serif" font-size="6" font-weight="bold" text-anchor="middle" fill="#8B4513">W</text>
+    </g>
+    
+    <!-- Title -->
+    <text x="100" y="25" font-family="Arial, sans-serif" font-size="12" font-weight="bold" 
+          text-anchor="middle" fill="#4169E1" stroke="white" stroke-width="0.5">WEATHER & CLIMATE</text>
+</svg>

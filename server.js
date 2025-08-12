@@ -50,7 +50,7 @@ const server = http.createServer((req, res) => {
     });
 });
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5001;
 server.listen(PORT, () => {
     console.log(`🚀 Server running at http://localhost:${PORT}/`);
     console.log('📱 Open this URL in your browser to test the app');

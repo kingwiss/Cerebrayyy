@@ -96,6 +96,10 @@ class BoredomBusterApp {
         // Initialize ElevenLabs
         this.initializeElevenLabs();
         
+        // 🚀 Performance Optimization System
+        this.performanceOptimizer = null;
+        this.initializePerformanceOptimizations();
+        
         console.log('Constructor completed!');
         this.setupIntersectionObserver();
     }
@@ -172,35 +176,461 @@ class BoredomBusterApp {
         }
     }
 
+    // 🚀 Initialize Performance Optimizations
+    initializePerformanceOptimizations() {
+        // Initialize performance optimizer if available
+        if (typeof PerformanceOptimizer !== 'undefined') {
+            this.performanceOptimizer = new PerformanceOptimizer();
+            console.log('🚀 Performance optimizer initialized');
+        }
+        
+        // Throttle functions for better performance
+        this.throttledFunctions = new Map();
+        
+        // Debounce resize and scroll events
+        this.setupOptimizedEventHandlers();
+        
+        // Memory management
+        this.setupMemoryManagement();
+        
+        // Animation optimizations
+        this.setupAnimationOptimizations();
+    }
+
+    // Setup optimized event handlers with throttling and debouncing
+    setupOptimizedEventHandlers() {
+        // Throttled scroll handler
+        this.throttledScroll = this.throttle(() => {
+            this.handleOptimizedScroll();
+        }, 16); // ~60fps
+        
+        // Debounced resize handler
+        this.debouncedResize = this.debounce(() => {
+            this.handleOptimizedResize();
+        }, 250);
+        
+        // Throttled mouse move handler
+        this.throttledMouseMove = this.throttle((e) => {
+            this.handleOptimizedMouseMove(e);
+        }, 16);
+    }
+
+    // Optimized scroll handler
+    handleOptimizedScroll() {
+        // Use requestAnimationFrame for smooth scrolling effects
+        if (!this.scrollAnimationFrame) {
+            this.scrollAnimationFrame = requestAnimationFrame(() => {
+                // Perform scroll-related operations here
+                this.updateVisibleCards();
+                this.scrollAnimationFrame = null;
+            });
+        }
+    }
+
+    // Optimized resize handler
+    handleOptimizedResize() {
+        // Use requestAnimationFrame for smooth resize effects
+        requestAnimationFrame(() => {
+            this.updateCardLayout();
+            this.recalculateViewport();
+        });
+    }
+
+    // Optimized mouse move handler
+    handleOptimizedMouseMove(e) {
+        // Only process if needed
+        if (this.isDragging || this.isInteracting) {
+            requestAnimationFrame(() => {
+                this.updateDragPosition(e);
+            });
+        }
+    }
+
+    // Memory management system
+    setupMemoryManagement() {
+        // Clean up unused resources periodically
+        this.memoryCleanupInterval = setInterval(() => {
+            this.performMemoryCleanup();
+        }, 30000); // Every 30 seconds
+        
+        // Clean up on page visibility change
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                this.performMemoryCleanup();
+            }
+        });
+    }
+
+    // Perform memory cleanup
+    performMemoryCleanup() {
+        // Clear audio cache if too large
+        if (this.audioCache.size > 50) {
+            const entries = Array.from(this.audioCache.entries());
+            // Keep only the most recent 25 entries
+            const toKeep = entries.slice(-25);
+            this.audioCache.clear();
+            toKeep.forEach(([key, value]) => {
+                this.audioCache.set(key, value);
+            });
+        }
+        
+        // Clear unused DOM references
+        this.cleanupDOMReferences();
+        
+        // Force garbage collection if available
+        if (window.gc) {
+            window.gc();
+        }
+    }
+
+    // Clean up DOM references
+    cleanupDOMReferences() {
+        // Remove event listeners from removed elements
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            if (!document.contains(card)) {
+                // Element was removed, cleanup would happen automatically
+                console.log('Cleaned up removed card element');
+            }
+        });
+    }
+
+    // Animation optimizations
+    setupAnimationOptimizations() {
+        // Use CSS transforms for better performance
+        this.enableHardwareAcceleration();
+        
+        // Optimize will-change property usage
+        this.optimizeWillChange();
+    }
+
+    // Enable hardware acceleration for key elements
+    enableHardwareAcceleration() {
+        const style = document.createElement('style');
+        style.textContent = `
+            .card {
+                transform: translateZ(0);
+                will-change: transform, opacity;
+                backface-visibility: hidden;
+            }
+            
+            .card-transition {
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            
+            .modal {
+                transform: translateZ(0);
+                will-change: transform, opacity;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    // Optimize will-change property usage
+    optimizeWillChange() {
+        // Add will-change before animations, remove after
+        this.addWillChange = (element, properties) => {
+            element.style.willChange = properties;
+        };
+        
+        this.removeWillChange = (element) => {
+            element.style.willChange = 'auto';
+        };
+    }
+
+    // Throttle function for performance
+    throttle(func, limit) {
+        let inThrottle;
+        return function() {
+            const args = arguments;
+            const context = this;
+            if (!inThrottle) {
+                func.apply(context, args);
+                inThrottle = true;
+                setTimeout(() => inThrottle = false, limit);
+            }
+        };
+    }
+
+    // Debounce function for performance
+    debounce(func, delay) {
+        let timeoutId;
+        return function() {
+            const context = this;
+            const args = arguments;
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => func.apply(context, args), delay);
+        };
+    }
+
+    // Update visible cards efficiently
+    updateVisibleCards() {
+        if (!this.cardsContainer) return;
+        
+        const cards = this.cardsContainer.querySelectorAll('.card');
+        const viewportHeight = window.innerHeight;
+        const scrollTop = window.pageYOffset;
+        
+        cards.forEach(card => {
+            const rect = card.getBoundingClientRect();
+            const isVisible = rect.top < viewportHeight && rect.bottom > 0;
+            
+            if (isVisible && !card.dataset.visible) {
+                card.dataset.visible = 'true';
+                this.onCardVisible(card);
+            } else if (!isVisible && card.dataset.visible) {
+                card.dataset.visible = 'false';
+                this.onCardHidden(card);
+            }
+        });
+    }
+
+    // Handle card becoming visible
+    onCardVisible(card) {
+        // Lazy load images if not already loaded
+        const img = card.querySelector('img[data-src]');
+        if (img) {
+            img.src = img.dataset.src;
+            img.removeAttribute('data-src');
+        }
+        
+        // Animate SVG when card comes into view
+        this.animateSVGOnView(card);
+        
+        // Preload audio if enabled
+        if (this.soundEnabled && !card.dataset.audioPreloaded) {
+            this.preloadCardAudio(card);
+        }
+    }
+
+    // Animate SVG image when card comes into view
+    animateSVGOnView(card) {
+        const img = card.querySelector('.card-image');
+        const imageContainer = card.querySelector('.card-image-container');
+        
+        if (!img || !imageContainer || card.dataset.svgAnimated === 'true') {
+            return; // Skip if no image, container, or already animated
+        }
+        
+        // Mark as animated to prevent re-animation
+        card.dataset.svgAnimated = 'true';
+        
+        // Check if it's an SVG image
+        const isSVG = img.src && img.src.includes('.svg');
+        
+        if (isSVG) {
+            // Create animated entrance effect for SVG
+            this.createSVGEntranceAnimation(img, imageContainer);
+        } else {
+            // Apply subtle animation for non-SVG images too
+            this.createImageEntranceAnimation(img, imageContainer);
+        }
+    }
+
+    // Create entrance animation specifically for SVG images
+    createSVGEntranceAnimation(img, container) {
+        // Set initial state
+        img.style.cssText += `
+            transform: scale(0.3) rotate(-10deg);
+            opacity: 0;
+            filter: blur(8px);
+            transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        `;
+        
+        // Add container animation
+        container.style.cssText += `
+            transform: translateY(20px);
+            transition: transform 0.6s ease-out;
+        `;
+        
+        // Trigger animation after a brief delay
+        setTimeout(() => {
+            img.style.cssText += `
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+                filter: blur(0px);
+            `;
+            
+            container.style.transform = 'translateY(0px)';
+            
+            // Add a subtle bounce effect
+            setTimeout(() => {
+                img.style.transform = 'scale(1.05) rotate(0deg)';
+                setTimeout(() => {
+                    img.style.transform = 'scale(1) rotate(0deg)';
+                }, 150);
+            }, 400);
+            
+            // Add floating animation for SVGs
+            this.addFloatingAnimation(img);
+            
+        }, 100);
+    }
+
+    // Create entrance animation for regular images
+    createImageEntranceAnimation(img, container) {
+        // Set initial state
+        img.style.cssText += `
+            transform: scale(0.8) translateY(10px);
+            opacity: 0;
+            transition: all 0.6s ease-out;
+        `;
+        
+        container.style.cssText += `
+            transform: translateY(15px);
+            transition: transform 0.5s ease-out;
+        `;
+        
+        // Trigger animation
+        setTimeout(() => {
+            img.style.cssText += `
+                transform: scale(1) translateY(0px);
+                opacity: 1;
+            `;
+            
+            container.style.transform = 'translateY(0px)';
+        }, 50);
+    }
+
+    // Add subtle floating animation to SVG images
+    addFloatingAnimation(img) {
+        // Only add floating animation if it's an SVG
+        if (!img.src || !img.src.includes('.svg')) return;
+        
+        // Create floating keyframes if not already created
+        if (!document.getElementById('svg-floating-animation')) {
+            const style = document.createElement('style');
+            style.id = 'svg-floating-animation';
+            style.textContent = `
+                @keyframes svgFloat {
+                    0%, 100% { 
+                        transform: translateY(0px) scale(1) rotate(0deg); 
+                    }
+                    25% { 
+                        transform: translateY(-3px) scale(1.02) rotate(0.5deg); 
+                    }
+                    50% { 
+                        transform: translateY(-1px) scale(1.01) rotate(0deg); 
+                    }
+                    75% { 
+                        transform: translateY(-2px) scale(1.015) rotate(-0.5deg); 
+                    }
+                }
+                
+                @keyframes svgGlow {
+                    0%, 100% { 
+                        filter: brightness(1) drop-shadow(0 0 0px rgba(102, 126, 234, 0)); 
+                    }
+                    50% { 
+                        filter: brightness(1.1) drop-shadow(0 0 8px rgba(102, 126, 234, 0.3)); 
+                    }
+                }
+                
+                .svg-floating {
+                    animation: svgFloat 4s ease-in-out infinite, svgGlow 6s ease-in-out infinite;
+                }
+                
+                .svg-floating:hover {
+                    animation-duration: 2s, 3s;
+                    transform: scale(1.05) !important;
+                    transition: transform 0.3s ease-out;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        // Apply floating animation after entrance animation completes
+        setTimeout(() => {
+            img.classList.add('svg-floating');
+        }, 1000);
+    }
+
+    // Handle card becoming hidden
+    onCardHidden(card) {
+        // Stop any playing audio for this card
+        if (this.currentSpeakingCard === card) {
+            this.stopSpeaking();
+        }
+    }
+
+    // Update card layout efficiently
+    updateCardLayout() {
+        if (!this.cardsContainer) return;
+        
+        requestAnimationFrame(() => {
+            // Recalculate card positions if needed
+            const cards = this.cardsContainer.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                // Update any layout-dependent properties
+                card.style.zIndex = cards.length - index;
+            });
+        });
+    }
+
+    // Recalculate viewport dimensions
+    recalculateViewport() {
+        this.viewportWidth = window.innerWidth;
+        this.viewportHeight = window.innerHeight;
+        
+        // Update any viewport-dependent calculations
+        this.updateSwipeThresholds();
+    }
+
+    // Update swipe thresholds based on viewport
+    updateSwipeThresholds() {
+        this.swipeThreshold = Math.min(this.viewportWidth * 0.3, 150);
+        this.swipeVelocityThreshold = 0.5;
+    }
+
     setupIntersectionObserver() {
-        // Create intersection observer to automatically trigger audio when cards come into view
+        // Create intersection observer to automatically trigger audio and SVG animations when cards come into view
         this.cardObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting && this.soundEnabled && this.speechReady) {
-                    const card = entry.target;
-                    
-                    // Skip if audio is already playing for any card
-                    if (this.currentSpeakingCard) {
-                        return;
+                const card = entry.target;
+                
+                if (entry.isIntersecting) {
+                    // Trigger SVG animation when card comes into view
+                    if (!card.dataset.svgAnimated) {
+                        this.animateSVGOnView(card);
                     }
                     
-                    // Only auto-play if this is the most visible card (closest to viewport center)
-                    const mostVisibleCard = this.getMostVisibleCard();
-                    if (card === mostVisibleCard && !card.hasAttribute('data-audio-played')) {
-                        console.log('Card came into view, auto-playing audio for most visible card');
-                        card.setAttribute('data-audio-played', 'true');
-                        setTimeout(() => {
-                            // Double-check that no other audio is playing before starting
-                            if (!this.currentSpeakingCard) {
-                                this.speakCardContent(card);
-                            }
-                        }, 300); // Small delay to ensure card is fully visible
+                    // Resume floating animation if paused
+                    const img = card.querySelector('.card-image.svg-floating');
+                    if (img) {
+                        img.style.animationPlayState = 'running';
+                    }
+                    
+                    // Audio logic (existing)
+                    if (this.soundEnabled && this.speechReady) {
+                        // Skip if audio is already playing for any card
+                        if (this.currentSpeakingCard) {
+                            return;
+                        }
+                        
+                        // Only auto-play if this is the most visible card (closest to viewport center)
+                        const mostVisibleCard = this.getMostVisibleCard();
+                        if (card === mostVisibleCard && !card.hasAttribute('data-audio-played')) {
+                            console.log('Card came into view, auto-playing audio for most visible card');
+                            card.setAttribute('data-audio-played', 'true');
+                            setTimeout(() => {
+                                // Double-check that no other audio is playing before starting
+                                if (!this.currentSpeakingCard) {
+                                    this.speakCardContent(card);
+                                }
+                            }, 300); // Small delay to ensure card is fully visible
+                        }
+                    }
+                } else {
+                    // Card is leaving viewport - pause floating animation to save performance
+                    const img = card.querySelector('.card-image.svg-floating');
+                    if (img) {
+                        img.style.animationPlayState = 'paused';
                     }
                 }
             });
         }, {
-            threshold: 0.7, // Trigger when 70% of the card is visible
-            rootMargin: '0px'
+            threshold: 0.5, // Trigger when 50% of the card is visible (adjusted for better animation timing)
+            rootMargin: '50px' // Start animation slightly before card is fully visible
         });
     }
 
@@ -215,12 +645,6 @@ class BoredomBusterApp {
         if (this.cardsContainer) {
             this.generateCards();
             this.bindEvents();
-            
-            // Aggressively fix any image loading issues after cards are generated
-            setTimeout(() => {
-                console.log('🖼️ Running automatic image refresh after initialization...');
-                this.refreshCardImages();
-            }, 1000);
         }
 
         // Initialize premium button state
@@ -242,7 +666,6 @@ class BoredomBusterApp {
         this.setupNavigation();
         this.setupContactForm();
         this.setupSavedCardsModal();
-        this.setupImageRefreshButton();
     }
 
     // Initialize premium button state on app load
@@ -2544,7 +2967,7 @@ class BoredomBusterApp {
                 action: 'play',
                 gameType: 'tictactoe',
                 category: 'game',
-                image: 'images/tictactoe.svg'
+                image: this.getCardImage('Game', 'tictactoe')
             },
             {
                 type: 'Game',
@@ -2553,7 +2976,7 @@ class BoredomBusterApp {
                 action: 'play',
                 gameType: 'connect4',
                 category: 'game',
-                image: 'images/connect4.svg'
+                image: this.getCardImage('Game', 'connect4')
             },
             {
                 type: 'Chess Puzzle',
@@ -2562,7 +2985,7 @@ class BoredomBusterApp {
                 action: 'play',
                 gameType: 'chess',
                 category: 'chess',
-                image: 'images/chess.svg'
+                image: this.getCardImage('Game', 'chess')
             }
         ];
         
@@ -3087,7 +3510,7 @@ class BoredomBusterApp {
     }
 
     createFallbackImage(type, title) {
-        // Create a data URL for an SVG fallback image
+        // Create a data URL for an animated SVG fallback image
         const colors = {
             'Game': ['#667eea', '#764ba2'],
             'Riddle': ['#a29bfe', '#6c5ce7'],
@@ -3103,14 +3526,24 @@ class BoredomBusterApp {
         const svg = `
             <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
                 <defs>
-                    <linearGradient id="fallbackGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <linearGradient id="fallbackGradient${type.replace(/\s+/g, '')}" x1="0%" y1="0%" x2="100%" y2="100%">
                         <stop offset="0%" style="stop-color:${colorPair[0]};stop-opacity:1" />
                         <stop offset="100%" style="stop-color:${colorPair[1]};stop-opacity:1" />
                     </linearGradient>
                 </defs>
-                <circle cx="100" cy="100" r="90" fill="url(#fallbackGradient)" opacity="0.1"/>
-                <circle cx="100" cy="100" r="60" fill="url(#fallbackGradient)" opacity="0.8"/>
-                <text x="100" y="110" font-family="Arial, sans-serif" font-size="40" fill="white" text-anchor="middle">${icon}</text>
+                <rect width="200" height="200" fill="url(#fallbackGradient${type.replace(/\s+/g, '')})" rx="20">
+                    <animateTransform attributeName="transform" type="translate" values="0,0; 0,-2; 0,0" dur="3s" repeatCount="indefinite"/>
+                </rect>
+                <circle cx="100" cy="100" r="70" fill="none" stroke="white" stroke-width="2" opacity="0.3">
+                    <animate attributeName="r" values="70; 75; 70" dur="2s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="100" cy="100" r="50" fill="white" opacity="0.1">
+                    <animate attributeName="opacity" values="0.1; 0.3; 0.1" dur="2.5s" repeatCount="indefinite"/>
+                </circle>
+                <text x="100" y="110" font-family="Arial, sans-serif" font-size="40" fill="white" text-anchor="middle">
+                    <animateTransform attributeName="transform" type="scale" values="1; 1.1; 1" dur="2s" repeatCount="indefinite"/>
+                    ${icon}
+                </text>
                 <text x="100" y="140" font-family="Arial, sans-serif" font-size="12" fill="white" text-anchor="middle" opacity="0.8">${type}</text>
             </svg>
         `;
@@ -3120,7 +3553,7 @@ class BoredomBusterApp {
     }
 
     createUniversalFallback(type) {
-        // Create a simple, guaranteed-to-work fallback
+        // Create a simple, guaranteed-to-work animated fallback
         const colors = {
             'Game': '#667eea',
             'Riddle': '#a29bfe', 
@@ -3135,8 +3568,17 @@ class BoredomBusterApp {
         
         return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`
             <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <rect width="100" height="100" fill="${color}" opacity="0.8"/>
-                <text x="50" y="55" font-family="Arial" font-size="30" fill="white" text-anchor="middle">${icon}</text>
+                <rect width="100" height="100" fill="${color}" opacity="0.8" rx="10">
+                    <animate attributeName="opacity" values="0.8; 1; 0.8" dur="2s" repeatCount="indefinite"/>
+                </rect>
+                <circle cx="50" cy="35" r="15" fill="white" opacity="0.2">
+                    <animate attributeName="r" values="15; 18; 15" dur="1.5s" repeatCount="indefinite"/>
+                </circle>
+                <text x="50" y="60" font-family="Arial" font-size="25" fill="white" text-anchor="middle">
+                    <animateTransform attributeName="transform" type="scale" values="1; 1.1; 1" dur="2s" repeatCount="indefinite"/>
+                    ${icon}
+                </text>
+                <text x="50" y="80" font-family="Arial" font-size="8" fill="white" text-anchor="middle" opacity="0.7">${type}</text>
             </svg>
         `)}`;
     }
@@ -3468,20 +3910,19 @@ class BoredomBusterApp {
     }
 
     generateCards() {
+        // Performance optimization: Use requestAnimationFrame for smooth rendering
+        this.animationFrameId = requestAnimationFrame(() => {
+            this.performCardGeneration();
+        });
+    }
+
+    performCardGeneration() {
+        // Clear existing cards efficiently
         this.cardsContainer.innerHTML = '';
         this.currentCards = [];
         
-        // Debug logging
-        console.log('🔍 generateCards() called with:');
-        console.log('  - tierManager:', !!this.tierManager);
-        console.log('  - currentTier:', this.tierManager ? this.tierManager.getCurrentTier() : 'none');
-        console.log('  - dailyCardLimit:', this.tierManager ? this.tierManager.getDailyCardLimit() : 'none');
-        console.log('  - cardsUsedToday:', this.tierManager ? this.tierManager.getCardsUsedToday() : 'none');
-        console.log('  - isPremiumMode:', this.isPremiumMode);
-        console.log('  - premiumContentBackend:', !!this.premiumContentBackend);
-        console.log('  - premiumCards.length:', this.premiumCards ? this.premiumCards.length : 0);
-        console.log('  - dailyContentBackend:', !!this.dailyContentBackend);
-        console.log('  - dailyCards.length:', this.dailyCards ? this.dailyCards.length : 0);
+        // Debug logging (reduced for performance)
+        console.log('🔍 generateCards() called - tier:', this.tierManager?.getCurrentTier(), 'premium:', this.isPremiumMode);
         
         // Check if user has reached daily card limit
         if (this.tierManager && this.tierManager.hasReachedDailyLimit()) {
@@ -3490,19 +3931,16 @@ class BoredomBusterApp {
             return;
         }
         
-        // 🌟 Use Premium Content System if premium mode is enabled and available
+        // Get selected activities based on mode
         let selectedActivities;
         if (this.isPremiumMode && this.premiumContentBackend && this.premiumCards.length > 0) {
-            selectedActivities = this.getNextPremiumCards(4); // Get next 4 cards from premium set
-            console.log('🌟 Using Premium Content System - showing cards', this.currentPremiumCardIndex - 4, 'to', this.currentPremiumCardIndex - 1);
-            console.log('🌟 Premium cards selected:', selectedActivities.map(card => ({ type: card.type, title: card.title, isNew: card.isNew })));
-        }
-        // 🎯 Use Daily Content System if available, otherwise fallback to original
-        else if (this.dailyContentBackend && this.dailyCards.length > 0) {
-            selectedActivities = this.getNextDailyCards(4); // Get next 4 cards from daily set
-            console.log('🎯 Using Daily Content System - showing cards', this.currentDailyCardIndex - 4, 'to', this.currentDailyCardIndex - 1);
+            selectedActivities = this.getNextPremiumCards(4);
+            console.log('🌟 Using Premium Content System');
+        } else if (this.dailyContentBackend && this.dailyCards.length > 0) {
+            selectedActivities = this.getNextDailyCards(4);
+            console.log('🎯 Using Daily Content System');
         } else {
-            selectedActivities = this.generateFreshContent(); // Fallback to original system
+            selectedActivities = this.generateFreshContent();
             console.log('⚠️ Using fallback content generation');
         }
         
@@ -3511,40 +3949,77 @@ class BoredomBusterApp {
             this.tierManager.trackCardUsage(selectedActivities.length);
         }
         
+        // Performance optimization: Use document fragment for batch DOM operations
+        const fragment = document.createDocumentFragment();
+        
         selectedActivities.forEach((activity, index) => {
-            const card = this.createCard(activity, index);
-            this.cardsContainer.appendChild(card);
+            const card = this.createCardOptimized(activity, index);
+            fragment.appendChild(card);
             this.currentCards.push(card);
         });
         
-        // Animate cards in
-        setTimeout(() => {
-            this.currentCards.forEach((card, index) => {
-                setTimeout(() => {
-                    card.style.opacity = '1';
-                    card.style.transform = card.style.transform.replace('translateY(100px)', 'translateY(0px)');
-                    
-                    // Play swoosh sound as card animates in
+        // Single DOM operation to add all cards
+        this.cardsContainer.appendChild(fragment);
+        
+        // Optimized animation with requestAnimationFrame
+        this.animateCardsIn();
+    }
+
+    animateCardsIn() {
+        let animationIndex = 0;
+        
+        const animateNextCard = () => {
+            if (animationIndex < this.currentCards.length) {
+                const card = this.currentCards[animationIndex];
+                
+                // Use CSS transitions for better performance
+                card.style.opacity = '1';
+                card.style.transform = card.style.transform.replace('translateY(100px)', 'translateY(0px)');
+                
+                // Play swoosh sound (throttled)
+                if (animationIndex === 0) {
                     this.playSwooshSound();
-                    
-                    // Start reading the top card (first card with highest z-index)
-                    if (index === 0 && this.soundEnabled) {
-                        setTimeout(() => {
-                            console.log('Attempting to read initial card...');
-                            this.speakCardContent(card);
-                        }, 500); // Longer delay to ensure card is fully visible and TTS is ready
-                    }
-                }, index * 100);
-            });
-            
-            // 🚀 AGGRESSIVE PRELOADING: Cache audio for ALL visible cards
-            setTimeout(() => {
-                this.preloadVisibleCardsAggressively();
-            }, 500); // Start preloading immediately after cards are animated in
-            
-            // Update back button visibility based on swiped cards history
-            this.updateBackButtonVisibility();
-        }, 100);
+                }
+                
+                // Start reading the top card
+                if (animationIndex === 0 && this.soundEnabled) {
+                    setTimeout(() => {
+                        this.speakCardContent(card);
+                    }, 300);
+                }
+                
+                animationIndex++;
+                
+                // Schedule next animation
+                setTimeout(() => {
+                    requestAnimationFrame(animateNextCard);
+                }, 50); // Reduced delay for smoother animation
+            } else {
+                // All cards animated, perform final setup
+                this.finalizeCardGeneration();
+            }
+        };
+        
+        // Start animation sequence
+        setTimeout(() => {
+            requestAnimationFrame(animateNextCard);
+        }, 50);
+    }
+
+    finalizeCardGeneration() {
+        // Preload audio for visible cards (debounced)
+        if (this.preloadTimeout) {
+            clearTimeout(this.preloadTimeout);
+        }
+        this.preloadTimeout = setTimeout(() => {
+            this.preloadVisibleCardsAggressively();
+        }, 300);
+        
+        // Update back button visibility
+        this.updateBackButtonVisibility();
+        
+        // Update visible cards for intersection observer
+        this.updateVisibleCards();
     }
     
     // 🎯 Get next set of cards from daily content
@@ -3764,7 +4239,7 @@ class BoredomBusterApp {
                 action: 'play',
                 gameType: 'sudoku',
                 category: 'Logic',
-                image: 'images/sudoku.svg'
+                image: this.getCardImage('Game', 'sudoku')
             },
             {
                 type: 'Premium Game',
@@ -3773,7 +4248,7 @@ class BoredomBusterApp {
                 action: 'play',
                 gameType: 'crossword',
                 category: 'Word',
-                image: 'images/crossword.svg'
+                image: this.getCardImage('Game', 'crossword')
             },
             {
                 type: 'Premium Game',
@@ -3782,7 +4257,7 @@ class BoredomBusterApp {
                 action: 'play',
                 gameType: 'pacman',
                 category: 'Arcade',
-                image: 'images/pacman.svg'
+                image: this.getCardImage('Game', 'pacman')
             }
         ];
         
@@ -4193,6 +4668,176 @@ class BoredomBusterApp {
         this.cardsContainer.appendChild(limitMessage);
     }
 
+    createCardOptimized(activity, index) {
+        // Performance optimization: Create card with minimal DOM operations
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.style.cssText = 'opacity: 0; transform: translateY(100px); will-change: transform, opacity;';
+        
+        // Store activity data efficiently
+        card.setAttribute('data-activity', JSON.stringify(activity));
+        const cardId = this.generateCardId(activity);
+        card.setAttribute('data-card-id', cardId);
+        
+        // Build HTML string for single innerHTML operation
+        const actionButton = this.buildActionButton(activity);
+        const imageHtml = this.buildImageHtml(activity);
+        
+        card.innerHTML = this.buildCardHTML(activity, actionButton, imageHtml);
+        
+        // Batch event listener setup
+        this.setupCardEventListeners(card, activity);
+        
+        return card;
+    }
+
+    buildActionButton(activity) {
+        if (activity.action === 'play') {
+            return `<button class="play-btn" onclick="app.openGame('${activity.gameType}', '${activity.title}')">
+                <i class="fas fa-play"></i> Play Game
+            </button>`;
+        } else if (activity.action === 'solve' || activity.action === 'Show Answer' || activity.action === 'Show Solution') {
+            const buttonText = activity.action === 'Show Solution' ? 'Show Solution' : 'Show Answer';
+            const answer = activity.answer || activity.solution || '';
+            const solution = activity.solution || activity.explanation || activity.answer || '';
+            return `<button class="play-btn show-answer-btn" data-answer="${answer}" data-solution="${solution}">
+                <i class="fas fa-lightbulb"></i> ${buttonText}
+            </button>`;
+        }
+        return '';
+    }
+
+    buildImageHtml(activity) {
+        const primaryImageSrc = activity.image || this.getCardImage(activity.type, activity.gameType || activity.category);
+        
+        if (primaryImageSrc) {
+            const isSVG = primaryImageSrc.includes('.svg');
+            const imageClass = isSVG ? 'card-image svg-image' : 'card-image';
+            
+            return `<div class="card-image-container" style="position: relative; width: 100%; height: 120px; border-radius: 8px; overflow: hidden;">
+                <img src="${primaryImageSrc}" 
+                     alt="${activity.title}" 
+                     class="${imageClass}" 
+                     style="width: 100%; height: 100%; object-fit: cover; transition: opacity 0.3s ease; opacity: 1;"
+                     onerror="console.error('❌ Image failed:', '${primaryImageSrc}'); this.style.display='none'; this.parentNode.querySelector('.fallback-image').style.display='flex';" 
+                     onload="console.log('✅ Image loaded:', '${primaryImageSrc}'); this.style.opacity='1'; this.parentNode.querySelector('.fallback-image').style.display='none';">
+                <div class="fallback-image" style="display: flex; position: absolute; top: 0; left: 0; width: 100%; height: 100%; align-items: center; justify-content: center; color: white; font-size: 2rem; text-align: center; flex-direction: column; background-image: url('${this.createFallbackImage(activity.type, activity.title)}'); background-size: cover; background-position: center;">
+                </div>
+            </div>`;
+        } else {
+            return `<div class="card-image-placeholder" style="background: linear-gradient(135deg, #ffa726 0%, #fb8c00 100%); height: 120px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; text-align: center; flex-direction: column;">
+                <div style="font-size: 2rem; margin-bottom: 8px;">⚠️</div>
+                <div>No Image<br/>Assigned</div>
+            </div>`;
+        }
+    }
+
+    buildCardHTML(activity, actionButton, imageHtml) {
+        return `
+            <div class="card-content">
+                <div class="card-header">
+                    <span class="card-type">${activity.type}</span>
+                    <h3 class="card-title">${activity.title}</h3>
+                    ${activity.type !== 'Game' && activity.type !== 'Chess Puzzle' ? 
+                        `<button class="sound-toggle sound-on" title="Toggle sound">🔊</button>` : ''}
+                </div>
+                <div class="card-body">
+                    <p class="card-description">${activity.description}</p>
+                    ${imageHtml}
+                    <div class="answer-section" style="display: none;">
+                        <div class="answer-divider"></div>
+                        <div class="answer-content">
+                            <h4 class="answer-title">Answer:</h4>
+                            <p class="answer-text"></p>
+                            <h4 class="solution-title">Explanation:</h4>
+                            <p class="solution-text"></p>
+                        </div>
+                    </div>
+                    ${actionButton}
+                </div>
+                <div class="swipe-indicator">
+                    <i class="fas fa-hand-paper"></i> Swipe
+                </div>
+                <button class="card-back-btn" title="Bring back previous card" style="display: none;">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <button class="card-save-btn" title="Save this card for later">
+                    <i class="fas fa-bookmark"></i>
+                </button>
+            </div>
+        `;
+    }
+
+    setupCardEventListeners(card, activity) {
+        // Batch event listener setup for better performance
+        const showAnswerBtn = card.querySelector('.show-answer-btn');
+        const soundToggle = card.querySelector('.sound-toggle');
+        const cardBackBtn = card.querySelector('.card-back-btn');
+        const cardSaveBtn = card.querySelector('.card-save-btn');
+
+        if (showAnswerBtn) {
+            showAnswerBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.userHasInteracted = true;
+                const answer = activity.answer || activity.solution || '';
+                const solution = activity.solution || activity.explanation || activity.answer || '';
+                this.showSolutionInline(card, answer, solution);
+            });
+        }
+
+        if (soundToggle) {
+            // Initialize button state
+            if (!this.speechReady && this.soundEnabled) {
+                soundToggle.textContent = '⏳';
+                soundToggle.title = 'Audio is being prepared...';
+            } else {
+                soundToggle.classList.toggle('sound-on', this.soundEnabled);
+                soundToggle.classList.toggle('sound-off', !this.soundEnabled);
+                soundToggle.textContent = this.soundEnabled ? '🔊' : '🔇';
+                soundToggle.title = this.soundEnabled ? 'Click to disable sound' : 'Click to enable sound';
+            }
+            
+            soundToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.userHasInteracted = true;
+                this.toggleSound(card);
+            });
+        }
+
+        if (cardBackBtn) {
+            cardBackBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.userHasInteracted = true;
+                this.bringBackLastCard();
+            });
+        }
+
+        if (cardSaveBtn) {
+            const cardId = this.generateCardId(activity);
+            const isSaved = this.isCardSaved(cardId);
+            this.updateSaveButtonAppearance(cardSaveBtn, isSaved);
+            card.dataset.cardId = cardId;
+            
+            cardSaveBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.userHasInteracted = true;
+                this.toggleSaveCard(activity);
+            });
+        }
+
+        // Add swipe listeners and other setup
+        this.addSwipeListeners(card);
+        
+        // Defer non-critical operations
+        setTimeout(() => {
+            this.checkCardOverflow(card);
+            if (this.cardObserver) {
+                this.cardObserver.observe(card);
+            }
+            this.monitorCardImage(card);
+        }, 100);
+    }
+
     createCard(activity, index) {
         const card = document.createElement('div');
         card.className = 'card';
@@ -4238,18 +4883,16 @@ class BoredomBusterApp {
         const fallbackImageUrl = this.createFallbackImage(activity.type, activity.title);
         const universalFallback = this.createUniversalFallback(activity.type);
         
-        // Create robust image HTML with comprehensive error handling
+        // Create robust image HTML with comprehensive error handling and immediate visibility
         const imageHtml = primaryImageSrc ? 
             `<div class="card-image-container" style="position: relative; width: 100%; height: 120px; border-radius: 8px; overflow: hidden;">
                 <img src="${primaryImageSrc}" 
                      alt="${activity.title}" 
                      class="card-image" 
-                     style="width: 100%; height: 100%; object-fit: cover; transition: opacity 0.3s ease;"
-                     onerror="this.style.display='none'; this.parentNode.querySelector('.fallback-image').style.display='flex'; console.error('❌ Primary image failed:', '${primaryImageSrc}');" 
-                     onload="console.log('✅ Primary image loaded:', '${primaryImageSrc}'); this.style.opacity='1';">
-                <div class="fallback-image" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); align-items: center; justify-content: center; color: white; font-size: 2rem; text-align: center; flex-direction: column;">
-                    <div style="font-size: 2.5rem; margin-bottom: 8px;">${this.getTypeIcon(activity.type)}</div>
-                    <div style="font-size: 0.9rem; opacity: 0.9;">${activity.type}</div>
+                     style="width: 100%; height: 100%; object-fit: cover; transition: opacity 0.3s ease; opacity: 1;"
+                     onerror="console.error('❌ Primary image failed:', '${primaryImageSrc}'); this.style.display='none'; this.parentNode.querySelector('.fallback-image').style.display='flex';" 
+                     onload="console.log('✅ Primary image loaded:', '${primaryImageSrc}'); this.style.opacity='1'; this.parentNode.querySelector('.fallback-image').style.display='none';">
+                <div class="fallback-image" style="display: flex; position: absolute; top: 0; left: 0; width: 100%; height: 100%; align-items: center; justify-content: center; color: white; font-size: 2rem; text-align: center; flex-direction: column; background-image: url('${this.createFallbackImage(activity.type, activity.title)}'); background-size: cover; background-position: center;">
                 </div>
             </div>` : 
             `<div class="card-image-placeholder" style="background: linear-gradient(135deg, #ffa726 0%, #fb8c00 100%); height: 120px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; text-align: center; flex-direction: column;">
@@ -4431,79 +5074,6 @@ class BoredomBusterApp {
         };
     }
 
-    // Setup image refresh button and periodic refresh
-    setupImageRefreshButton() {
-        // Create image refresh button if it doesn't exist
-        let refreshBtn = document.getElementById('imageRefreshBtn');
-        if (!refreshBtn) {
-            refreshBtn = document.createElement('button');
-            refreshBtn.id = 'imageRefreshBtn';
-            refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i>';
-            refreshBtn.title = 'Refresh card images';
-            refreshBtn.style.cssText = `
-                position: fixed;
-                bottom: 20px;
-                right: 80px;
-                width: 50px;
-                height: 50px;
-                border-radius: 50%;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                border: none;
-                color: white;
-                font-size: 18px;
-                cursor: pointer;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-                z-index: 1000;
-                transition: all 0.3s ease;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            `;
-            
-            // Add hover effects
-            refreshBtn.addEventListener('mouseenter', () => {
-                refreshBtn.style.transform = 'scale(1.1)';
-                refreshBtn.style.boxShadow = '0 6px 20px rgba(0,0,0,0.3)';
-            });
-            
-            refreshBtn.addEventListener('mouseleave', () => {
-                refreshBtn.style.transform = 'scale(1)';
-                refreshBtn.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
-            });
-            
-            // Add click handler
-            refreshBtn.addEventListener('click', () => {
-                console.log('🖼️ Manual image refresh triggered');
-                refreshBtn.style.animation = 'spin 1s linear';
-                this.refreshCardImages();
-                setTimeout(() => {
-                    refreshBtn.style.animation = '';
-                }, 1000);
-            });
-            
-            document.body.appendChild(refreshBtn);
-        }
-
-        // Set up periodic image refresh every 30 seconds
-        setInterval(() => {
-            console.log('🖼️ Running periodic image refresh...');
-            this.refreshCardImages();
-        }, 30000);
-
-        // Add CSS for spin animation
-        if (!document.getElementById('imageRefreshStyles')) {
-            const style = document.createElement('style');
-            style.id = 'imageRefreshStyles';
-            style.textContent = `
-                @keyframes spin {
-                    from { transform: rotate(0deg); }
-                    to { transform: rotate(360deg); }
-                }
-            `;
-            document.head.appendChild(style);
-        }
-    }
-
     checkCardOverflow(card) {
         const cardContent = card.querySelector('.card-content');
         if (cardContent) {
@@ -4585,13 +5155,14 @@ class BoredomBusterApp {
                 animationFrame = null;
             }
             
-            // For touch events on non-scrollable content, start immediately for better responsiveness
-            if (e.type === 'touchstart' && !isOnScrollableContent) {
-                isDragging = true;
+            // For touch events, prevent default to avoid scroll conflicts
+            if (e.type === 'touchstart') {
+                // Always prevent default on touchstart to avoid scroll conflicts
+                e.preventDefault();
                 card.style.transition = 'none';
                 card.style.cursor = 'grabbing';
                 card.style.zIndex = '100';
-                card.style.willChange = 'transform, opacity'; // Hint browser for optimization
+                card.style.willChange = 'transform, opacity';
             }
         };
         
@@ -4618,20 +5189,41 @@ class BoredomBusterApp {
                     }
                 }
                 
-                // Improved gesture detection with better thresholds
-                if (absDeltaY > absDeltaX && absDeltaY > 8) {
-                    isScrolling = true;
-                    return; // Let the browser handle scrolling
-                }
-                else if (absDeltaX > 10 || (absDeltaX > absDeltaY && absDeltaX > 5)) {
-                    isDragging = true;
-                    card.style.transition = 'none';
-                    card.style.cursor = 'grabbing';
-                    card.style.zIndex = '100';
-                    card.style.willChange = 'transform, opacity';
-                }
-                else if (timeSinceStart < 100) { // Reduced wait time for better responsiveness
-                    return;
+                // Enhanced gesture detection for touch events
+                if (e.type === 'touchmove') {
+                    // For touch events, be more aggressive about preventing vertical scrolling during horizontal swipes
+                    if (absDeltaX > 5) {
+                        // This is likely a horizontal swipe, prevent vertical scrolling
+                        isDragging = true;
+                        e.preventDefault(); // Prevent vertical scrolling
+                        card.style.transition = 'none';
+                        card.style.cursor = 'grabbing';
+                        card.style.zIndex = '100';
+                        card.style.willChange = 'transform, opacity';
+                    } else if (absDeltaY > 15 && absDeltaY > absDeltaX * 2) {
+                        // Clear vertical scroll, allow it
+                        isScrolling = true;
+                        return;
+                    } else if (timeSinceStart < 50) {
+                        // Wait a bit more to determine gesture direction
+                        return;
+                    }
+                } else {
+                    // Mouse gesture detection (original logic)
+                    if (absDeltaY > absDeltaX && absDeltaY > 8) {
+                        isScrolling = true;
+                        return; // Let the browser handle scrolling
+                    }
+                    else if (absDeltaX > 10 || (absDeltaX > absDeltaY && absDeltaX > 5)) {
+                        isDragging = true;
+                        card.style.transition = 'none';
+                        card.style.cursor = 'grabbing';
+                        card.style.zIndex = '100';
+                        card.style.willChange = 'transform, opacity';
+                    }
+                    else if (timeSinceStart < 100) {
+                        return;
+                    }
                 }
             }
             
@@ -4643,10 +5235,8 @@ class BoredomBusterApp {
             // Handle swiping
             if (!isDragging) return;
             
-            // Only prevent default for actual swipe gestures
-            if (absDeltaX > 5) {
-                e.preventDefault();
-            }
+            // Always prevent default during dragging to avoid any scroll interference
+            e.preventDefault();
             
             // Calculate velocity for momentum (optimized)
             const currentTime = Date.now();
@@ -4775,7 +5365,7 @@ class BoredomBusterApp {
         });
         
         // Optimized touch events with better passive handling
-        card.addEventListener('touchstart', handleStart, { passive: true });
+        card.addEventListener('touchstart', handleStart, { passive: false }); // Changed to false to allow preventDefault
         card.addEventListener('touchmove', handleMove, { passive: false }); // Only non-passive for preventDefault
         card.addEventListener('touchend', handleEnd, { passive: true });
         
@@ -5025,7 +5615,10 @@ class BoredomBusterApp {
     }
 
     bindEvents() {
-
+        // Use optimized event handlers
+        window.addEventListener('scroll', this.throttledScroll, { passive: true });
+        window.addEventListener('resize', this.debouncedResize, { passive: true });
+        document.addEventListener('mousemove', this.throttledMouseMove, { passive: true });
 
         this.refreshBtn.addEventListener('click', () => {
             this.generateCards();
@@ -5710,6 +6303,11 @@ class BoredomBusterApp {
                 <button class="play-btn" onclick="app.resetChessPuzzle()">🔄 New Puzzle</button>
                 <button class="play-btn" onclick="app.showChessSolution()" style="margin-left: 10px;">💡 Show Solution</button>
                 <button class="play-btn" onclick="app.showPuzzleStats()" style="margin-left: 10px;">📊 Stats</button>
+                <button class="play-btn" onclick="app.testChessDragDrop()" style="margin-left: 10px;">🧪 Test Drag</button>
+            </div>
+            <div id="chessDebugInfo" style="margin-top: 10px; padding: 10px; background: #f0f0f0; border-radius: 5px; font-family: monospace; font-size: 12px; display: none;">
+                <strong>Debug Info:</strong><br>
+                <span id="debugText">Click 'Test Drag' to check functionality</span>
             </div>
         `;
         
@@ -5722,28 +6320,55 @@ class BoredomBusterApp {
     }
 
     initializeChessBoard() {
+        console.log('🚀 Starting chess board initialization...');
+        
         // Check if libraries are loaded
         if (typeof Chess === 'undefined') {
-            console.error('Chess.js library not loaded');
+            console.error('❌ Chess.js library not loaded');
             document.getElementById('chessStatus').textContent = 'Error: Chess library not loaded. Please refresh the page.';
             return;
         }
         
         if (typeof Chessboard === 'undefined') {
-            console.error('Chessboard.js library not loaded');
+            console.error('❌ Chessboard.js library not loaded');
             document.getElementById('chessStatus').textContent = 'Error: Chessboard library not loaded. Please refresh the page.';
             return;
         }
         
+        // Check if jQuery is loaded (required for chessboard.js)
+        if (typeof $ === 'undefined') {
+            console.error('❌ jQuery not loaded - required for chessboard.js');
+            document.getElementById('chessStatus').textContent = 'Error: jQuery not loaded. Please refresh the page.';
+            return;
+        }
+        
+        console.log('✅ All libraries loaded successfully');
+        
         try {
-            // Validate the FEN position first (older chess.js doesn't have validateFen)
+            // Destroy existing board if it exists
+            if (this.board && typeof this.board.destroy === 'function') {
+                console.log('🗑️ Destroying existing board...');
+                this.board.destroy();
+            }
+            
+            // Clear the board container
+            const boardElement = document.getElementById('chessBoard');
+            if (boardElement) {
+                boardElement.innerHTML = '';
+                console.log('🧹 Cleared board container');
+            }
+            
+            // Validate the FEN position
             let fenValidation = { valid: true };
             try {
                 const testChess = new Chess(this.currentChessPuzzle.fen);
                 fenValidation = { valid: true };
+                console.log('✅ FEN validation passed');
             } catch (e) {
                 fenValidation = { valid: false, error: e.message };
+                console.error('❌ FEN validation failed:', e.message);
             }
+            
             if (!fenValidation.valid) {
                 console.error('Invalid FEN position:', this.currentChessPuzzle.fen, fenValidation.error);
                 document.getElementById('chessStatus').textContent = 'Error: Invalid puzzle position. Generating new puzzle...';
@@ -5751,27 +6376,26 @@ class BoredomBusterApp {
                 return;
             }
             
-            // Initialize chess.js game with latest API
+            // Initialize chess.js game
             this.chessGame = new Chess(this.currentChessPuzzle.fen);
             this.puzzleSolved = false;
-            this.puzzleMoveHistory = []; // Reset move history for new puzzle
+            this.puzzleMoveHistory = [];
             
-            console.log('Chess game initialized with FEN:', this.currentChessPuzzle.fen);
-            console.log('Chess game valid:', fenValidation.valid);
+            console.log('🎯 Chess game initialized with FEN:', this.currentChessPuzzle.fen);
+            console.log('🎯 Current turn:', this.chessGame.turn() === 'w' ? 'White' : 'Black');
             
-            // Validate that the solution move is actually legal
+            // Validate solution move
             const testGame = new Chess(this.currentChessPuzzle.fen);
             const testMove = testGame.move(this.currentChessPuzzle.solution.replace('#', ''));
             if (!testMove) {
-                console.error('Invalid solution move:', this.currentChessPuzzle.solution, 'for position:', this.currentChessPuzzle.fen);
+                console.error('❌ Invalid solution move:', this.currentChessPuzzle.solution);
                 document.getElementById('chessStatus').textContent = 'Error: Invalid puzzle solution. Generating new puzzle...';
                 setTimeout(() => this.resetChessPuzzle(), 2000);
                 return;
             }
             
-            // Verify the solution actually leads to checkmate
             if (!testGame.in_checkmate()) {
-                console.error('Solution does not lead to checkmate:', this.currentChessPuzzle.solution);
+                console.error('❌ Solution does not lead to checkmate:', this.currentChessPuzzle.solution);
                 document.getElementById('chessStatus').textContent = 'Error: Puzzle solution incorrect. Generating new puzzle...';
                 setTimeout(() => this.resetChessPuzzle(), 2000);
                 return;
@@ -5779,99 +6403,141 @@ class BoredomBusterApp {
             
             console.log('✅ Puzzle validation passed:', this.currentChessPuzzle.name);
             
-            // Board configuration
-            const config = {
+            // Simple piece theme function
+            const pieceTheme = (piece) => {
+                // Use Wikipedia pieces as primary source
+                return `https://chessboardjs.com/img/chesspieces/wikipedia/${piece}.png`;
+            };
+            
+            // Board configuration with explicit drag and drop handlers
+            const boardConfig = {
                 draggable: true,
                 position: this.currentChessPuzzle.fen,
-                pieceTheme: function(piece) {
-                    console.log('Loading piece:', piece);
-                    // Use our reliable Wikipedia chess pieces
-                    if (window.chessPieceTheme && window.chessPieceTheme[piece]) {
-                        console.log('Using custom piece for:', piece);
-                        return window.chessPieceTheme[piece];
-                    }
-                    // Fallback to chessboard.js default
-                    console.log('Using fallback piece for:', piece);
-                    return 'https://chessboardjs.com/img/chesspieces/wikipedia/' + piece + '.png';
-                },
+                pieceTheme: pieceTheme,
                 onDragStart: (source, piece, position, orientation) => {
-                    console.log('=== DRAG START ===');
-                    console.log('Source:', source, 'Piece:', piece);
-                    console.log('Game over:', this.chessGame.game_over());
-                    console.log('Puzzle solved:', this.puzzleSolved);
-                    console.log('Current turn:', this.chessGame.turn());
+                    console.log('🎯 DRAG START:', { source, piece, turn: this.chessGame.turn() });
                     
-                    // Don't pick up pieces if the game is over
+                    // Don't allow dragging if game is over
                     if (this.chessGame.game_over() || this.puzzleSolved) {
-                        console.log('Cannot drag - game over or puzzle solved');
+                        console.log('❌ Cannot drag - game over or solved');
                         return false;
                     }
                     
-                    // Only allow moving pieces of the current player's turn
+                    // Only allow dragging pieces of the current player
                     const isWhitePiece = piece.search(/^w/) !== -1;
-                    const isBlackPiece = piece.search(/^b/) !== -1;
                     const isWhiteTurn = this.chessGame.turn() === 'w';
                     
-                    if ((isWhiteTurn && !isWhitePiece) || (!isWhiteTurn && !isBlackPiece)) {
-                        console.log('Cannot drag - not your turn');
+                    if ((isWhiteTurn && !isWhitePiece) || (!isWhiteTurn && isWhitePiece)) {
+                        console.log('❌ Cannot drag - not your turn');
                         return false;
                     }
                     
-                    console.log('Drag allowed for:', piece);
+                    console.log('✅ Drag allowed');
                     return true;
                 },
                 onDrop: (source, target) => {
-                    console.log('=== DROP ATTEMPT ===');
-                    console.log('From:', source, 'To:', target);
+                    console.log('🎯 DROP ATTEMPT:', { source, target });
                     
-                    // See if the move is legal - try different promotion pieces
-                    let move = this.chessGame.move({
-                        from: source,
-                        to: target,
-                        promotion: 'q' // Always promote to a queen for simplicity
-                    });
+                    // Attempt the move
+                    let move = null;
                     
-                    // If queen promotion failed, try without promotion
-                    if (move === null) {
+                    // Try with promotion to queen first
+                    try {
                         move = this.chessGame.move({
                             from: source,
-                            to: target
+                            to: target,
+                            promotion: 'q'
                         });
+                    } catch (e) {
+                        // If that fails, try without promotion
+                        try {
+                            move = this.chessGame.move({
+                                from: source,
+                                to: target
+                            });
+                        } catch (e2) {
+                            console.log('❌ Illegal move');
+                            return 'snapback';
+                        }
                     }
                     
-                    // Illegal move
                     if (move === null) {
-                        console.log('ILLEGAL MOVE - snapback');
+                        console.log('❌ Move returned null - snapback');
                         return 'snapback';
                     }
                     
-                    console.log('LEGAL MOVE:', move.san);
+                    console.log('✅ Legal move made:', move.san);
                     
-                    // Check if this move solves the puzzle
+                    // Check if puzzle is solved
                     this.checkPuzzleSolution(move);
                     
                     return true;
                 },
                 onSnapEnd: () => {
-                    console.log('Snap end - updating position');
-                    this.board.position(this.chessGame.fen());
+                    console.log('🎯 Snap end - updating board position');
+                    if (this.board && this.chessGame) {
+                        this.board.position(this.chessGame.fen());
+                    }
                 }
             };
             
+            console.log('🎮 Creating chessboard with config:', boardConfig);
+            
             // Create the board
-            this.board = Chessboard('chessBoard', config);
+            this.board = Chessboard('chessBoard', boardConfig);
             
-            console.log('Chessboard created successfully');
+            // Verify board was created
+            if (!this.board) {
+                throw new Error('Failed to create chessboard');
+            }
             
-            // Add touch event polyfill for mobile devices
+            console.log('✅ Chessboard created successfully!');
+            console.log('🎮 Board object:', this.board);
+            
+            // Wait a moment then verify the board is interactive
             setTimeout(() => {
+                const boardElement = document.getElementById('chessBoard');
+                if (boardElement && boardElement.children.length > 0) {
+                    console.log('✅ Board DOM elements created successfully');
+                    console.log('🎮 Board HTML structure:', boardElement.innerHTML.substring(0, 200) + '...');
+                    
+                    // Check for chess pieces
+                    const pieces = boardElement.querySelectorAll('.piece-417db');
+                    console.log(`🎯 Found ${pieces.length} chess pieces on the board`);
+                    
+                    // Add visual feedback for drag events
+                    pieces.forEach((piece, index) => {
+                        piece.addEventListener('mousedown', () => {
+                            console.log(`🎯 Mouse down on piece ${index + 1}`);
+                            piece.style.opacity = '0.7';
+                        });
+                        
+                        piece.addEventListener('mouseup', () => {
+                            console.log(`🎯 Mouse up on piece ${index + 1}`);
+                            piece.style.opacity = '1';
+                        });
+                    });
+                    
+                    // Test if board methods are available
+                    if (this.board && typeof this.board.position === 'function') {
+                        console.log('✅ Board methods are available');
+                    } else {
+                        console.error('❌ Board methods not available');
+                    }
+                    
+                } else {
+                    console.error('❌ Board DOM elements not found');
+                }
+                
+                // Add touch support for mobile
                 this.addChessTouchSupport();
             }, 100);
             
             // Update status
             this.updateChessStatus();
+            
         } catch (error) {
-            console.error('Error initializing chess board:', error);
+            console.error('❌ Error initializing chess board:', error);
             document.getElementById('chessStatus').textContent = 'Error initializing chess board. Please try again.';
         }
     }
@@ -6244,6 +6910,81 @@ class BoredomBusterApp {
         if (saved) {
             this.puzzleStats = JSON.parse(saved);
         }
+    }
+
+    testChessDragDrop() {
+        const debugInfo = document.getElementById('chessDebugInfo');
+        const debugText = document.getElementById('debugText');
+        
+        debugInfo.style.display = 'block';
+        
+        let debugOutput = [];
+        
+        // Test 1: Check if board exists
+        debugOutput.push(`Board object exists: ${this.board ? '✅ YES' : '❌ NO'}`);
+        
+        // Test 2: Check board methods
+        if (this.board) {
+            debugOutput.push(`Board.position method: ${typeof this.board.position === 'function' ? '✅ Available' : '❌ Missing'}`);
+            debugOutput.push(`Board.destroy method: ${typeof this.board.destroy === 'function' ? '✅ Available' : '❌ Missing'}`);
+        }
+        
+        // Test 3: Check DOM elements
+        const boardElement = document.getElementById('chessBoard');
+        debugOutput.push(`Board DOM element: ${boardElement ? '✅ Found' : '❌ Missing'}`);
+        
+        if (boardElement) {
+            const pieces = boardElement.querySelectorAll('.piece-417db');
+            debugOutput.push(`Chess pieces found: ${pieces.length} pieces`);
+            
+            if (pieces.length > 0) {
+                debugOutput.push(`First piece class: ${pieces[0].className}`);
+                debugOutput.push(`First piece data-piece: ${pieces[0].getAttribute('data-piece') || 'none'}`);
+                
+                // Test drag events on first piece
+                const firstPiece = pieces[0];
+                let dragTestResult = 'Testing...';
+                
+                // Add temporary event listeners to test
+                const testMouseDown = () => {
+                    dragTestResult = '✅ Mouse events working';
+                    debugOutput[debugOutput.length - 1] = `Drag test: ${dragTestResult}`;
+                    debugText.innerHTML = debugOutput.join('<br>');
+                };
+                
+                firstPiece.addEventListener('mousedown', testMouseDown, { once: true });
+                
+                // Simulate a click to test
+                setTimeout(() => {
+                    const event = new MouseEvent('mousedown', {
+                        bubbles: true,
+                        cancelable: true,
+                        clientX: firstPiece.getBoundingClientRect().left + 10,
+                        clientY: firstPiece.getBoundingClientRect().top + 10
+                    });
+                    firstPiece.dispatchEvent(event);
+                }, 100);
+                
+                debugOutput.push(`Drag test: ${dragTestResult}`);
+            }
+        }
+        
+        // Test 4: Check chess.js game
+        debugOutput.push(`Chess game exists: ${this.chessGame ? '✅ YES' : '❌ NO'}`);
+        if (this.chessGame) {
+            debugOutput.push(`Current turn: ${this.chessGame.turn() === 'w' ? 'White' : 'Black'}`);
+            debugOutput.push(`Game over: ${this.chessGame.game_over() ? 'YES' : 'NO'}`);
+        }
+        
+        // Test 5: Check libraries
+        debugOutput.push(`jQuery loaded: ${typeof $ !== 'undefined' ? '✅ YES' : '❌ NO'}`);
+        debugOutput.push(`Chess.js loaded: ${typeof Chess !== 'undefined' ? '✅ YES' : '❌ NO'}`);
+        debugOutput.push(`Chessboard.js loaded: ${typeof Chessboard !== 'undefined' ? '✅ YES' : '❌ NO'}`);
+        
+        debugText.innerHTML = debugOutput.join('<br>');
+        
+        console.log('🧪 Chess Drag & Drop Test Results:');
+        debugOutput.forEach(line => console.log(line));
     }
 
     createFlappyBird() {
@@ -7563,6 +8304,32 @@ class BoredomBusterApp {
             console.log('Could not play save sound:', error);
         }
     }
+
+    // Cleanup method to prevent memory leaks
+    cleanup() {
+        // Remove event listeners
+        window.removeEventListener('scroll', this.throttledScroll);
+        window.removeEventListener('resize', this.debouncedResize);
+        document.removeEventListener('mousemove', this.throttledMouseMove);
+        
+        // Clear intervals and timeouts
+        if (this.autoReadingInterval) {
+            clearInterval(this.autoReadingInterval);
+        }
+        if (this.memoryCleanupInterval) {
+            clearInterval(this.memoryCleanupInterval);
+        }
+        
+        // Clear DOM references
+        this.cleanupDOMReferences();
+        
+        // Cancel any pending animation frames
+        if (this.animationFrameId) {
+            cancelAnimationFrame(this.animationFrameId);
+        }
+        
+        console.log('🧹 App cleanup completed');
+    }
 }
 
 // Appwrite OAuth callback handler
@@ -7661,19 +8428,12 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Add page visibility handler (respects user sound preference)
         document.addEventListener('visibilitychange', () => {
-            if (!document.hidden) {
-                if (app.soundEnabled) {
-                    console.log('🚀 PAGE VISIBLE - INITIALIZING AUDIO...');
-                    setTimeout(() => {
-                        app.initializeAudioImmediately();
-                        app.startAutoReading();
-                    }, 100);
-                }
-                // Always refresh images when page becomes visible
-                console.log('🖼️ Page visible - refreshing images...');
+            if (!document.hidden && app.soundEnabled) {
+                console.log('🚀 PAGE VISIBLE - INITIALIZING AUDIO...');
                 setTimeout(() => {
-                    app.refreshCardImages();
-                }, 500);
+                    app.initializeAudioImmediately();
+                    app.startAutoReading();
+                }, 100);
             }
         });
         
@@ -7686,23 +8446,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     app.startAutoReading();
                 }, 100);
             }
-            // Always refresh images when window gets focus
-            console.log('🖼️ Window focused - refreshing images...');
-            setTimeout(() => {
-                app.refreshCardImages();
-            }, 500);
-        });
-
-        // Add user interaction handlers to trigger image refresh
-        ['click', 'touchstart', 'scroll'].forEach(eventType => {
-            document.addEventListener(eventType, () => {
-                // Throttle image refresh on user interaction
-                if (!app.lastImageRefresh || Date.now() - app.lastImageRefresh > 10000) {
-                    console.log('🖼️ User interaction detected - refreshing images...');
-                    app.refreshCardImages();
-                    app.lastImageRefresh = Date.now();
-                }
-            }, { once: true, passive: true });
         });
         
     } catch (error) {

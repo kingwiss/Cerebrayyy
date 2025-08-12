@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Test</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .test-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .test-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .image-container {
+            width: 100%;
+            height: 120px;
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 10px 0;
+        }
+        .test-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 2;
+        }
+        .fallback-display {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+            color: white;
+            font-size: 2rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Card Image Test</h1>
+        
+        <div class="test-card">
+            <h3>Game - Tic Tac Toe</h3>
+            <div class="image-container">
+                <img class="test-image" 
+                     src="images/tictactoe.svg" 
+                     alt="Tic Tac Toe"
+                     onload="console.log('✅ Tic Tac Toe loaded');"
+                     onerror="console.log('❌ Tic Tac Toe failed'); this.style.display = 'none';">
+                <div class="fallback-display">🎮</div>
+            </div>
+        </div>
+
+        <div class="test-card">
+            <h3>Riddle</h3>
+            <div class="image-container">
+                <img class="test-image" 
+                     src="images/riddle.svg" 
+                     alt="Riddle"
+                     onload="console.log('✅ Riddle loaded');"
+                     onerror="console.log('❌ Riddle failed'); this.style.display = 'none';">
+                <div class="fallback-display">🧩</div>
+            </div>
+        </div>
+
+        <div class="test-card">
+            <h3>Math Challenge</h3>
+            <div class="image-container">
+                <img class="test-image" 
+                     src="images/math-challenge.svg" 
+                     alt="Math Challenge"
+                     onload="console.log('✅ Math Challenge loaded');"
+                     onerror="console.log('❌ Math Challenge failed'); this.style.display = 'none';">
+                <div class="fallback-display">🔢</div>
+            </div>
+        </div>
+
+        <div class="test-card">
+            <h3>Activity</h3>
+            <div class="image-container">
+                <img class="test-image" 
+                     src="images/literature-arts.svg" 
+                     alt="Activity"
+                     onload="console.log('✅ Activity loaded');"
+                     onerror="console.log('❌ Activity failed'); this.style.display = 'none';">
+                <div class="fallback-display">⭐</div>
+            </div>
+        </div>
+
+        <div class="test-card">
+            <h3>Non-existent Image Test</h3>
+            <div class="image-container">
+                <img class="test-image" 
+                     src="images/non-existent.svg" 
+                     alt="Non-existent"
+                     onload="console.log('✅ Non-existent loaded');"
+                     onerror="console.log('❌ Non-existent failed'); this.style.display = 'none';">
+                <div class="fallback-display">❓</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        console.log('🧪 Image test page loaded');
+    </script>
+</body>
+</html>

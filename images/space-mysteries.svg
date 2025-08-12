@@ -1,43 +1,136 @@
 <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
     <defs>
-        <linearGradient id="spaceGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:#2d3436;stop-opacity:1" />
-            <stop offset="100%" style="stop-color:#636e72;stop-opacity:1" />
-        </linearGradient>
-        <radialGradient id="starGradient" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" style="stop-color:#ffeaa7;stop-opacity:1" />
-            <stop offset="100%" style="stop-color:#fdcb6e;stop-opacity:0" />
+        <radialGradient id="spaceGradient" cx="50%" cy="50%">
+            <stop offset="0%" style="stop-color:#1a1a2e;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#000000;stop-opacity:1" />
+        </radialGradient>
+        <radialGradient id="planetGradient" cx="30%" cy="30%">
+            <stop offset="0%" style="stop-color:#FF6347;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#8B0000;stop-opacity:1" />
+        </radialGradient>
+        <radialGradient id="moonGradient" cx="40%" cy="40%">
+            <stop offset="0%" style="stop-color:#F5F5DC;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#A9A9A9;stop-opacity:1" />
+        </radialGradient>
+        <radialGradient id="starGradient" cx="50%" cy="50%">
+            <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#FFD700;stop-opacity:0.8" />
         </radialGradient>
     </defs>
-    <circle cx="100" cy="100" r="90" fill="url(#spaceGradient)" opacity="0.8"/>
-    <g transform="translate(100,100)">
-        <circle cx="0" cy="0" r="20" fill="url(#starGradient)">
-            <animate attributeName="r" values="20;25;20" dur="3s" repeatCount="indefinite"/>
+    
+    <!-- Space background -->
+    <rect width="200" height="200" fill="url(#spaceGradient)"/>
+    
+    <!-- Stars -->
+    <circle cx="30" cy="40" r="1" fill="url(#starGradient)">
+        <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="170" cy="30" r="1.5" fill="url(#starGradient)">
+        <animate attributeName="opacity" values="0.8;1;0.8" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="20" cy="120" r="1" fill="url(#starGradient)">
+        <animate attributeName="opacity" values="0.6;1;0.6" dur="2.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="180" cy="150" r="1" fill="url(#starGradient)">
+        <animate attributeName="opacity" values="0.7;1;0.7" dur="1.8s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="60" cy="180" r="1.2" fill="url(#starGradient)">
+        <animate attributeName="opacity" values="0.4;1;0.4" dur="2.2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="150" cy="170" r="1" fill="url(#starGradient)">
+        <animate attributeName="opacity" values="0.9;1;0.9" dur="1.5s" repeatCount="indefinite"/>
+    </circle>
+    
+    <!-- Nebula cloud -->
+    <ellipse cx="40" cy="60" rx="25" ry="15" fill="#4B0082" opacity="0.3">
+        <animate attributeName="opacity" values="0.3;0.5;0.3" dur="4s" repeatCount="indefinite"/>
+    </ellipse>
+    <ellipse cx="45" cy="65" rx="20" ry="12" fill="#8A2BE2" opacity="0.2">
+        <animate attributeName="opacity" values="0.2;0.4;0.2" dur="5s" repeatCount="indefinite"/>
+    </ellipse>
+    
+    <!-- Main planet -->
+    <circle cx="120" cy="100" r="35" fill="url(#planetGradient)" stroke="#FF4500" stroke-width="0.5">
+        <animateTransform attributeName="transform" type="rotate" values="0 120 100; 360 120 100" dur="20s" repeatCount="indefinite"/>
+    </circle>
+    
+    <!-- Planet surface details -->
+    <ellipse cx="110" cy="90" rx="8" ry="5" fill="#8B0000" opacity="0.6"/>
+    <ellipse cx="135" cy="105" rx="6" ry="4" fill="#8B0000" opacity="0.7"/>
+    <ellipse cx="125" cy="120" rx="10" ry="3" fill="#8B0000" opacity="0.5"/>
+    
+    <!-- Planet rings -->
+    <ellipse cx="120" cy="100" rx="50" ry="8" fill="none" stroke="#FFD700" stroke-width="2" opacity="0.6">
+        <animateTransform attributeName="transform" type="rotate" values="0 120 100; 360 120 100" dur="15s" repeatCount="indefinite"/>
+    </ellipse>
+    <ellipse cx="120" cy="100" rx="45" ry="6" fill="none" stroke="#FFA500" stroke-width="1" opacity="0.4">
+        <animateTransform attributeName="transform" type="rotate" values="0 120 100; -360 120 100" dur="18s" repeatCount="indefinite"/>
+    </ellipse>
+    
+    <!-- Moon -->
+    <circle cx="60" cy="140" r="12" fill="url(#moonGradient)">
+        <animateTransform attributeName="transform" type="rotate" values="0 120 100; 360 120 100" dur="10s" repeatCount="indefinite"/>
+    </circle>
+    
+    <!-- Moon craters -->
+    <circle cx="58" cy="135" r="2" fill="#808080" opacity="0.8"/>
+    <circle cx="63" cy="142" r="1.5" fill="#808080" opacity="0.7"/>
+    <circle cx="57" cy="145" r="1" fill="#808080" opacity="0.6"/>
+    
+    <!-- UFO/Mysterious object -->
+    <g transform="translate(160, 80)">
+        <animateTransform attributeName="transform" type="translate" 
+            values="160,80; 170,75; 160,80; 150,85; 160,80" 
+            dur="3s" repeatCount="indefinite"/>
+        
+        <!-- UFO body -->
+        <ellipse cx="0" cy="0" rx="15" ry="5" fill="#C0C0C0" stroke="#808080" stroke-width="0.5"/>
+        <ellipse cx="0" cy="-3" rx="8" ry="4" fill="#E6E6FA" opacity="0.8"/>
+        
+        <!-- UFO lights -->
+        <circle cx="-8" cy="2" r="1" fill="#00FF00">
+            <animate attributeName="opacity" values="0.5;1;0.5" dur="0.8s" repeatCount="indefinite"/>
         </circle>
-        <g opacity="0.8">
-            <circle cx="-30" cy="-30" r="2" fill="#fff">
-                <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/>
-            </circle>
-            <circle cx="35" cy="-20" r="1.5" fill="#fff">
-                <animate attributeName="opacity" values="0.3;1;0.3" dur="2.5s" repeatCount="indefinite"/>
-            </circle>
-            <circle cx="-40" cy="25" r="1" fill="#fff">
-                <animate attributeName="opacity" values="0.3;1;0.3" dur="1.8s" repeatCount="indefinite"/>
-            </circle>
-            <circle cx="25" cy="35" r="1.5" fill="#fff">
-                <animate attributeName="opacity" values="0.3;1;0.3" dur="3.2s" repeatCount="indefinite"/>
-            </circle>
-        </g>
-        <ellipse cx="0" cy="0" rx="50" ry="15" fill="none" stroke="#74b9ff" stroke-width="2" opacity="0.5">
-            <animateTransform attributeName="transform" type="rotate" values="0;360" dur="8s" repeatCount="indefinite"/>
-        </ellipse>
-        <circle cx="0" cy="-15" r="3" fill="#74b9ff">
-            <animateTransform attributeName="transform" type="rotate" values="0;360" dur="8s" repeatCount="indefinite"/>
+        <circle cx="0" cy="3" r="1" fill="#FF0000">
+            <animate attributeName="opacity" values="0.5;1;0.5" dur="1.2s" repeatCount="indefinite"/>
         </circle>
+        <circle cx="8" cy="2" r="1" fill="#0000FF">
+            <animate attributeName="opacity" values="0.5;1;0.5" dur="1s" repeatCount="indefinite"/>
+        </circle>
+        
+        <!-- Light beam -->
+        <polygon points="-5,5 5,5 15,25 -15,25" fill="#FFFF00" opacity="0.3">
+            <animate attributeName="opacity" values="0.3;0.6;0.3" dur="1.5s" repeatCount="indefinite"/>
+        </polygon>
     </g>
-    <g opacity="0.3">
-        <path d="M 20 50 Q 50 30 80 50 Q 110 70 140 50 Q 170 30 200 50" stroke="#ffeaa7" stroke-width="1" fill="none" stroke-dasharray="3,3">
-            <animate attributeName="stroke-dashoffset" values="0;6" dur="4s" repeatCount="indefinite"/>
+    
+    <!-- Comet -->
+    <g transform="translate(30, 30)">
+        <animateTransform attributeName="transform" type="translate" 
+            values="30,30; 180,180; 30,30" 
+            dur="8s" repeatCount="indefinite"/>
+        
+        <!-- Comet head -->
+        <circle cx="0" cy="0" r="3" fill="#FFFFFF" stroke="#FFD700" stroke-width="0.5"/>
+        
+        <!-- Comet tail -->
+        <path d="M0 0 Q-10 -5 -20 -8 Q-15 -3 -25 -5" stroke="#FFD700" stroke-width="2" fill="none" opacity="0.7"/>
+        <path d="M0 0 Q-8 3 -18 5 Q-12 8 -22 10" stroke="#FFA500" stroke-width="1.5" fill="none" opacity="0.6"/>
+    </g>
+    
+    <!-- Galaxy spiral -->
+    <g transform="translate(40, 160)" opacity="0.4">
+        <path d="M0 0 Q5 -5 10 0 Q15 5 20 0 Q25 -5 30 0" 
+              stroke="#9370DB" stroke-width="1" fill="none">
+            <animateTransform attributeName="transform" type="rotate" values="0; 360" dur="12s" repeatCount="indefinite"/>
+        </path>
+        <path d="M0 0 Q-5 5 -10 0 Q-15 -5 -20 0 Q-25 5 -30 0" 
+              stroke="#9370DB" stroke-width="1" fill="none">
+            <animateTransform attributeName="transform" type="rotate" values="0; 360" dur="12s" repeatCount="indefinite"/>
         </path>
     </g>
+    
+    <!-- Title -->
+    <text x="100" y="25" font-family="Arial, sans-serif" font-size="12" font-weight="bold" 
+          text-anchor="middle" fill="#FFD700" stroke="#000" stroke-width="0.5">SPACE MYSTERIES</text>
 </svg>

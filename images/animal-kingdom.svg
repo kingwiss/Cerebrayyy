@@ -1,39 +1,192 @@
 <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
     <defs>
-        <linearGradient id="animalGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:#00b894;stop-opacity:1" />
-            <stop offset="100%" style="stop-color:#00cec9;stop-opacity:1" />
+        <linearGradient id="jungleGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#87CEEB;stop-opacity:1" />
+            <stop offset="30%" style="stop-color:#98FB98;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#228B22;stop-opacity:1" />
+        </linearGradient>
+        <radialGradient id="sunGradient" cx="50%" cy="50%">
+            <stop offset="0%" style="stop-color:#FFD700;stop-opacity:0.8" />
+            <stop offset="100%" style="stop-color:#FFA500;stop-opacity:0.4" />
+        </radialGradient>
+        <linearGradient id="lionGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#DAA520;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#B8860B;stop-opacity:1" />
+        </linearGradient>
+        <linearGradient id="elephantGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#A9A9A9;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#696969;stop-opacity:1" />
         </linearGradient>
     </defs>
-    <circle cx="100" cy="100" r="90" fill="url(#animalGradient)" opacity="0.1"/>
-    <g transform="translate(100,100)">
-        <ellipse cx="0" cy="0" rx="20" ry="15" fill="#feca57">
-            <animateTransform attributeName="transform" type="scale" values="1;1.1;1" dur="2s" repeatCount="indefinite"/>
-        </ellipse>
-        <circle cx="-6" cy="-5" r="2" fill="#2d3436"/>
-        <circle cx="6" cy="-5" r="2" fill="#2d3436"/>
-        <ellipse cx="0" cy="2" rx="3" ry="2" fill="#e17055"/>
-        <ellipse cx="-15" cy="-10" rx="5" ry="8" fill="#feca57"/>
-        <ellipse cx="15" cy="-10" rx="5" ry="8" fill="#feca57"/>
-        <path d="M -8 8 Q 0 12 8 8" stroke="#2d3436" stroke-width="2" fill="none">
-            <animate attributeName="stroke-opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite"/>
-        </path>
-        <g transform="translate(-25,25)">
-            <ellipse cx="0" cy="0" rx="8" ry="6" fill="#fd79a8">
-                <animateTransform attributeName="transform" type="rotate" values="0;10;-10;0" dur="3s" repeatCount="indefinite"/>
-            </ellipse>
-            <circle cx="-2" cy="-2" r="1" fill="#2d3436"/>
-            <circle cx="2" cy="-2" r="1" fill="#2d3436"/>
-        </g>
-        <g transform="translate(25,25)">
-            <ellipse cx="0" cy="0" rx="6" ry="8" fill="#74b9ff">
-                <animateTransform attributeName="transform" type="rotate" values="0;-15;15;0" dur="2.5s" repeatCount="indefinite"/>
-            </ellipse>
-            <circle cx="-1" cy="-3" r="1" fill="#2d3436"/>
-            <circle cx="1" cy="-3" r="1" fill="#2d3436"/>
-        </g>
+    
+    <!-- Background -->
+    <rect width="200" height="200" fill="url(#jungleGradient)"/>
+    
+    <!-- Sun -->
+    <circle cx="170" cy="30" r="20" fill="url(#sunGradient)"/>
+    
+    <!-- Trees/Jungle background -->
+    <ellipse cx="20" cy="180" rx="25" ry="40" fill="#228B22" opacity="0.7"/>
+    <ellipse cx="180" cy="170" rx="30" ry="50" fill="#32CD32" opacity="0.6"/>
+    <ellipse cx="100" cy="190" rx="40" ry="30" fill="#228B22" opacity="0.8"/>
+    
+    <!-- Tree trunks -->
+    <rect x="15" y="160" width="10" height="40" fill="#8B4513"/>
+    <rect x="175" y="150" width="12" height="50" fill="#A0522D"/>
+    
+    <!-- Lion -->
+    <g transform="translate(60, 120)">
+        <animateTransform attributeName="transform" type="translate" 
+            values="60,120; 65,118; 60,120; 55,122; 60,120" 
+            dur="4s" repeatCount="indefinite"/>
+        
+        <!-- Lion body -->
+        <ellipse cx="0" cy="10" rx="20" ry="12" fill="url(#lionGradient)" stroke="#B8860B" stroke-width="0.5"/>
+        
+        <!-- Lion head -->
+        <circle cx="0" cy="-5" r="12" fill="url(#lionGradient)" stroke="#B8860B" stroke-width="0.5"/>
+        
+        <!-- Lion mane -->
+        <circle cx="0" cy="-5" r="16" fill="#CD853F" opacity="0.8"/>
+        <circle cx="-3" cy="-8" r="4" fill="#DEB887" opacity="0.7"/>
+        <circle cx="3" cy="-8" r="4" fill="#DEB887" opacity="0.7"/>
+        <circle cx="-6" cy="-2" r="3" fill="#DEB887" opacity="0.7"/>
+        <circle cx="6" cy="-2" r="3" fill="#DEB887" opacity="0.7"/>
+        
+        <!-- Lion face -->
+        <circle cx="-3" cy="-8" r="1" fill="black"/> <!-- Left eye -->
+        <circle cx="3" cy="-8" r="1" fill="black"/>  <!-- Right eye -->
+        <polygon points="0,-3 -2,0 2,0" fill="black"/> <!-- Nose -->
+        <path d="M0 0 Q-3 2 -6 1" stroke="black" stroke-width="0.5" fill="none"/> <!-- Mouth left -->
+        <path d="M0 0 Q3 2 6 1" stroke="black" stroke-width="0.5" fill="none"/>   <!-- Mouth right -->
+        
+        <!-- Lion legs -->
+        <rect x="-15" y="18" width="4" height="8" fill="url(#lionGradient)"/>
+        <rect x="-8" y="18" width="4" height="8" fill="url(#lionGradient)"/>
+        <rect x="4" y="18" width="4" height="8" fill="url(#lionGradient)"/>
+        <rect x="11" y="18" width="4" height="8" fill="url(#lionGradient)"/>
+        
+        <!-- Lion tail -->
+        <path d="M20 10 Q25 5 30 8 Q35 12 32 15" stroke="url(#lionGradient)" stroke-width="3" fill="none"/>
+        <circle cx="32" cy="15" r="2" fill="#8B4513"/> <!-- Tail tuft -->
     </g>
-    <circle cx="100" cy="100" r="85" fill="none" stroke="url(#animalGradient)" stroke-width="1" opacity="0.3" stroke-dasharray="4,4">
-        <animate attributeName="stroke-dashoffset" values="0;8" dur="2s" repeatCount="indefinite"/>
-    </circle>
+    
+    <!-- Elephant -->
+    <g transform="translate(130, 100)">
+        <animateTransform attributeName="transform" type="translate" 
+            values="130,100; 135,102; 130,100; 125,98; 130,100" 
+            dur="5s" repeatCount="indefinite"/>
+        
+        <!-- Elephant body -->
+        <ellipse cx="0" cy="15" rx="25" ry="18" fill="url(#elephantGradient)" stroke="#696969" stroke-width="0.5"/>
+        
+        <!-- Elephant head -->
+        <ellipse cx="-10" cy="-5" rx="15" ry="12" fill="url(#elephantGradient)" stroke="#696969" stroke-width="0.5"/>
+        
+        <!-- Elephant ears -->
+        <ellipse cx="-20" cy="-8" rx="8" ry="12" fill="#A9A9A9" opacity="0.8">
+            <animateTransform attributeName="transform" type="rotate" values="0 -20 -8; 5 -20 -8; 0 -20 -8; -5 -20 -8; 0 -20 -8" dur="3s" repeatCount="indefinite"/>
+        </ellipse>
+        <ellipse cx="-5" cy="-12" rx="6" ry="10" fill="#A9A9A9" opacity="0.8">
+            <animateTransform attributeName="transform" type="rotate" values="0 -5 -12; -5 -5 -12; 0 -5 -12; 5 -5 -12; 0 -5 -12" dur="3s" repeatCount="indefinite"/>
+        </ellipse>
+        
+        <!-- Elephant trunk -->
+        <path d="M-20 0 Q-30 10 -25 20 Q-20 30 -15 25" stroke="url(#elephantGradient)" stroke-width="6" fill="none">
+            <animate attributeName="d" 
+                     values="M-20 0 Q-30 10 -25 20 Q-20 30 -15 25;
+                             M-20 0 Q-35 8 -30 18 Q-25 28 -20 23;
+                             M-20 0 Q-30 10 -25 20 Q-20 30 -15 25" 
+                     dur="4s" repeatCount="indefinite"/>
+        </path>
+        
+        <!-- Elephant eyes -->
+        <circle cx="-15" cy="-8" r="1.5" fill="black"/>
+        <circle cx="-8" cy="-10" r="1" fill="black"/>
+        
+        <!-- Elephant tusks -->
+        <path d="M-18 -2 L-22 2" stroke="white" stroke-width="2"/>
+        <path d="M-12 -4 L-16 0" stroke="white" stroke-width="2"/>
+        
+        <!-- Elephant legs -->
+        <rect x="-20" y="28" width="6" height="12" fill="url(#elephantGradient)"/>
+        <rect x="-10" y="28" width="6" height="12" fill="url(#elephantGradient)"/>
+        <rect x="0" y="28" width="6" height="12" fill="url(#elephantGradient)"/>
+        <rect x="10" y="28" width="6" height="12" fill="url(#elephantGradient)"/>
+        
+        <!-- Elephant tail -->
+        <path d="M25 15 Q30 18 28 22" stroke="url(#elephantGradient)" stroke-width="2" fill="none"/>
+    </g>
+    
+    <!-- Bird -->
+    <g transform="translate(40, 60)">
+        <animateTransform attributeName="transform" type="translate" 
+            values="40,60; 50,55; 60,60; 50,65; 40,60" 
+            dur="3s" repeatCount="indefinite"/>
+        
+        <!-- Bird body -->
+        <ellipse cx="0" cy="0" rx="6" ry="4" fill="#FF6347" stroke="#FF4500" stroke-width="0.5"/>
+        
+        <!-- Bird wing -->
+        <ellipse cx="-2" cy="-1" rx="4" ry="2" fill="#FF4500" opacity="0.8">
+            <animateTransform attributeName="transform" type="rotate" values="0; -15; 0; 15; 0" dur="0.5s" repeatCount="indefinite"/>
+        </ellipse>
+        
+        <!-- Bird head -->
+        <circle cx="4" cy="-2" r="3" fill="#FF6347"/>
+        
+        <!-- Bird eye -->
+        <circle cx="5" cy="-3" r="0.5" fill="black"/>
+        
+        <!-- Bird beak -->
+        <polygon points="7,-2 9,-1 7,0" fill="#FFA500"/>
+        
+        <!-- Bird tail -->
+        <polygon points="-6,0 -10,-2 -10,2" fill="#FF4500"/>
+    </g>
+    
+    <!-- Butterfly -->
+    <g transform="translate(150, 50)">
+        <animateTransform attributeName="transform" type="translate" 
+            values="150,50; 160,45; 170,50; 160,55; 150,50" 
+            dur="2s" repeatCount="indefinite"/>
+        
+        <!-- Butterfly body -->
+        <line x1="0" y1="-4" x2="0" y2="4" stroke="black" stroke-width="1"/>
+        
+        <!-- Butterfly wings -->
+        <ellipse cx="-3" cy="-2" rx="4" ry="3" fill="#FF69B4" opacity="0.8">
+            <animateTransform attributeName="transform" type="rotate" values="0; 10; 0; -10; 0" dur="1s" repeatCount="indefinite"/>
+        </ellipse>
+        <ellipse cx="3" cy="-2" rx="4" ry="3" fill="#FF1493" opacity="0.8">
+            <animateTransform attributeName="transform" type="rotate" values="0; -10; 0; 10; 0" dur="1s" repeatCount="indefinite"/>
+        </ellipse>
+        <ellipse cx="-2" cy="2" rx="3" ry="2" fill="#FF69B4" opacity="0.8">
+            <animateTransform attributeName="transform" type="rotate" values="0; 10; 0; -10; 0" dur="1s" repeatCount="indefinite"/>
+        </ellipse>
+        <ellipse cx="2" cy="2" rx="3" ry="2" fill="#FF1493" opacity="0.8">
+            <animateTransform attributeName="transform" type="rotate" values="0; -10; 0; 10; 0" dur="1s" repeatCount="indefinite"/>
+        </ellipse>
+        
+        <!-- Wing patterns -->
+        <circle cx="-3" cy="-2" r="1" fill="white" opacity="0.8"/>
+        <circle cx="3" cy="-2" r="1" fill="white" opacity="0.8"/>
+    </g>
+    
+    <!-- Grass -->
+    <g stroke="#228B22" stroke-width="2" fill="none" opacity="0.6">
+        <path d="M10 190 Q12 185 10 180">
+            <animate attributeName="d" values="M10 190 Q12 185 10 180; M10 190 Q8 185 10 180; M10 190 Q12 185 10 180" dur="2s" repeatCount="indefinite"/>
+        </path>
+        <path d="M30 195 Q32 188 30 182">
+            <animate attributeName="d" values="M30 195 Q32 188 30 182; M30 195 Q28 188 30 182; M30 195 Q32 188 30 182" dur="2.5s" repeatCount="indefinite"/>
+        </path>
+        <path d="M170 192 Q172 187 170 183">
+            <animate attributeName="d" values="M170 192 Q172 187 170 183; M170 192 Q168 187 170 183; M170 192 Q172 187 170 183" dur="1.8s" repeatCount="indefinite"/>
+        </path>
+    </g>
+    
+    <!-- Title -->
+    <text x="100" y="25" font-family="Arial, sans-serif" font-size="12" font-weight="bold" 
+          text-anchor="middle" fill="#8B4513" stroke="white" stroke-width="0.5">ANIMAL KINGDOM</text>
 </svg>

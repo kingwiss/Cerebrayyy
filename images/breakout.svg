@@ -1,40 +1,84 @@
 <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
     <defs>
-        <linearGradient id="breakoutGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:#00b894;stop-opacity:1" />
-            <stop offset="100%" style="stop-color:#00cec9;stop-opacity:1" />
+        <linearGradient id="gameBackground" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#1a1a2e;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#16213e;stop-opacity:1" />
         </linearGradient>
+        <linearGradient id="paddleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#00d4ff;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#0099cc;stop-opacity:1" />
+        </linearGradient>
+        <radialGradient id="ballGradient" cx="30%" cy="30%">
+            <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#ffff00;stop-opacity:1" />
+        </radialGradient>
     </defs>
-    <circle cx="100" cy="100" r="90" fill="url(#breakoutGradient)" opacity="0.1"/>
-    <g transform="translate(100,100)">
-        <g fill="url(#breakoutGradient)" opacity="0.8">
-            <rect x="-35" y="-35" width="12" height="6"/>
-            <rect x="-20" y="-35" width="12" height="6"/>
-            <rect x="-5" y="-35" width="12" height="6"/>
-            <rect x="10" y="-35" width="12" height="6"/>
-            <rect x="25" y="-35" width="12" height="6"/>
-            <rect x="-35" y="-25" width="12" height="6"/>
-            <rect x="-20" y="-25" width="12" height="6"/>
-            <rect x="-5" y="-25" width="12" height="6"/>
-            <rect x="10" y="-25" width="12" height="6"/>
-            <rect x="25" y="-25" width="12" height="6"/>
-        </g>
-        <circle cx="0" cy="10" r="4" fill="#ff6b6b">
-            <animateTransform attributeName="transform" type="translate" values="0,0; 15,-10; -15,5; 0,0" dur="2s" repeatCount="indefinite"/>
-        </circle>
-        <rect x="-15" y="25" width="30" height="6" rx="3" fill="url(#breakoutGradient)">
-            <animateTransform attributeName="transform" type="translate" values="0,0; 5,0; -5,0; 0,0" dur="3s" repeatCount="indefinite"/>
-        </rect>
-        <g opacity="0.5">
-            <circle cx="-25" cy="0" r="2" fill="#feca57">
-                <animate attributeName="opacity" values="0.5;1;0.5" dur="1.5s" repeatCount="indefinite"/>
-            </circle>
-            <circle cx="25" cy="5" r="2" fill="#fd79a8">
-                <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite"/>
-            </circle>
-        </g>
+    
+    <!-- Game background -->
+    <rect width="200" height="200" fill="url(#gameBackground)"/>
+    
+    <!-- Game border -->
+    <rect x="10" y="10" width="180" height="180" fill="none" stroke="#00d4ff" stroke-width="2"/>
+    
+    <!-- Bricks -->
+    <g id="bricks">
+        <!-- Top row - Red -->
+        <rect x="20" y="30" width="25" height="10" fill="#ff4757" stroke="#fff" stroke-width="0.5"/>
+        <rect x="50" y="30" width="25" height="10" fill="#ff4757" stroke="#fff" stroke-width="0.5"/>
+        <rect x="80" y="30" width="25" height="10" fill="#ff4757" stroke="#fff" stroke-width="0.5"/>
+        <rect x="110" y="30" width="25" height="10" fill="#ff4757" stroke="#fff" stroke-width="0.5"/>
+        <rect x="140" y="30" width="25" height="10" fill="#ff4757" stroke="#fff" stroke-width="0.5"/>
+        <rect x="170" y="30" width="25" height="10" fill="#ff4757" stroke="#fff" stroke-width="0.5"/>
+        
+        <!-- Second row - Orange -->
+        <rect x="20" y="45" width="25" height="10" fill="#ffa502" stroke="#fff" stroke-width="0.5"/>
+        <rect x="50" y="45" width="25" height="10" fill="#ffa502" stroke="#fff" stroke-width="0.5"/>
+        <rect x="80" y="45" width="25" height="10" fill="#ffa502" stroke="#fff" stroke-width="0.5"/>
+        <rect x="110" y="45" width="25" height="10" fill="#ffa502" stroke="#fff" stroke-width="0.5"/>
+        <rect x="140" y="45" width="25" height="10" fill="#ffa502" stroke="#fff" stroke-width="0.5"/>
+        <rect x="170" y="45" width="25" height="10" fill="#ffa502" stroke="#fff" stroke-width="0.5"/>
+        
+        <!-- Third row - Yellow -->
+        <rect x="20" y="60" width="25" height="10" fill="#ffdd59" stroke="#fff" stroke-width="0.5"/>
+        <rect x="50" y="60" width="25" height="10" fill="#ffdd59" stroke="#fff" stroke-width="0.5"/>
+        <rect x="80" y="60" width="25" height="10" fill="#ffdd59" stroke="#fff" stroke-width="0.5"/>
+        <rect x="110" y="60" width="25" height="10" fill="#ffdd59" stroke="#fff" stroke-width="0.5"/>
+        <rect x="140" y="60" width="25" height="10" fill="#ffdd59" stroke="#fff" stroke-width="0.5"/>
+        <rect x="170" y="60" width="25" height="10" fill="#ffdd59" stroke="#fff" stroke-width="0.5"/>
+        
+        <!-- Fourth row - Green -->
+        <rect x="20" y="75" width="25" height="10" fill="#2ed573" stroke="#fff" stroke-width="0.5"/>
+        <rect x="50" y="75" width="25" height="10" fill="#2ed573" stroke="#fff" stroke-width="0.5"/>
+        <rect x="80" y="75" width="25" height="10" fill="#2ed573" stroke="#fff" stroke-width="0.5"/>
+        <rect x="110" y="75" width="25" height="10" fill="#2ed573" stroke="#fff" stroke-width="0.5"/>
+        <rect x="140" y="75" width="25" height="10" fill="#2ed573" stroke="#fff" stroke-width="0.5"/>
+        <rect x="170" y="75" width="25" height="10" fill="#2ed573" stroke="#fff" stroke-width="0.5"/>
     </g>
-    <circle cx="100" cy="100" r="85" fill="none" stroke="url(#breakoutGradient)" stroke-width="1" opacity="0.3" stroke-dasharray="4,4">
-        <animate attributeName="stroke-dashoffset" values="0;8" dur="2s" repeatCount="indefinite"/>
+    
+    <!-- Ball -->
+    <circle cx="100" cy="120" r="4" fill="url(#ballGradient)" stroke="#fff" stroke-width="0.5">
+        <animateTransform attributeName="transform" type="translate" 
+            values="0,0; 30,-20; 60,0; 30,20; 0,0; -30,-20; -60,0; -30,20; 0,0" 
+            dur="3s" repeatCount="indefinite"/>
+    </circle>
+    
+    <!-- Paddle -->
+    <rect x="80" y="170" width="40" height="6" rx="3" fill="url(#paddleGradient)" stroke="#fff" stroke-width="0.5">
+        <animateTransform attributeName="transform" type="translate" 
+            values="0,0; 20,0; -20,0; 0,0" 
+            dur="2s" repeatCount="indefinite"/>
+    </rect>
+    
+    <!-- Score display -->
+    <text x="15" y="25" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#00d4ff">BREAKOUT</text>
+    
+    <!-- Particle effects -->
+    <circle cx="45" cy="35" r="1" fill="#ffff00" opacity="0.8">
+        <animate attributeName="opacity" values="0;1;0" dur="1s" repeatCount="indefinite"/>
+        <animateTransform attributeName="transform" type="translate" values="0,0; 5,-5; 10,-10" dur="1s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="155" cy="50" r="1" fill="#ff4757" opacity="0.8">
+        <animate attributeName="opacity" values="0;1;0" dur="1.5s" repeatCount="indefinite"/>
+        <animateTransform attributeName="transform" type="translate" values="0,0; -3,-8; -6,-16" dur="1.5s" repeatCount="indefinite"/>
     </circle>
 </svg>
