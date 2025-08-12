@@ -214,5 +214,20 @@
     
     <script src="auth-modal.js"></script>
     <script src="script.js"></script>
+    
+    <!-- Performance Monitoring and Optimization -->
+    <script src="performance-monitor.js"></script>
+    <script src="web-vitals-tracker.js"></script>
+    <script src="performance-optimizer.js"></script>
+    
+    <script>
+        // Initialize performance monitoring in development
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            console.log('🚀 Performance monitoring enabled');
+            console.log('Keyboard shortcuts:');
+            console.log('  Ctrl+Shift+P: Toggle Performance Monitor');
+            console.log('  Ctrl+Shift+V: Toggle Web Vitals Display');
+        }
+    </script>
 </body>
 </html>

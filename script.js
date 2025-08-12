@@ -4059,6 +4059,32 @@ class BoredomBusterApp {
         let lastTime = 0;
         let lastX = 0;
         let scrollStartTime = 0;
+        let animationFrame = null;
+        
+        // Performance optimization: Use transform3d for hardware acceleration
+        const setCardTransform = (x, y, rotation, scale, opacity) => {
+            // Use transform3d for hardware acceleration and batch DOM updates
+            // Cache the transform string to reduce string concatenation overhead
+            const transform = `translate3d(${x}px, ${y}px, 0) rotate(${rotation}deg) scale(${scale})`;
+            card.style.transform = transform;
+            card.style.opacity = opacity;
+        };
+        
+        // Throttled move handler using requestAnimationFrame
+        const throttledMove = (deltaX, deltaY) => {
+            if (animationFrame) return; // Skip if animation frame is already queued
+            
+            animationFrame = requestAnimationFrame(() => {
+                // Optimized calculations with reduced complexity
+                const rotation = deltaX * 0.1; // Reduced rotation factor for smoother feel
+                const scale = Math.max(0.98, 1 - Math.abs(deltaX) * 0.0003); // Less aggressive scaling
+                const verticalOffset = Math.abs(deltaX) * 0.05; // Reduced vertical movement
+                const opacity = Math.max(0.5, 1 - Math.abs(deltaX) * 0.001); // Less aggressive opacity change
+                
+                setCardTransform(deltaX, -verticalOffset, rotation, scale, opacity);
+                animationFrame = null;
+            });
+        };
         
         const handleStart = (e) => {
             // Only handle actual mouse down or touch start events
@@ -4085,15 +4111,20 @@ class BoredomBusterApp {
             isDragging = false;
             isScrolling = false;
             
-            // For mouse events, we need an actual click to start dragging
-            // For touch events on non-scrollable content, we can start immediately
+            // Cancel any pending animation frames
+            if (animationFrame) {
+                cancelAnimationFrame(animationFrame);
+                animationFrame = null;
+            }
+            
+            // For touch events on non-scrollable content, start immediately for better responsiveness
             if (e.type === 'touchstart' && !isOnScrollableContent) {
                 isDragging = true;
                 card.style.transition = 'none';
                 card.style.cursor = 'grabbing';
                 card.style.zIndex = '100';
+                card.style.willChange = 'transform, opacity'; // Hint browser for optimization
             }
-            // For mouse events, wait for movement to confirm drag intent
         };
         
         const handleMove = (e) => {
@@ -4112,29 +4143,26 @@ class BoredomBusterApp {
             if (!isDragging && !isScrolling) {
                 const timeSinceStart = Date.now() - scrollStartTime;
                 
-                // For mouse events, only start dragging if we have significant movement
-                // This prevents accidental dragging on hover
+                // For mouse events, require more movement to prevent accidental drags
                 if (e.type === 'mousemove') {
-                    // Require more movement for mouse to prevent accidental drags
-                    if (absDeltaX < 20 && absDeltaY < 20) {
+                    if (absDeltaX < 15 && absDeltaY < 15) {
                         return; // Not enough movement to start dragging
                     }
                 }
                 
-                // If movement is primarily vertical and we're on scrollable content, it's scrolling
-                if (absDeltaY > absDeltaX && absDeltaY > 10) {
+                // Improved gesture detection with better thresholds
+                if (absDeltaY > absDeltaX && absDeltaY > 8) {
                     isScrolling = true;
                     return; // Let the browser handle scrolling
                 }
-                // If movement is primarily horizontal or significant horizontal movement, it's swiping
-                else if (absDeltaX > 15 || (absDeltaX > absDeltaY && absDeltaX > 8)) {
+                else if (absDeltaX > 10 || (absDeltaX > absDeltaY && absDeltaX > 5)) {
                     isDragging = true;
                     card.style.transition = 'none';
                     card.style.cursor = 'grabbing';
                     card.style.zIndex = '100';
+                    card.style.willChange = 'transform, opacity';
                 }
-                // If movement is too small, wait for more input
-                else if (timeSinceStart < 150) {
+                else if (timeSinceStart < 100) { // Reduced wait time for better responsiveness
                     return;
                 }
             }
@@ -4146,32 +4174,32 @@ class BoredomBusterApp {
             
             // Handle swiping
             if (!isDragging) return;
-            e.preventDefault();
             
-            // Calculate velocity for momentum
+            // Only prevent default for actual swipe gestures
+            if (absDeltaX > 5) {
+                e.preventDefault();
+            }
+            
+            // Calculate velocity for momentum (optimized)
             const currentTime = Date.now();
             const timeDelta = currentTime - lastTime;
-            if (timeDelta > 0) {
+            if (timeDelta > 16) { // Throttle velocity calculation to ~60fps
                 velocity = (currentX - lastX) / timeDelta;
+                lastX = currentX;
+                lastTime = currentTime;
             }
-            lastX = currentX;
-            lastTime = currentTime;
             
-            // More natural rotation based on distance and direction
-            const rotation = deltaX * 0.15;
-            const scale = Math.max(0.95, 1 - Math.abs(deltaX) * 0.0005);
-            
-            // Add slight vertical movement for more natural feel
-            const verticalOffset = Math.abs(deltaX) * 0.1;
-            
-            card.style.transform = `translateX(${deltaX}px) translateY(${-verticalOffset}px) rotate(${rotation}deg) scale(${scale})`;
-            
-            // Add opacity fade for cards being swiped far
-            const opacity = Math.max(0.3, 1 - Math.abs(deltaX) * 0.002);
-            card.style.opacity = opacity;
+            // Use throttled animation for smooth performance
+            throttledMove(deltaX, deltaY);
         };
         
         const handleEnd = () => {
+            // Cancel any pending animation frames
+            if (animationFrame) {
+                cancelAnimationFrame(animationFrame);
+                animationFrame = null;
+            }
+            
             // Reset scrolling state
             if (isScrolling) {
                 isScrolling = false;
@@ -4182,13 +4210,14 @@ class BoredomBusterApp {
             isDragging = false;
             
             const deltaX = currentX - startX;
-            const swipeThreshold = 120;
-            const velocityThreshold = 0.5;
+            const swipeThreshold = 100; // Reduced threshold for more responsive swiping
+            const velocityThreshold = 0.4; // Slightly reduced for easier swiping
             
             // Consider both distance and velocity for swipe detection
             const shouldSwipe = Math.abs(deltaX) > swipeThreshold || Math.abs(velocity) > velocityThreshold;
             
             card.style.cursor = 'grab';
+            card.style.willChange = 'auto'; // Reset will-change to save memory
             
             if (shouldSwipe) {
                 // Mark user interaction when swiping
@@ -4210,13 +4239,14 @@ class BoredomBusterApp {
                     this.stopSpeech();
                 }
                 
-                // Enhanced swipe away animation with momentum
+                // Optimized swipe away animation with hardware acceleration
                 const direction = deltaX > 0 ? 1 : -1;
-                const finalX = direction * (window.innerWidth + 200);
-                const finalRotation = direction * 30 + (velocity * 50);
+                const finalX = direction * (window.innerWidth + 150);
+                const finalRotation = direction * 25 + (velocity * 30); // Reduced rotation for smoother feel
                 
-                card.style.transition = 'all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-                card.style.transform = `translateX(${finalX}px) translateY(-100px) rotate(${finalRotation}deg) scale(0.8)`;
+                // Use faster, more optimized transition
+                card.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease-out';
+                card.style.transform = `translate3d(${finalX}px, -80px, 0) rotate(${finalRotation}deg) scale(0.85)`;
                 card.style.opacity = '0';
                 
                 // Add swipe class for additional styling
@@ -4227,6 +4257,7 @@ class BoredomBusterApp {
                     this.cardObserver.unobserve(card);
                 }
                 
+                // Reduced timeout for faster card replacement
                 setTimeout(() => {
                     this.addNewCard();
                     card.remove();
@@ -4239,14 +4270,19 @@ class BoredomBusterApp {
                             newTopCard.removeAttribute('data-audio-played'); // Allow audio to play again
                             this.speakCardContent(newTopCard);
                         }
-                    }, 300);
-                }, 800);
+                    }, 200); // Reduced delay for faster audio response
+                }, 600); // Reduced from 800ms for faster card replacement
             } else {
-                // Smooth snap back animation
-                card.style.transition = 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
-                card.style.transform = '';
+                // Optimized snap back animation
+                card.style.transition = 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease-out';
+                card.style.transform = 'translate3d(0, 0, 0) rotate(0deg) scale(1)';
                 card.style.opacity = '1';
                 card.style.zIndex = '';
+                
+                // Reset will-change after animation
+                setTimeout(() => {
+                    card.style.willChange = 'auto';
+                }, 400);
             }
         };
         
@@ -4270,9 +4306,9 @@ class BoredomBusterApp {
             document.addEventListener('mouseup', mouseUpHandler);
         });
         
-        // Touch events with better passive handling
-        card.addEventListener('touchstart', handleStart, { passive: false });
-        card.addEventListener('touchmove', handleMove, { passive: false });
+        // Optimized touch events with better passive handling
+        card.addEventListener('touchstart', handleStart, { passive: true });
+        card.addEventListener('touchmove', handleMove, { passive: false }); // Only non-passive for preventDefault
         card.addEventListener('touchend', handleEnd, { passive: true });
         
         // Handle mouse leave to prevent stuck drag state
