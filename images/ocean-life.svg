@@ -1,77 +1,31 @@
 <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="oceanGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#74b9ff;stop-opacity:1" />
-      <stop offset="50%" style="stop-color:#0984e3;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#2d3436;stop-opacity:1" />
-    </linearGradient>
-    <linearGradient id="jellyfishGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#fd79a8;stop-opacity:0.8" />
-      <stop offset="100%" style="stop-color:#fdcb6e;stop-opacity:0.6" />
-    </linearGradient>
-    <linearGradient id="fishGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#00cec9;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#55a3ff;stop-opacity:1" />
-    </linearGradient>
-  </defs>
-  
-  <!-- Ocean background -->
-  <circle cx="100" cy="100" r="90" fill="url(#oceanGradient)"/>
-  
-  <!-- Water bubbles -->
-  <g opacity="0.6">
-    <circle cx="30" cy="160" r="3" fill="#fff">
-      <animate attributeName="cy" values="160;20" dur="4s" repeatCount="indefinite"/>
-      <animate attributeName="opacity" values="0.6;0" dur="4s" repeatCount="indefinite"/>
-    </circle>
-    <circle cx="170" cy="180" r="2" fill="#fff">
-      <animate attributeName="cy" values="180;30" dur="5s" repeatCount="indefinite"/>
-      <animate attributeName="opacity" values="0.6;0" dur="5s" repeatCount="indefinite"/>
-    </circle>
-    <circle cx="100" cy="170" r="4" fill="#fff">
-      <animate attributeName="cy" values="170;10" dur="6s" repeatCount="indefinite"/>
-      <animate attributeName="opacity" values="0.6;0" dur="6s" repeatCount="indefinite"/>
-    </circle>
-  </g>
-  
-  <!-- Jellyfish -->
-  <g transform="translate(60,80)">
-    <ellipse cx="0" cy="0" rx="20" ry="15" fill="url(#jellyfishGradient)"/>
-    <path d="M -15 10 Q -10 25 -5 15 Q 0 30 5 15 Q 10 25 15 10" stroke="url(#jellyfishGradient)" stroke-width="2" fill="none">
-      <animate attributeName="d" values="M -15 10 Q -10 25 -5 15 Q 0 30 5 15 Q 10 25 15 10;M -15 10 Q -10 20 -5 18 Q 0 25 5 18 Q 10 20 15 10;M -15 10 Q -10 25 -5 15 Q 0 30 5 15 Q 10 25 15 10" dur="2s" repeatCount="indefinite"/>
-    </animate>
-    <circle cx="-5" cy="-5" r="2" fill="#fff" opacity="0.8"/>
-    <circle cx="5" cy="-5" r="2" fill="#fff" opacity="0.8"/>
-  </g>
-  
-  <!-- Fish -->
-  <g transform="translate(130,120)">
-    <ellipse cx="0" cy="0" rx="15" ry="8" fill="url(#fishGradient)"/>
-    <polygon points="-15,0 -25,-5 -25,5" fill="url(#fishGradient)"/>
-    <circle cx="8" cy="-2" r="2" fill="#fff"/>
-    <circle cx="9" cy="-2" r="1" fill="#333"/>
-    <animateTransform attributeName="transform" type="translate" values="130,120;140,115;130,120" dur="3s" repeatCount="indefinite"/>
-  </g>
-  
-  <!-- Octopus tentacles -->
-  <g transform="translate(100,140)" opacity="0.8">
-    <path d="M 0 0 Q -20 10 -15 25 Q -10 35 -20 40" stroke="url(#fishGradient)" stroke-width="4" fill="none" stroke-linecap="round">
-      <animate attributeName="d" values="M 0 0 Q -20 10 -15 25 Q -10 35 -20 40;M 0 0 Q -25 15 -10 30 Q -5 40 -15 45;M 0 0 Q -20 10 -15 25 Q -10 35 -20 40" dur="3s" repeatCount="indefinite"/>
+    <defs>
+        <linearGradient id="oceanGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#74b9ff;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#0984e3;stop-opacity:1" />
+        </linearGradient>
+    </defs>
+    <circle cx="100" cy="100" r="90" fill="url(#oceanGradient)" opacity="0.2"/>
+    <g transform="translate(100,100)">
+        <ellipse cx="0" cy="0" rx="30" ry="15" fill="url(#oceanGradient)" opacity="0.8">
+            <animateTransform attributeName="transform" type="rotate" values="0;360" dur="8s" repeatCount="indefinite"/>
+        </ellipse>
+        <circle cx="15" cy="0" r="8" fill="#ff6b6b" opacity="0.7">
+            <animate attributeName="cy" values="0;-10;0;10;0" dur="3s" repeatCount="indefinite"/>
+        </circle>
+        <path d="M -25 0 Q -35 -10 -25 -15 Q -15 -10 -25 0" fill="url(#oceanGradient)">
+            <animate attributeName="d" values="M -25 0 Q -35 -10 -25 -15 Q -15 -10 -25 0;M -25 0 Q -35 -5 -25 -10 Q -15 -5 -25 0;M -25 0 Q -35 -10 -25 -15 Q -15 -10 -25 0" dur="2s" repeatCount="indefinite"/>
+        </path>
+    </g>
+    <g opacity="0.6">
+        <circle cx="60" cy="60" r="3" fill="#4ecdc4">
+            <animate attributeName="r" values="3;6;3" dur="2s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="140" cy="140" r="2" fill="#feca57">
+            <animate attributeName="r" values="2;5;2" dur="2.5s" repeatCount="indefinite"/>
+        </circle>
+    </g>
+    <path d="M 20 180 Q 100 160 180 180" stroke="url(#oceanGradient)" stroke-width="3" fill="none" opacity="0.4" stroke-dasharray="5,5">
+        <animate attributeName="stroke-dashoffset" values="0;10" dur="3s" repeatCount="indefinite"/>
     </path>
-    <path d="M 0 0 Q 20 10 15 25 Q 10 35 20 40" stroke="url(#fishGradient)" stroke-width="4" fill="none" stroke-linecap="round">
-      <animate attributeName="d" values="M 0 0 Q 20 10 15 25 Q 10 35 20 40;M 0 0 Q 25 15 10 30 Q 5 40 15 45;M 0 0 Q 20 10 15 25 Q 10 35 20 40" dur="3s" repeatCount="indefinite"/>
-    </path>
-  </g>
-  
-  <!-- Coral -->
-  <g transform="translate(40,150)" opacity="0.7">
-    <path d="M 0 20 Q -5 15 -3 10 Q -8 5 -5 0 M 0 20 Q 5 15 3 10 Q 8 5 5 0" stroke="#ff7675" stroke-width="3" fill="none" stroke-linecap="round"/>
-  </g>
-  
-  <!-- Seaweed -->
-  <g transform="translate(160,140)" opacity="0.6">
-    <path d="M 0 40 Q -5 30 0 20 Q 5 10 0 0" stroke="#00b894" stroke-width="3" fill="none" stroke-linecap="round">
-      <animate attributeName="d" values="M 0 40 Q -5 30 0 20 Q 5 10 0 0;M 0 40 Q 5 30 0 20 Q -5 10 0 0;M 0 40 Q -5 30 0 20 Q 5 10 0 0" dur="4s" repeatCount="indefinite"/>
-    </path>
-  </g>
 </svg>

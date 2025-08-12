@@ -1,0 +1,35 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="geoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#00b894;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#74b9ff;stop-opacity:1" />
+        </linearGradient>
+    </defs>
+    <circle cx="100" cy="100" r="90" fill="url(#geoGradient)" opacity="0.1"/>
+    <g transform="translate(100,100)">
+        <circle cx="0" cy="0" r="35" fill="url(#geoGradient)" opacity="0.3"/>
+        <g fill="#00b894" opacity="0.8">
+            <path d="M -20 -25 Q -10 -30 0 -25 Q 10 -20 5 -10 Q 0 -5 -10 -10 Q -20 -15 -20 -25"/>
+            <path d="M 15 -15 Q 25 -20 30 -10 Q 25 0 15 -5 Q 10 -10 15 -15"/>
+            <path d="M -25 5 Q -15 0 -5 5 Q 5 10 0 20 Q -10 25 -20 20 Q -30 15 -25 5"/>
+            <path d="M 10 10 Q 20 5 25 15 Q 20 25 10 20 Q 5 15 10 10"/>
+        </g>
+        <g opacity="0.6">
+            <circle cx="-15" cy="-15" r="2" fill="#feca57">
+                <animate attributeName="r" values="2;4;2" dur="2s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="20" cy="-5" r="2" fill="#ff6b6b">
+                <animate attributeName="r" values="2;4;2" dur="2.5s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="-10" cy="15" r="2" fill="#fd79a8">
+                <animate attributeName="r" values="2;4;2" dur="1.8s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="15" cy="18" r="2" fill="#a29bfe">
+                <animate attributeName="r" values="2;4;2" dur="2.2s" repeatCount="indefinite"/>
+            </circle>
+        </g>
+    </g>
+    <circle cx="100" cy="100" r="85" fill="none" stroke="url(#geoGradient)" stroke-width="1" opacity="0.3" stroke-dasharray="6,6">
+        <animate attributeName="stroke-dashoffset" values="0;12" dur="3s" repeatCount="indefinite"/>
+    </circle>
+</svg>

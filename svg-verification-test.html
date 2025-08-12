@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG Verification Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .svg-test-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: 2px solid transparent;
+        }
+        .svg-test-card.success {
+            border-color: #00b894;
+            background: rgba(0, 184, 148, 0.2);
+        }
+        .svg-test-card.error {
+            border-color: #e17055;
+            background: rgba(225, 112, 85, 0.2);
+        }
+        .svg-test-card img {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 10px;
+        }
+        .svg-test-card h4 {
+            margin: 5px 0;
+            font-size: 12px;
+        }
+        .svg-test-card .status {
+            font-size: 10px;
+            opacity: 0.8;
+        }
+        .summary {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .summary h2 {
+            margin-top: 0;
+        }
+        .stats {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .stat {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        .missing-files {
+            background: rgba(225, 112, 85, 0.2);
+            border: 1px solid #e17055;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .missing-files h3 {
+            margin-top: 0;
+            color: #e17055;
+        }
+        .missing-files ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 SVG Verification Test</h1>
+        <p>Testing all SVG files used by the card application...</p>
+        
+        <div class="summary" id="summary">
+            <h2>📊 Test Results</h2>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-value" id="totalCount">0</div>
+                    <div class="stat-label">Total SVGs</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="successCount">0</div>
+                    <div class="stat-label">Loaded</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="errorCount">0</div>
+                    <div class="stat-label">Failed</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="successRate">0%</div>
+                    <div class="stat-label">Success Rate</div>
+                </div>
+            </div>
+            <div id="missingFiles" class="missing-files" style="display: none;">
+                <h3>❌ Missing or Failed SVG Files</h3>
+                <ul id="missingFilesList"></ul>
+            </div>
+        </div>
+        
+        <div class="test-grid" id="testGrid"></div>
+    </div>
+
+    <script>
+        // Complete list of all SVG files that should be available
+        const expectedSVGs = [
+            // Game SVGs
+            { path: 'images/tictactoe.svg', category: 'Games', description: 'Tic-tac-toe game' },
+            { path: 'images/connect4.svg', category: 'Games', description: 'Connect 4 game' },
+            { path: 'images/chess.svg', category: 'Games', description: 'Chess game' },
+            { path: 'images/flappy.svg', category: 'Games', description: 'Flappy Bird game' },
+            { path: 'images/sudoku.svg', category: 'Games', description: 'Sudoku puzzle' },
+            { path: 'images/crossword.svg', category: 'Games', description: 'Crossword puzzle' },
+            { path: 'images/pacman.svg', category: 'Games', description: 'Pac-Man game' },
+            { path: 'images/tetris.svg', category: 'Games', description: 'Tetris game' },
+            { path: 'images/galaga.svg', category: 'Games', description: 'Galaga game' },
+            { path: 'images/snake.svg', category: 'Games', description: 'Snake game' },
+            { path: 'images/breakout.svg', category: 'Games', description: 'Breakout game' },
+            { path: 'images/memory.svg', category: 'Games', description: 'Memory match game' },
+            { path: 'images/wordsearch.svg', category: 'Games', description: 'Word search game' },
+            { path: 'images/solitaire.svg', category: 'Games', description: 'Solitaire card game' },
+            { path: 'images/minesweeper.svg', category: 'Games', description: 'Minesweeper game' },
+            
+            // Educational Content SVGs
+            { path: 'images/ocean-life.svg', category: 'Education', description: 'Ocean Life facts' },
+            { path: 'images/space-mysteries.svg', category: 'Education', description: 'Space Mysteries facts' },
+            { path: 'images/animal-kingdom.svg', category: 'Education', description: 'Animal Kingdom facts' },
+            { path: 'images/human-body.svg', category: 'Education', description: 'Human Body facts' },
+            { path: 'images/technology-science.svg', category: 'Education', description: 'Technology & Science facts' },
+            { path: 'images/ancient-history.svg', category: 'Education', description: 'Ancient History facts' },
+            { path: 'images/medieval-times.svg', category: 'Education', description: 'Medieval Times facts' },
+            { path: 'images/modern-history.svg', category: 'Education', description: 'Modern History facts' },
+            { path: 'images/world-geography.svg', category: 'Education', description: 'World Geography facts' },
+            { path: 'images/literature-arts.svg', category: 'Education', description: 'Literature & Arts facts' },
+            { path: 'images/psychology-mind.svg', category: 'Education', description: 'Psychology & Mind facts' },
+            { path: 'images/food-culture.svg', category: 'Education', description: 'Food & Culture facts' },
+            
+            // Challenge SVGs
+            { path: 'images/riddle.svg', category: 'Challenges', description: 'Riddles and puzzles' },
+            { path: 'images/math-challenge.svg', category: 'Challenges', description: 'Math challenges' },
+            
+            // Activity SVGs
+            { path: 'images/creative-arts.svg', category: 'Activities', description: 'Creative Arts activities' },
+            { path: 'images/learning-adventures.svg', category: 'Activities', description: 'Learning Adventures activities' },
+            { path: 'images/physical-challenges.svg', category: 'Activities', description: 'Physical Challenges activities' },
+            { path: 'images/communication-skills.svg', category: 'Activities', description: 'Communication Skills activities' },
+            { path: 'images/life-skills.svg', category: 'Activities', description: 'Life Skills activities' },
+            { path: 'images/mental-exercises.svg', category: 'Activities', description: 'Mental Exercises activities' },
+            { path: 'images/mindfulness-&-reflection.svg', category: 'Activities', description: 'Mindfulness & Reflection activities' },
+            { path: 'images/nature-connection.svg', category: 'Activities', description: 'Nature Connection activities' },
+            { path: 'images/problem-solving.svg', category: 'Activities', description: 'Problem Solving activities' },
+            { path: 'images/social-experiments.svg', category: 'Activities', description: 'Social Experiments activities' },
+            { path: 'images/storytelling.svg', category: 'Activities', description: 'Storytelling activities' },
+            { path: 'images/observation-games.svg', category: 'Activities', description: 'Observation Games activities' },
+            
+            // Additional Premium Content SVGs (if they exist)
+            { path: 'images/geography-world.svg', category: 'Premium', description: 'Geography World content' },
+            { path: 'images/language-learning.svg', category: 'Premium', description: 'Language Learning content' },
+            { path: 'images/memory-training.svg', category: 'Premium', description: 'Memory Training content' },
+            { path: 'images/music-rhythm.svg', category: 'Premium', description: 'Music Rhythm content' },
+            { path: 'images/nature-environment.svg', category: 'Premium', description: 'Nature Environment content' },
+            { path: 'images/personal-development.svg', category: 'Premium', description: 'Personal Development content' },
+            { path: 'images/physics-chemistry.svg', category: 'Premium', description: 'Physics Chemistry content' },
+            { path: 'images/quick-reflexes.svg', category: 'Premium', description: 'Quick Reflexes content' },
+            { path: 'images/sports-fitness.svg', category: 'Premium', description: 'Sports Fitness content' },
+            { path: 'images/strategy-planning.svg', category: 'Premium', description: 'Strategy Planning content' },
+            { path: 'images/trivia-knowledge.svg', category: 'Premium', description: 'Trivia Knowledge content' },
+            { path: 'images/visual-perception.svg', category: 'Premium', description: 'Visual Perception content' },
+            { path: 'images/word-games.svg', category: 'Premium', description: 'Word Games content' }
+        ];
+
+        let totalCount = 0;
+        let successCount = 0;
+        let errorCount = 0;
+        let missingFiles = [];
+
+        function updateStats() {
+            document.getElementById('totalCount').textContent = totalCount;
+            document.getElementById('successCount').textContent = successCount;
+            document.getElementById('errorCount').textContent = errorCount;
+            
+            const successRate = totalCount > 0 ? Math.round((successCount / totalCount) * 100) : 0;
+            document.getElementById('successRate').textContent = successRate + '%';
+            
+            if (missingFiles.length > 0) {
+                document.getElementById('missingFiles').style.display = 'block';
+                const list = document.getElementById('missingFilesList');
+                list.innerHTML = '';
+                missingFiles.forEach(file => {
+                    const li = document.createElement('li');
+                    li.textContent = file;
+                    list.appendChild(li);
+                });
+            }
+        }
+
+        function testSVG(svgInfo) {
+            return new Promise((resolve) => {
+                const card = document.createElement('div');
+                card.className = 'svg-test-card';
+                
+                const img = document.createElement('img');
+                const title = document.createElement('h4');
+                const status = document.createElement('div');
+                status.className = 'status';
+                
+                title.textContent = svgInfo.path.split('/').pop().replace('.svg', '');
+                status.textContent = 'Loading...';
+                
+                card.appendChild(img);
+                card.appendChild(title);
+                card.appendChild(status);
+                
+                document.getElementById('testGrid').appendChild(card);
+                
+                totalCount++;
+                
+                img.onload = () => {
+                    card.className = 'svg-test-card success';
+                    status.textContent = '✅ Loaded';
+                    successCount++;
+                    updateStats();
+                    resolve({ success: true, path: svgInfo.path });
+                };
+                
+                img.onerror = () => {
+                    card.className = 'svg-test-card error';
+                    status.textContent = '❌ Failed';
+                    errorCount++;
+                    missingFiles.push(svgInfo.path);
+                    updateStats();
+                    resolve({ success: false, path: svgInfo.path });
+                };
+                
+                // Set a timeout for loading
+                setTimeout(() => {
+                    if (!img.complete) {
+                        img.onerror();
+                    }
+                }, 5000);
+                
+                img.src = svgInfo.path;
+            });
+        }
+
+        async function runTests() {
+            console.log('🧪 Starting SVG verification tests...');
+            
+            const results = [];
+            for (const svgInfo of expectedSVGs) {
+                const result = await testSVG(svgInfo);
+                results.push(result);
+            }
+            
+            console.log('✅ SVG verification tests completed!');
+            console.log(`📊 Results: ${successCount}/${totalCount} SVGs loaded successfully (${Math.round((successCount / totalCount) * 100)}%)`);
+            
+            if (missingFiles.length > 0) {
+                console.error('❌ Missing SVG files:', missingFiles);
+            }
+            
+            return results;
+        }
+
+        // Start tests when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            runTests();
+        });
+    </script>
+</body>
+</html>

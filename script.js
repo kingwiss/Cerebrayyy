@@ -208,10 +208,19 @@ class BoredomBusterApp {
         // Initialize saved cards functionality first
         this.initializeSavedCards();
 
+        // Preload all images to ensure they're available
+        this.preloadImages();
+
         // Page-specific initializations
         if (this.cardsContainer) {
             this.generateCards();
             this.bindEvents();
+            
+            // Aggressively fix any image loading issues after cards are generated
+            setTimeout(() => {
+                console.log('🖼️ Running automatic image refresh after initialization...');
+                this.refreshCardImages();
+            }, 1000);
         }
 
         // Initialize premium button state
@@ -233,6 +242,7 @@ class BoredomBusterApp {
         this.setupNavigation();
         this.setupContactForm();
         this.setupSavedCardsModal();
+        this.setupImageRefreshButton();
     }
 
     // Initialize premium button state on app load
@@ -2525,7 +2535,7 @@ class BoredomBusterApp {
             }
         }
         
-        // Fallback to basic games if no backend available
+        // Fallback to basic games if no backend available - INCLUDING CHESS PUZZLES FOR FREE USERS!
         const fallbackGames = [
             {
                 type: 'Game',
@@ -2544,6 +2554,15 @@ class BoredomBusterApp {
                 gameType: 'connect4',
                 category: 'game',
                 image: 'images/connect4.svg'
+            },
+            {
+                type: 'Chess Puzzle',
+                title: 'Chess Puzzle',
+                description: 'Solve chess puzzles and improve your strategic thinking! Find the winning move.',
+                action: 'play',
+                gameType: 'chess',
+                category: 'chess',
+                image: 'images/chess.svg'
             }
         ];
         
@@ -2963,79 +2982,353 @@ class BoredomBusterApp {
     }
 
     getCardImage(type, category = null) {
-        // Map different card types and categories to their respective SVG images
+        // Comprehensive image mapping with multiple fallback options
         const imageMap = {
-            // Game images
+            // Game images with fallbacks
             'Game': {
-                'tictactoe': 'images/tictactoe.svg',
-                'connect4': 'images/connect4.svg',
-                'chess': 'images/chess.svg',
-                'flappy': 'images/flappy.svg',
-                // Premium games
-                'sudoku': 'images/sudoku.svg',
-                'crossword': 'images/crossword.svg',
-                'pacman': 'images/pacman.svg',
-                'tetris': 'images/tetris.svg',
-                'galaga': 'images/galaga.svg',
-                'snake': 'images/snake.svg',
-                'breakout': 'images/breakout.svg',
-                'memory': 'images/memory.svg',
-                'wordsearch': 'images/wordsearch.svg',
-                'solitaire': 'images/solitaire.svg',
-                'minesweeper': 'images/minesweeper.svg'
+                'tictactoe': ['images/tictactoe.svg'],
+                'connect4': ['images/connect4.svg'],
+                'chess': ['images/chess.svg'],
+                'flappy': ['images/flappy.svg'],
+                'sudoku': ['images/sudoku.svg'],
+                'crossword': ['images/crossword.svg'],
+                'pacman': ['images/pacman.svg'],
+                'tetris': ['images/tetris.svg'],
+                'galaga': ['images/galaga.svg'],
+                'snake': ['images/snake.svg'],
+                'breakout': ['images/breakout.svg'],
+                'memory': ['images/memory.svg', 'images/memory-training.svg'],
+                'wordsearch': ['images/wordsearch.svg', 'images/word-games.svg'],
+                'solitaire': ['images/solitaire.svg'],
+                'minesweeper': ['images/minesweeper.svg']
             },
             
-            // Fun Facts images by category
-            'Ocean Life': 'images/ocean-life.svg',
-            'Space Mysteries': 'images/space-mysteries.svg',
-            'Animal Kingdom': 'images/animal-kingdom.svg',
-            'Human Body': 'images/human-body.svg',
-            'Technology & Science': 'images/technology-science.svg',
-            'Ancient History': 'images/ancient-history.svg',
-            'Medieval Times': 'images/medieval-times.svg',
-            'Modern History': 'images/modern-history.svg',
-            'World Geography': 'images/world-geography.svg',
-            'Literature & Arts': 'images/literature-arts.svg',
-            'Psychology & Mind': 'images/psychology-mind.svg',
-            'Food & Culture': 'images/food-culture.svg',
-            'Amazing Fact': 'images/technology-science.svg', // Default for random facts
+            // Fun Facts images with multiple fallback options
+            'Ocean Life': ['images/ocean-life.svg', 'images/nature-&-environment.svg', 'images/nature-environment.svg'],
+            'Space Mysteries': ['images/space-mysteries.svg', 'images/mysteries-&-unexplained.svg'],
+            'Animal Kingdom': ['images/animal-kingdom.svg', 'images/nature-&-environment.svg'],
+            'Human Body': ['images/human-body.svg', 'images/physics-chemistry.svg'],
+            'Technology & Science': ['images/technology-science.svg', 'images/technology-&-digital.svg', 'images/physics-chemistry.svg'],
+            'Ancient History': ['images/ancient-history.svg', 'images/trivia-&-facts.svg'],
+            'Medieval Times': ['images/medieval-times.svg', 'images/ancient-history.svg'],
+            'Modern History': ['images/modern-history.svg', 'images/trivia-&-facts.svg'],
+            'World Geography': ['images/world-geography.svg', 'images/geography-world.svg', 'images/trivia-&-facts.svg'],
+            'Literature & Arts': ['images/literature-arts.svg', 'images/music-&-entertainment.svg'],
+            'Psychology & Mind': ['images/psychology-mind.svg', 'images/personal-development.svg'],
+            'Food & Culture': ['images/food-culture.svg', 'images/trivia-&-facts.svg'],
+            'Amazing Fact': ['images/technology-science.svg', 'images/trivia-&-facts.svg', 'images/weird-science.svg'],
             
-            // Riddle images
-            'Riddle': 'images/riddle.svg',
-            'Mystery Challenge': 'images/riddle.svg',
-            'Word Puzzle': 'images/riddle.svg',
-            'Logic Puzzle': 'images/riddle.svg',
+            // Riddle images with fallbacks
+            'Riddle': ['images/riddle.svg', 'images/mathematics-&-logic.svg'],
+            'Mystery Challenge': ['images/riddle.svg', 'images/mysteries-&-unexplained.svg'],
+            'Word Puzzle': ['images/riddle.svg', 'images/word-games.svg'],
+            'Logic Puzzle': ['images/riddle.svg', 'images/mathematics-&-logic.svg'],
             
-            // Math Challenge images - all math types use the same beautiful math image
-            'Math Challenge': 'images/math-challenge.svg',
-            'Math Puzzle': 'images/math-challenge.svg',
-            'Pattern Puzzle': 'images/math-challenge.svg',
-            'Logic Puzzle': 'images/math-challenge.svg',
-            'Number Quest': 'images/math-challenge.svg',
-            'Pattern Detective': 'images/math-challenge.svg',
-            'Sequence Solver': 'images/math-challenge.svg',
-            'Pattern Quest': 'images/math-challenge.svg',
-            'Number Patterns': 'images/math-challenge.svg',
-            'Logic Challenge': 'images/math-challenge.svg',
-            'Brain Teaser': 'images/math-challenge.svg',
-            'Think Tank': 'images/math-challenge.svg',
-            'Arithmetic Master': 'images/math-challenge.svg',
-            'Number Wizard': 'images/math-challenge.svg',
-            'Quick Math': 'images/math-challenge.svg',
-            'Math Quest': 'images/math-challenge.svg',
-            'Number Challenge': 'images/math-challenge.svg',
-            'Math Mystery': 'images/math-challenge.svg',
-            'Calculation Quest': 'images/math-challenge.svg',
-            'Number Puzzle': 'images/math-challenge.svg'
+            // Math Challenge images with fallbacks
+            'Math Challenge': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            'Math Puzzle': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            'Pattern Puzzle': ['images/math-challenge.svg', 'images/visual-perception.svg'],
+            'Logic Puzzle': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            'Number Quest': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            'Pattern Detective': ['images/math-challenge.svg', 'images/visual-perception.svg'],
+            'Sequence Solver': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            'Pattern Quest': ['images/math-challenge.svg', 'images/visual-perception.svg'],
+            'Number Patterns': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            'Logic Challenge': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            'Brain Teaser': ['images/math-challenge.svg', 'images/psychology-mind.svg'],
+            'Think Tank': ['images/math-challenge.svg', 'images/strategy-planning.svg'],
+            'Arithmetic Master': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            'Number Wizard': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            'Quick Math': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            'Math Quest': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            'Number Challenge': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            'Math Mystery': ['images/math-challenge.svg', 'images/mysteries-&-unexplained.svg'],
+            'Calculation Quest': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            'Number Puzzle': ['images/math-challenge.svg', 'images/mathematics-&-logic.svg'],
+            
+            // Activity images with comprehensive fallbacks
+            'Activity': {
+                'Creative Arts': ['images/creative-arts.svg', 'images/literature-arts.svg', 'images/music-&-entertainment.svg'],
+                'Learning Adventures': ['images/learning-adventures.svg', 'images/language-learning.svg', 'images/trivia-knowledge.svg'],
+                'Physical Challenges': ['images/physical-challenges.svg', 'images/sports-&-records.svg', 'images/sports-fitness.svg'],
+                'Communication Skills': ['images/communication-skills.svg', 'images/language-learning.svg'],
+                'Life Skills': ['images/life-skills.svg', 'images/personal-development.svg'],
+                'Mental Exercises': ['images/mental-exercises.svg', 'images/memory-training.svg', 'images/psychology-mind.svg'],
+                'Mindfulness & Reflection': ['images/mindfulness-&-reflection.svg', 'images/mindfulness.svg', 'images/personal-development.svg'],
+                'Nature Connection': ['images/nature-connection.svg', 'images/nature-&-environment.svg', 'images/nature-environment.svg'],
+                'Problem Solving': ['images/problem-solving.svg', 'images/strategy-planning.svg', 'images/mathematics-&-logic.svg'],
+                'Social Experiments': ['images/social-experiments.svg', 'images/psychology-mind.svg'],
+                'Storytelling': ['images/storytelling.svg', 'images/literature-arts.svg'],
+                'Observation Games': ['images/observation-games.svg', 'images/visual-perception.svg']
+            }
+        };
+        
+        // Helper function to get the first available image from a list
+        const getFirstAvailableImage = (imageList) => {
+            if (!Array.isArray(imageList)) return imageList;
+            return imageList[0]; // For now, return the first one. We'll add validation later.
         };
         
         // For games, use the category (gameType) to get specific image
         if (type === 'Game' && category) {
-            return imageMap['Game'][category] || 'images/tictactoe.svg';
+            const gameImages = imageMap['Game'][category];
+            return getFirstAvailableImage(gameImages) || 'images/tictactoe.svg';
+        }
+        
+        // For activities, use the category to get specific image
+        if (type === 'Activity' && category) {
+            const activityImages = imageMap['Activity'][category];
+            return getFirstAvailableImage(activityImages) || 'images/literature-arts.svg';
         }
         
         // For other types, use the type directly
-        return imageMap[type] || 'images/riddle.svg'; // Default fallback
+        const typeImages = imageMap[type];
+        return getFirstAvailableImage(typeImages) || 'images/riddle.svg';
+    }
+
+    createFallbackImage(type, title) {
+        // Create a data URL for an SVG fallback image
+        const colors = {
+            'Game': ['#667eea', '#764ba2'],
+            'Riddle': ['#a29bfe', '#6c5ce7'],
+            'Math Challenge': ['#00cec9', '#55a3ff'],
+            'Amazing Fact': ['#74b9ff', '#0984e3'],
+            'Activity': ['#fd79a8', '#fdcb6e'],
+            'default': ['#ddd', '#999']
+        };
+        
+        const colorPair = colors[type] || colors['default'];
+        const icon = this.getTypeIcon(type);
+        
+        const svg = `
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="fallbackGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:${colorPair[0]};stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:${colorPair[1]};stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                <circle cx="100" cy="100" r="90" fill="url(#fallbackGradient)" opacity="0.1"/>
+                <circle cx="100" cy="100" r="60" fill="url(#fallbackGradient)" opacity="0.8"/>
+                <text x="100" y="110" font-family="Arial, sans-serif" font-size="40" fill="white" text-anchor="middle">${icon}</text>
+                <text x="100" y="140" font-family="Arial, sans-serif" font-size="12" fill="white" text-anchor="middle" opacity="0.8">${type}</text>
+            </svg>
+        `;
+        
+        // Use encodeURIComponent instead of btoa to handle Unicode characters
+        return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+    }
+
+    createUniversalFallback(type) {
+        // Create a simple, guaranteed-to-work fallback
+        const colors = {
+            'Game': '#667eea',
+            'Riddle': '#a29bfe', 
+            'Math Challenge': '#00cec9',
+            'Amazing Fact': '#74b9ff',
+            'Activity': '#fd79a8',
+            'default': '#999'
+        };
+        
+        const color = colors[type] || colors['default'];
+        const icon = this.getTypeIcon(type);
+        
+        return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <rect width="100" height="100" fill="${color}" opacity="0.8"/>
+                <text x="50" y="55" font-family="Arial" font-size="30" fill="white" text-anchor="middle">${icon}</text>
+            </svg>
+        `)}`;
+    }
+
+    getTypeIcon(type) {
+        const icons = {
+            'Game': '🎮',
+            'Riddle': '🧩',
+            'Math Challenge': '🔢',
+            'Amazing Fact': '💡',
+            'Activity': '⭐',
+            'default': '📝'
+        };
+        return icons[type] || icons['default'];
+    }
+
+    // Preload all SVG images to ensure they're available
+    preloadImages() {
+        const imagesToPreload = [
+            'images/tictactoe.svg', 'images/connect4.svg', 'images/chess.svg', 'images/flappy.svg',
+            'images/sudoku.svg', 'images/crossword.svg', 'images/pacman.svg', 'images/tetris.svg',
+            'images/galaga.svg', 'images/snake.svg', 'images/breakout.svg', 'images/memory.svg',
+            'images/wordsearch.svg', 'images/solitaire.svg', 'images/minesweeper.svg',
+            'images/ocean-life.svg', 'images/space-mysteries.svg', 'images/animal-kingdom.svg',
+            'images/human-body.svg', 'images/technology-science.svg', 'images/ancient-history.svg',
+            'images/medieval-times.svg', 'images/modern-history.svg', 'images/world-geography.svg',
+            'images/literature-arts.svg', 'images/psychology-mind.svg', 'images/food-culture.svg',
+            'images/riddle.svg', 'images/math-challenge.svg', 'images/creative-arts.svg',
+            'images/learning-adventures.svg', 'images/physical-challenges.svg',
+            'images/communication-skills.svg', 'images/life-skills.svg', 'images/mental-exercises.svg',
+            'images/mindfulness-&-reflection.svg', 'images/nature-connection.svg',
+            'images/problem-solving.svg', 'images/social-experiments.svg', 'images/storytelling.svg',
+            'images/observation-games.svg'
+        ];
+
+        console.log('🖼️ Starting comprehensive image preload...');
+        let loadedCount = 0;
+        let failedCount = 0;
+        const totalImages = imagesToPreload.length;
+        const failedImages = [];
+
+        const loadPromises = imagesToPreload.map((src, index) => {
+            return new Promise((resolve) => {
+                const img = new Image();
+                
+                const handleLoad = () => {
+                    loadedCount++;
+                    console.log(`✅ Preloaded ${src} (${loadedCount}/${totalImages})`);
+                    resolve({ src, success: true });
+                };
+                
+                const handleError = () => {
+                    failedCount++;
+                    failedImages.push(src);
+                    console.error(`❌ Failed to preload ${src} (${failedCount} failures)`);
+                    resolve({ src, success: false });
+                };
+                
+                img.onload = handleLoad;
+                img.onerror = handleError;
+                
+                // Set a timeout for loading
+                setTimeout(() => {
+                    if (!img.complete) {
+                        img.onload = null;
+                        img.onerror = null;
+                        handleError();
+                    }
+                }, 5000);
+                
+                img.src = src;
+            });
+        });
+
+        Promise.all(loadPromises).then(results => {
+            const successful = results.filter(r => r.success).length;
+            const failed = results.filter(r => !r.success).length;
+            
+            console.log(`🎯 Image preload complete: ${successful} loaded, ${failed} failed`);
+            
+            if (failed > 0) {
+                console.warn('⚠️ Some images failed to load. Attempting to fix card display...');
+                console.log('Failed images:', failedImages);
+                
+                // Force refresh card images after a delay
+                setTimeout(() => {
+                    this.refreshCardImages();
+                }, 1000);
+            } else {
+                console.log('🎉 All images preloaded successfully!');
+            }
+        });
+    }
+
+    refreshCardImages() {
+        console.log('🔄 Starting comprehensive card image refresh...');
+        const cards = document.querySelectorAll('.card');
+        let refreshedCount = 0;
+        let fixedCount = 0;
+        
+        cards.forEach((card, index) => {
+            const img = card.querySelector('.card-image');
+            const container = card.querySelector('.card-image-container');
+            const fallbackDiv = card.querySelector('.fallback-image');
+            
+            if (!img) {
+                console.log(`⚠️ No image found in card ${index}`);
+                return;
+            }
+            
+            // Check if image failed to load or is broken
+            const isImageBroken = !img.complete || img.naturalHeight === 0 || img.naturalWidth === 0 || img.style.display === 'none';
+            
+            if (isImageBroken) {
+                console.log(`🔧 Fixing broken image in card ${index}:`, img.src);
+                
+                // Try to get activity data from the card
+                const activityData = card.getAttribute('data-activity');
+                let activity = null;
+                try {
+                    activity = JSON.parse(activityData);
+                } catch (e) {
+                    console.error('Failed to parse activity data:', e);
+                }
+                
+                if (activity) {
+                    // Regenerate the image source
+                    const newImageSrc = activity.image || this.getCardImage(activity.type, activity.gameType || activity.category);
+                    
+                    // Reset the image
+                    img.style.display = 'block';
+                    img.style.opacity = '0';
+                    
+                    // Set up new error handling
+                    img.onerror = () => {
+                        console.error(`❌ Image still failed after refresh: ${newImageSrc}`);
+                        img.style.display = 'none';
+                        if (fallbackDiv) {
+                            fallbackDiv.style.display = 'flex';
+                        }
+                    };
+                    
+                    img.onload = () => {
+                        console.log(`✅ Successfully loaded refreshed image: ${newImageSrc}`);
+                        img.style.opacity = '1';
+                        if (fallbackDiv) {
+                            fallbackDiv.style.display = 'none';
+                        }
+                    };
+                    
+                    // Add cache buster and set new source
+                    const cacheBuster = '?refresh=' + Date.now() + Math.random();
+                    setTimeout(() => {
+                        img.src = newImageSrc + cacheBuster;
+                    }, 50 * refreshedCount);
+                    
+                    refreshedCount++;
+                } else {
+                    // No activity data, show fallback
+                    console.log(`⚠️ No activity data for card ${index}, showing fallback`);
+                    img.style.display = 'none';
+                    if (fallbackDiv) {
+                        fallbackDiv.style.display = 'flex';
+                    }
+                    fixedCount++;
+                }
+            }
+        });
+        
+        // Also check for any images that might be loading but taking too long
+        setTimeout(() => {
+            const stillLoadingImages = document.querySelectorAll('.card-image[src]:not([style*="display: none"])');
+            stillLoadingImages.forEach(img => {
+                if (!img.complete || img.naturalHeight === 0) {
+                    console.log('⏰ Image taking too long to load, showing fallback:', img.src);
+                    const fallbackDiv = img.parentNode.querySelector('.fallback-image');
+                    if (fallbackDiv) {
+                        img.style.display = 'none';
+                        fallbackDiv.style.display = 'flex';
+                        fixedCount++;
+                    }
+                }
+            });
+            
+            console.log(`🎯 Image refresh complete: ${refreshedCount} refreshed, ${fixedCount} fixed with fallbacks`);
+        }, 3000);
+        
+        if (refreshedCount > 0 || fixedCount > 0) {
+            console.log(`🔄 Attempted to refresh ${refreshedCount} images and fixed ${fixedCount} with fallbacks`);
+        } else {
+            console.log('✅ All card images appear to be loading correctly');
+        }
     }
 
     generateRandomFact() {
@@ -3300,11 +3593,40 @@ class BoredomBusterApp {
     
     // 🎯 Convert daily card format to app card format
     convertDailyCardToAppFormat(dailyCard) {
+        // Use the main script's comprehensive getCardImage function instead of the limited backend image
+        let improvedImage = dailyCard.image;
+        
+        // For activities, try to get a better image based on the activity category
+        if (dailyCard.type === 'Activity' && dailyCard.title) {
+            // Map activity titles to better image categories
+            const title = dailyCard.title.toLowerCase();
+            if (title.includes('creative') || title.includes('art')) {
+                improvedImage = this.getCardImage('Activity', 'Creative Arts');
+            } else if (title.includes('learning') || title.includes('knowledge') || title.includes('discovery')) {
+                improvedImage = this.getCardImage('Activity', 'Learning Adventures');
+            } else if (title.includes('fitness') || title.includes('physical') || title.includes('movement') || title.includes('active')) {
+                improvedImage = this.getCardImage('Activity', 'Physical Challenges');
+            } else {
+                // Use the main script's getCardImage for better fallback
+                improvedImage = this.getCardImage(dailyCard.type);
+            }
+        } else {
+            // For other types, use the main script's getCardImage function
+            improvedImage = this.getCardImage(dailyCard.type);
+        }
+        
+        console.log(`🖼️ Daily Card Image Assignment:`, {
+            title: dailyCard.title,
+            type: dailyCard.type,
+            originalImage: dailyCard.image,
+            improvedImage: improvedImage
+        });
+        
         return {
             type: dailyCard.type,
             title: dailyCard.title,
             description: dailyCard.description,
-            image: dailyCard.image,
+            image: improvedImage,
             action: dailyCard.action,
             category: dailyCard.category,
             answer: dailyCard.answer || null,
@@ -3898,10 +4220,42 @@ class BoredomBusterApp {
             </button>`;
         }
         
-        // Use activity.image if available, otherwise fallback to getCardImage method
-        const imageSrc = activity.image || this.getCardImage(activity.type, activity.gameType || activity.category);
-        const imageHtml = imageSrc ? 
-            `<img src="${imageSrc}" alt="${activity.title}" class="card-image" onerror="this.style.display='none'; console.error('Failed to load image:', '${imageSrc}');" onload="console.log('Successfully loaded image:', '${imageSrc}');">` : '';
+        // Enhanced image loading system with multiple fallbacks
+        const primaryImageSrc = activity.image || this.getCardImage(activity.type, activity.gameType || activity.category);
+        
+        // Debug logging for image assignment
+        console.log(`🖼️ Card Image Debug:`, {
+            title: activity.title,
+            type: activity.type,
+            gameType: activity.gameType,
+            category: activity.category,
+            activityImage: activity.image,
+            calculatedImage: this.getCardImage(activity.type, activity.gameType || activity.category),
+            finalImageSrc: primaryImageSrc
+        });
+        
+        // Create multiple fallback options
+        const fallbackImageUrl = this.createFallbackImage(activity.type, activity.title);
+        const universalFallback = this.createUniversalFallback(activity.type);
+        
+        // Create robust image HTML with comprehensive error handling
+        const imageHtml = primaryImageSrc ? 
+            `<div class="card-image-container" style="position: relative; width: 100%; height: 120px; border-radius: 8px; overflow: hidden;">
+                <img src="${primaryImageSrc}" 
+                     alt="${activity.title}" 
+                     class="card-image" 
+                     style="width: 100%; height: 100%; object-fit: cover; transition: opacity 0.3s ease;"
+                     onerror="this.style.display='none'; this.parentNode.querySelector('.fallback-image').style.display='flex'; console.error('❌ Primary image failed:', '${primaryImageSrc}');" 
+                     onload="console.log('✅ Primary image loaded:', '${primaryImageSrc}'); this.style.opacity='1';">
+                <div class="fallback-image" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); align-items: center; justify-content: center; color: white; font-size: 2rem; text-align: center; flex-direction: column;">
+                    <div style="font-size: 2.5rem; margin-bottom: 8px;">${this.getTypeIcon(activity.type)}</div>
+                    <div style="font-size: 0.9rem; opacity: 0.9;">${activity.type}</div>
+                </div>
+            </div>` : 
+            `<div class="card-image-placeholder" style="background: linear-gradient(135deg, #ffa726 0%, #fb8c00 100%); height: 120px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; text-align: center; flex-direction: column;">
+                <div style="font-size: 2rem; margin-bottom: 8px;">⚠️</div>
+                <div>No Image<br/>Assigned</div>
+            </div>`;
         
         card.innerHTML = `
             <div class="card-content">
@@ -4033,7 +4387,121 @@ class BoredomBusterApp {
             this.cardObserver.observe(card);
         }
         
+        // Set up image monitoring for this specific card
+        this.monitorCardImage(card);
+        
         return card;
+    }
+
+    monitorCardImage(card) {
+        const img = card.querySelector('.card-image');
+        const fallbackDiv = card.querySelector('.fallback-image');
+        
+        if (!img) return;
+        
+        // Set up a timeout to check if image loads within reasonable time
+        const imageTimeout = setTimeout(() => {
+            if (!img.complete || img.naturalHeight === 0 || img.naturalWidth === 0) {
+                console.log('⏰ Image loading timeout, showing fallback:', img.src);
+                img.style.display = 'none';
+                if (fallbackDiv) {
+                    fallbackDiv.style.display = 'flex';
+                }
+            }
+        }, 5000); // 5 second timeout
+        
+        // Clear timeout if image loads successfully
+        img.onload = () => {
+            clearTimeout(imageTimeout);
+            console.log('✅ Image loaded successfully:', img.src);
+            img.style.opacity = '1';
+            if (fallbackDiv) {
+                fallbackDiv.style.display = 'none';
+            }
+        };
+        
+        // Handle immediate errors
+        img.onerror = () => {
+            clearTimeout(imageTimeout);
+            console.error('❌ Image failed to load:', img.src);
+            img.style.display = 'none';
+            if (fallbackDiv) {
+                fallbackDiv.style.display = 'flex';
+            }
+        };
+    }
+
+    // Setup image refresh button and periodic refresh
+    setupImageRefreshButton() {
+        // Create image refresh button if it doesn't exist
+        let refreshBtn = document.getElementById('imageRefreshBtn');
+        if (!refreshBtn) {
+            refreshBtn = document.createElement('button');
+            refreshBtn.id = 'imageRefreshBtn';
+            refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i>';
+            refreshBtn.title = 'Refresh card images';
+            refreshBtn.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 80px;
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                border: none;
+                color: white;
+                font-size: 18px;
+                cursor: pointer;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                z-index: 1000;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            `;
+            
+            // Add hover effects
+            refreshBtn.addEventListener('mouseenter', () => {
+                refreshBtn.style.transform = 'scale(1.1)';
+                refreshBtn.style.boxShadow = '0 6px 20px rgba(0,0,0,0.3)';
+            });
+            
+            refreshBtn.addEventListener('mouseleave', () => {
+                refreshBtn.style.transform = 'scale(1)';
+                refreshBtn.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+            });
+            
+            // Add click handler
+            refreshBtn.addEventListener('click', () => {
+                console.log('🖼️ Manual image refresh triggered');
+                refreshBtn.style.animation = 'spin 1s linear';
+                this.refreshCardImages();
+                setTimeout(() => {
+                    refreshBtn.style.animation = '';
+                }, 1000);
+            });
+            
+            document.body.appendChild(refreshBtn);
+        }
+
+        // Set up periodic image refresh every 30 seconds
+        setInterval(() => {
+            console.log('🖼️ Running periodic image refresh...');
+            this.refreshCardImages();
+        }, 30000);
+
+        // Add CSS for spin animation
+        if (!document.getElementById('imageRefreshStyles')) {
+            const style = document.createElement('style');
+            style.id = 'imageRefreshStyles';
+            style.textContent = `
+                @keyframes spin {
+                    from { transform: rotate(0deg); }
+                    to { transform: rotate(360deg); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
     }
 
     checkCardOverflow(card) {
@@ -7193,12 +7661,19 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Add page visibility handler (respects user sound preference)
         document.addEventListener('visibilitychange', () => {
-            if (!document.hidden && app.soundEnabled) {
-                console.log('🚀 PAGE VISIBLE - INITIALIZING AUDIO...');
+            if (!document.hidden) {
+                if (app.soundEnabled) {
+                    console.log('🚀 PAGE VISIBLE - INITIALIZING AUDIO...');
+                    setTimeout(() => {
+                        app.initializeAudioImmediately();
+                        app.startAutoReading();
+                    }, 100);
+                }
+                // Always refresh images when page becomes visible
+                console.log('🖼️ Page visible - refreshing images...');
                 setTimeout(() => {
-                    app.initializeAudioImmediately();
-                    app.startAutoReading();
-                }, 100);
+                    app.refreshCardImages();
+                }, 500);
             }
         });
         
@@ -7211,6 +7686,23 @@ document.addEventListener('DOMContentLoaded', () => {
                     app.startAutoReading();
                 }, 100);
             }
+            // Always refresh images when window gets focus
+            console.log('🖼️ Window focused - refreshing images...');
+            setTimeout(() => {
+                app.refreshCardImages();
+            }, 500);
+        });
+
+        // Add user interaction handlers to trigger image refresh
+        ['click', 'touchstart', 'scroll'].forEach(eventType => {
+            document.addEventListener(eventType, () => {
+                // Throttle image refresh on user interaction
+                if (!app.lastImageRefresh || Date.now() - app.lastImageRefresh > 10000) {
+                    console.log('🖼️ User interaction detected - refreshing images...');
+                    app.refreshCardImages();
+                    app.lastImageRefresh = Date.now();
+                }
+            }, { once: true, passive: true });
         });
         
     } catch (error) {

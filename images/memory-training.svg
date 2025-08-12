@@ -1,0 +1,48 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="memoryGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#fd79a8;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#fdcb6e;stop-opacity:1" />
+        </linearGradient>
+    </defs>
+    <circle cx="100" cy="100" r="90" fill="url(#memoryGradient)" opacity="0.1"/>
+    <g transform="translate(100,100)">
+        <path d="M -20 -25 Q 0 -35 20 -25 Q 25 -5 20 15 Q 0 25 -20 15 Q -25 -5 -20 -25" fill="none" stroke="url(#memoryGradient)" stroke-width="3"/>
+        <g opacity="0.8">
+            <circle cx="-10" cy="-15" r="3" fill="#ff6b6b">
+                <animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="10" cy="-15" r="3" fill="#4ecdc4">
+                <animate attributeName="opacity" values="0;1;0" dur="2.5s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="0" cy="-5" r="3" fill="#feca57">
+                <animate attributeName="opacity" values="0;1;0" dur="1.8s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="-8" cy="5" r="3" fill="#a29bfe">
+                <animate attributeName="opacity" values="0;1;0" dur="2.2s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="8" cy="5" r="3" fill="#00b894">
+                <animate attributeName="opacity" values="0;1;0" dur="3s" repeatCount="indefinite"/>
+            </circle>
+        </g>
+        <g transform="translate(0,25)">
+            <rect x="-15" y="0" width="30" height="8" rx="4" fill="url(#memoryGradient)" opacity="0.6"/>
+            <g fill="#fff" opacity="0.9">
+                <circle cx="-8" cy="4" r="2"/>
+                <circle cx="0" cy="4" r="2"/>
+                <circle cx="8" cy="4" r="2"/>
+            </g>
+        </g>
+        <g opacity="0.5">
+            <path d="M -25 -30 Q -15 -35 -5 -30" stroke="url(#memoryGradient)" stroke-width="2" fill="none" stroke-dasharray="2,2">
+                <animate attributeName="stroke-dashoffset" values="0;4" dur="1.5s" repeatCount="indefinite"/>
+            </path>
+            <path d="M 5 -30 Q 15 -35 25 -30" stroke="url(#memoryGradient)" stroke-width="2" fill="none" stroke-dasharray="2,2">
+                <animate attributeName="stroke-dashoffset" values="0;4" dur="1.8s" repeatCount="indefinite"/>
+            </path>
+        </g>
+    </g>
+    <circle cx="100" cy="100" r="85" fill="none" stroke="url(#memoryGradient)" stroke-width="1" opacity="0.3" stroke-dasharray="5,5">
+        <animate attributeName="stroke-dashoffset" values="0;10" dur="2s" repeatCount="indefinite"/>
+    </circle>
+</svg>

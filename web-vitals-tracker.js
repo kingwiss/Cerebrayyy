@@ -491,14 +491,16 @@ class WebVitalsTracker {
 if (typeof window !== 'undefined') {
     window.webVitalsTracker = new WebVitalsTracker();
     
-    // Auto-show in development
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        setTimeout(() => {
-            document.getElementById('web-vitals-display').style.display = 'block';
-        }, 1000);
-        
-        console.log('📊 Web Vitals Tracker initialized. Press Ctrl+Shift+V to toggle display.');
-    }
+    // Auto-show in development - DISABLED
+    // if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    //     setTimeout(() => {
+    //         document.getElementById('web-vitals-display').style.display = 'block';
+    //     }, 1000);
+    //     
+    //     console.log('📊 Web Vitals Tracker initialized. Press Ctrl+Shift+V to toggle display.');
+    // }
+    
+    console.log('📊 Web Vitals Tracker initialized. Press Ctrl+Shift+V to toggle display.');
     
     // Send vitals to analytics when page is about to unload
     window.addEventListener('beforeunload', () => {

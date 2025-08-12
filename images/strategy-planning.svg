@@ -1,0 +1,56 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="strategyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#636e72;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#2d3436;stop-opacity:1" />
+        </linearGradient>
+    </defs>
+    <circle cx="100" cy="100" r="90" fill="url(#strategyGradient)" opacity="0.1"/>
+    <g transform="translate(100,100)">
+        <g stroke="url(#strategyGradient)" stroke-width="2" fill="none">
+            <rect x="-25" y="-25" width="50" height="50"/>
+            <line x1="-25" y1="-8" x2="25" y2="-8"/>
+            <line x1="-25" y1="8" x2="25" y2="8"/>
+            <line x1="-8" y1="-25" x2="-8" y2="25"/>
+            <line x1="8" y1="-25" x2="8" y2="25"/>
+        </g>
+        <g fill="url(#strategyGradient)" opacity="0.8">
+            <circle cx="-16" cy="-16" r="3">
+                <animate attributeName="fill" values="url(#strategyGradient);#ff6b6b;url(#strategyGradient)" dur="2s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="0" cy="-16" r="3">
+                <animate attributeName="fill" values="url(#strategyGradient);#4ecdc4;url(#strategyGradient)" dur="2.5s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="16" cy="-16" r="3">
+                <animate attributeName="fill" values="url(#strategyGradient);#feca57;url(#strategyGradient)" dur="1.8s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="-16" cy="0" r="3">
+                <animate attributeName="fill" values="url(#strategyGradient);#a29bfe;url(#strategyGradient)" dur="2.2s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="16" cy="0" r="3">
+                <animate attributeName="fill" values="url(#strategyGradient);#00b894;url(#strategyGradient)" dur="2.8s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="0" cy="16" r="3">
+                <animate attributeName="fill" values="url(#strategyGradient);#fd79a8;url(#strategyGradient)" dur="3s" repeatCount="indefinite"/>
+            </circle>
+        </g>
+        <g opacity="0.6">
+            <path d="M -16 -16 L 0 0" stroke="#ff6b6b" stroke-width="2">
+                <animate attributeName="stroke-opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite"/>
+            </path>
+            <path d="M 0 0 L 16 -16" stroke="#4ecdc4" stroke-width="2">
+                <animate attributeName="stroke-opacity" values="0.6;1;0.6" dur="2.5s" repeatCount="indefinite"/>
+            </path>
+            <path d="M 0 0 L 0 16" stroke="#feca57" stroke-width="2">
+                <animate attributeName="stroke-opacity" values="0.6;1;0.6" dur="1.8s" repeatCount="indefinite"/>
+            </path>
+        </g>
+        <g transform="translate(0,35)">
+            <rect x="-15" y="0" width="30" height="6" rx="3" fill="url(#strategyGradient)" opacity="0.5"/>
+            <rect x="-12" y="1" width="24" height="4" rx="2" fill="#fff" opacity="0.8"/>
+        </g>
+    </g>
+    <circle cx="100" cy="100" r="85" fill="none" stroke="url(#strategyGradient)" stroke-width="1" opacity="0.3" stroke-dasharray="4,4">
+        <animate attributeName="stroke-dashoffset" values="0;8" dur="2s" repeatCount="indefinite"/>
+    </circle>
+</svg>

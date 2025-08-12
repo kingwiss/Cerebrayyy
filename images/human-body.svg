@@ -1,111 +1,37 @@
 <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="bodyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#fd79a8;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#fdcb6e;stop-opacity:1" />
-    </linearGradient>
-    <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#e17055;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#d63031;stop-opacity:1" />
-    </linearGradient>
-    <linearGradient id="brainGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#74b9ff;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#0984e3;stop-opacity:1" />
-    </linearGradient>
-  </defs>
-  
-  <!-- Background circle -->
-  <circle cx="100" cy="100" r="90" fill="url(#bodyGradient)" opacity="0.1"/>
-  
-  <!-- Human silhouette -->
-  <g transform="translate(100,100)" opacity="0.3">
-    <!-- Head -->
-    <circle cx="0" cy="-60" r="20" fill="url(#bodyGradient)"/>
-    <!-- Body -->
-    <ellipse cx="0" cy="-20" rx="15" ry="30" fill="url(#bodyGradient)"/>
-    <!-- Arms -->
-    <ellipse cx="-25" cy="-25" rx="8" ry="20" fill="url(#bodyGradient)" transform="rotate(-20)"/>
-    <ellipse cx="25" cy="-25" rx="8" ry="20" fill="url(#bodyGradient)" transform="rotate(20)"/>
-    <!-- Legs -->
-    <ellipse cx="-8" cy="20" rx="6" ry="25" fill="url(#bodyGradient)"/>
-    <ellipse cx="8" cy="20" rx="6" ry="25" fill="url(#bodyGradient)"/>
-  </g>
-  
-  <!-- Brain -->
-  <g transform="translate(100,40)">
-    <ellipse cx="0" cy="0" rx="25" ry="18" fill="url(#brainGradient)" opacity="0.8"/>
-    <!-- Brain folds -->
-    <path d="M -20 -5 Q -10 -10 0 -5 Q 10 -10 20 -5" stroke="url(#brainGradient)" stroke-width="2" fill="none" opacity="0.6"/>
-    <path d="M -15 0 Q -5 -5 5 0 Q 15 -5 20 0" stroke="url(#brainGradient)" stroke-width="2" fill="none" opacity="0.6"/>
-    <path d="M -20 5 Q -10 0 0 5 Q 10 0 20 5" stroke="url(#brainGradient)" stroke-width="2" fill="none" opacity="0.6"/>
-    <!-- Brain activity -->
-    <g opacity="0.7">
-      <circle cx="-10" cy="-5" r="2" fill="#fff">
-        <animate attributeName="opacity" values="0.7;0.3;0.7" dur="1.5s" repeatCount="indefinite"/>
-      </circle>
-      <circle cx="8" cy="2" r="1.5" fill="#fff">
-        <animate attributeName="opacity" values="0.7;0.3;0.7" dur="2s" repeatCount="indefinite"/>
-      </circle>
-      <circle cx="0" cy="-8" r="1" fill="#fff">
-        <animate attributeName="opacity" values="0.7;0.3;0.7" dur="1.2s" repeatCount="indefinite"/>
-      </circle>
+    <defs>
+        <linearGradient id="bodyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#fd79a8;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#fdcb6e;stop-opacity:1" />
+        </linearGradient>
+    </defs>
+    <circle cx="100" cy="100" r="90" fill="url(#bodyGradient)" opacity="0.1"/>
+    <g transform="translate(100,100)">
+        <circle cx="0" cy="-20" r="15" fill="#ffeaa7" stroke="url(#bodyGradient)" stroke-width="2"/>
+        <rect x="-8" y="-5" width="16" height="25" rx="3" fill="#ffeaa7" stroke="url(#bodyGradient)" stroke-width="2"/>
+        <rect x="-12" y="0" width="8" height="20" rx="2" fill="#ffeaa7" stroke="url(#bodyGradient)" stroke-width="1"/>
+        <rect x="4" y="0" width="8" height="20" rx="2" fill="#ffeaa7" stroke="url(#bodyGradient)" stroke-width="1"/>
+        <rect x="-6" y="20" width="5" height="15" rx="2" fill="#ffeaa7" stroke="url(#bodyGradient)" stroke-width="1"/>
+        <rect x="1" y="20" width="5" height="15" rx="2" fill="#ffeaa7" stroke="url(#bodyGradient)" stroke-width="1"/>
+        <circle cx="-3" cy="-25" r="1.5" fill="#2d3436"/>
+        <circle cx="3" cy="-25" r="1.5" fill="#2d3436"/>
+        <ellipse cx="0" cy="-20" rx="2" ry="1" fill="#e17055"/>
+        <g opacity="0.6">
+            <circle cx="-2" cy="5" r="3" fill="#ff6b6b">
+                <animate attributeName="fill" values="#ff6b6b;#ff7675;#ff6b6b" dur="1.5s" repeatCount="indefinite"/>
+            </circle>
+            <text x="0" y="8" font-family="Arial" font-size="8" fill="#2d3436" text-anchor="middle">♥</text>
+        </g>
+        <g opacity="0.4">
+            <circle cx="15" cy="-15" r="2" fill="#74b9ff">
+                <animate attributeName="r" values="2;4;2" dur="2s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="-15" cy="10" r="2" fill="#00b894">
+                <animate attributeName="r" values="2;4;2" dur="2.5s" repeatCount="indefinite"/>
+            </circle>
+        </g>
     </g>
-  </g>
-  
-  <!-- Heart -->
-  <g transform="translate(80,100)">
-    <path d="M 0 5 C -5 0, -15 0, -15 10 C -15 15, 0 25, 0 25 C 0 25, 15 15, 15 10 C 15 0, 5 0, 0 5 Z" fill="url(#heartGradient)">
-      <animate attributeName="transform" values="scale(1);scale(1.1);scale(1)" dur="1s" repeatCount="indefinite"/>
-    </path>
-    <!-- Heart pulse lines -->
-    <g opacity="0.6">
-      <path d="M -25 0 L -20 0 L -18 -5 L -15 10 L -12 -8 L -8 12 L -5 0 L 5 0" stroke="url(#heartGradient)" stroke-width="2" fill="none">
-        <animate attributeName="opacity" values="0.6;1;0.6" dur="1s" repeatCount="indefinite"/>
-      </path>
-    </g>
-  </g>
-  
-  <!-- DNA Helix -->
-  <g transform="translate(140,120)">
-    <path d="M -10 -20 Q 0 -15 10 -10 Q 0 -5 -10 0 Q 0 5 10 10 Q 0 15 -10 20" stroke="url(#brainGradient)" stroke-width="3" fill="none" opacity="0.7"/>
-    <path d="M 10 -20 Q 0 -15 -10 -10 Q 0 -5 10 0 Q 0 5 -10 10 Q 0 15 10 20" stroke="url(#bodyGradient)" stroke-width="3" fill="none" opacity="0.7"/>
-    <!-- DNA base pairs -->
-    <g opacity="0.5">
-      <line x1="-8" y1="-15" x2="8" y2="-15" stroke="#333" stroke-width="1"/>
-      <line x1="-5" y1="-5" x2="5" y2="-5" stroke="#333" stroke-width="1"/>
-      <line x1="-8" y1="5" x2="8" y2="5" stroke="#333" stroke-width="1"/>
-      <line x1="-5" y1="15" x2="5" y2="15" stroke="#333" stroke-width="1"/>
-    </g>
-  </g>
-  
-  <!-- Lungs -->
-  <g transform="translate(100,120)" opacity="0.6">
-    <ellipse cx="-8" cy="0" rx="6" ry="12" fill="url(#bodyGradient)"/>
-    <ellipse cx="8" cy="0" rx="6" ry="12" fill="url(#bodyGradient)"/>
-    <!-- Breathing animation -->
-    <animateTransform attributeName="transform" values="translate(100,120) scale(1);translate(100,120) scale(1.05);translate(100,120) scale(1)" dur="3s" repeatCount="indefinite"/>
-  </g>
-  
-  <!-- Blood cells -->
-  <g opacity="0.5">
-    <circle cx="50" cy="80" r="2" fill="url(#heartGradient)">
-      <animateTransform attributeName="transform" type="translate" values="0,0;20,10;0,0" dur="4s" repeatCount="indefinite"/>
+    <circle cx="100" cy="100" r="85" fill="none" stroke="url(#bodyGradient)" stroke-width="1" opacity="0.3" stroke-dasharray="5,5">
+        <animate attributeName="stroke-dashoffset" values="0;10" dur="2s" repeatCount="indefinite"/>
     </circle>
-    <circle cx="150" cy="160" r="1.5" fill="url(#heartGradient)">
-      <animateTransform attributeName="transform" type="translate" values="0,0;-15,-8;0,0" dur="3s" repeatCount="indefinite"/>
-    </circle>
-    <circle cx="60" cy="160" r="2" fill="url(#heartGradient)">
-      <animateTransform attributeName="transform" type="translate" values="0,0;10,-12;0,0" dur="3.5s" repeatCount="indefinite"/>
-    </circle>
-  </g>
-  
-  <!-- Neural connections -->
-  <g opacity="0.4">
-    <path d="M 70 50 Q 85 60 100 50" stroke="url(#brainGradient)" stroke-width="1" fill="none" stroke-dasharray="2,2">
-      <animate attributeName="stroke-dashoffset" values="0;4" dur="1s" repeatCount="indefinite"/>
-    </path>
-    <path d="M 100 50 Q 115 40 130 50" stroke="url(#brainGradient)" stroke-width="1" fill="none" stroke-dasharray="2,2">
-      <animate attributeName="stroke-dashoffset" values="0;4" dur="1.2s" repeatCount="indefinite"/>
-    </path>
-  </g>
 </svg>

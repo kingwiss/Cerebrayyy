@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG Regeneration Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .button {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            display: block;
+            margin: 20px auto;
+            transition: transform 0.3s ease;
+        }
+        .button:hover {
+            transform: scale(1.05);
+        }
+        .log {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-family: monospace;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .progress {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 SVG Regeneration Tool</h1>
+        <p>This tool will regenerate all SVG images for the card game with beautiful animated designs.</p>
+        
+        <div class="progress" id="progress" style="display: none;">
+            <div>Generating SVGs... <span id="progressText">0/47</span></div>
+        </div>
+        
+        <button class="button" onclick="regenerateAllSVGs()">🚀 Regenerate All SVGs</button>
+        
+        <div class="log" id="log"></div>
+    </div>
+
+    <script src="regenerate-svgs.js"></script>
+    <script>
+        function log(message) {
+            const logElement = document.getElementById('log');
+            logElement.innerHTML += message + '<br>';
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+
+        function updateProgress(current, total) {
+            const progressElement = document.getElementById('progress');
+            const progressText = document.getElementById('progressText');
+            progressElement.style.display = 'block';
+            progressText.textContent = `${current}/${total}`;
+        }
+
+        // Override the regenerateAllSVGs function to show progress
+        window.regenerateAllSVGs = function() {
+            log('🎨 Starting SVG regeneration...');
+            const svgNames = Object.keys(svgTemplates);
+            const total = svgNames.length;
+            
+            updateProgress(0, total);
+            
+            svgNames.forEach((name, index) => {
+                const content = svgTemplates[name];
+                createSVGFile(`${name}.svg`, content);
+                log(`✅ Created ${name}.svg`);
+                updateProgress(index + 1, total);
+            });
+            
+            log('🎉 All SVG files regenerated successfully!');
+            log(`📁 ${total} SVG files have been downloaded to your Downloads folder.`);
+            log('📋 You can now copy these files to the images/ directory.');
+        };
+
+        // Function to create and save SVG files
+        function createSVGFile(filename, svgContent) {
+            const blob = new Blob([svgContent], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        log('SVG Regeneration Tool loaded successfully!');
+        log(`Found ${Object.keys(svgTemplates).length} SVG templates ready for generation.`);
+    </script>
+</body>
+</html>

@@ -120,7 +120,8 @@
         
         function generateCardId(cardData) {
             const content = cardData.title + cardData.description + cardData.category;
-            return btoa(content).replace(/[^a-zA-Z0-9]/g, '').substring(0, 16);
+            // Use encodeURIComponent instead of btoa to handle Unicode characters
+            return encodeURIComponent(content).replace(/[^a-zA-Z0-9]/g, '').substring(0, 16);
         }
         
         function isCardSaved(cardId) {
