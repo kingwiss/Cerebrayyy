@@ -1244,6 +1244,28 @@ body {
         margin: 10% auto;
         padding: 20px;
     }
+    
+    /* Tablet game responsiveness */
+    .tic-tac-toe {
+        grid-template-columns: repeat(3, 70px);
+        grid-template-rows: repeat(3, 70px);
+    }
+    
+    .connect4 {
+        grid-template-columns: repeat(7, 50px);
+        grid-template-rows: repeat(6, 50px);
+    }
+    
+    .game-cell {
+        font-size: 1.8rem;
+        border-radius: 8px;
+    }
+    
+    /* Chess board tablet responsiveness */
+    #chessBoard {
+        max-width: 350px;
+        margin: 20px auto;
+    }
 }
 
 /* Large mobile devices (601px to 768px) */
@@ -1296,6 +1318,38 @@ body {
         height: 28px !important;
         font-size: 10px !important;
         margin-right: 8px !important;
+    }
+    
+    /* Mobile game responsiveness */
+    .tic-tac-toe {
+        grid-template-columns: repeat(3, 60px) !important;
+        grid-template-rows: repeat(3, 60px) !important;
+    }
+    
+    .connect4 {
+        grid-template-columns: repeat(7, 40px) !important;
+        grid-template-rows: repeat(6, 40px) !important;
+    }
+    
+    .game-cell {
+        font-size: 1.5rem !important;
+        border-radius: 6px !important;
+    }
+    
+    .game-status {
+        font-size: 1rem !important;
+        margin: 15px 0 !important;
+    }
+    
+    /* Chess board mobile responsiveness */
+    #chessBoard {
+        max-width: 280px !important;
+        margin: 15px auto !important;
+    }
+    
+    .chess-status {
+        font-size: 14px !important;
+        margin: 8px 0 !important;
     }
     
     /* Even more compact sign-in button */
@@ -2072,6 +2126,38 @@ canvas {
     
     .cards-container {
         margin-top: 35px; /* Adjusted for ultra-compact button positioning */
+    }
+    
+    /* Extra small mobile game responsiveness */
+    .tic-tac-toe {
+        grid-template-columns: repeat(3, 50px) !important;
+        grid-template-rows: repeat(3, 50px) !important;
+    }
+    
+    .connect4 {
+        grid-template-columns: repeat(7, 35px) !important;
+        grid-template-rows: repeat(6, 35px) !important;
+    }
+    
+    .game-cell {
+        font-size: 1.2rem !important;
+        border-radius: 4px !important;
+    }
+    
+    .game-status {
+        font-size: 0.9rem !important;
+        margin: 10px 0 !important;
+    }
+    
+    /* Chess board extra small mobile responsiveness */
+    #chessBoard {
+        max-width: 240px !important;
+        margin: 10px auto !important;
+    }
+    
+    .chess-status {
+        font-size: 12px !important;
+        margin: 6px 0 !important;
     }
     
     /* Cards maintain desktop dimensions - no responsive sizing */
