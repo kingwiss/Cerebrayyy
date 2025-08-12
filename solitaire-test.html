@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solitaire Game Test</title>
+    <link rel="stylesheet" href="premium-games.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .game-container {
+            width: 100%;
+            min-height: 600px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🃏 Solitaire Game Test</h1>
+        <div class="game-container" id="gameContainer"></div>
+        
+        <div style="margin-top: 20px; text-align: center;">
+            <button onclick="testSolitaire()" style="padding: 10px 20px; font-size: 16px; background: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                🎮 Start Solitaire Game
+            </button>
+        </div>
+    </div>
+
+    <script src="premium-games.js"></script>
+    <script>
+        function testSolitaire() {
+            const gameContainer = document.getElementById('gameContainer');
+            
+            // Initialize the premium games system
+            if (typeof PremiumGames !== 'undefined') {
+                const games = new PremiumGames();
+                games.gameContainer = gameContainer;
+                games.initGame('solitaire', gameContainer);
+                console.log('Solitaire game initialized successfully!');
+            } else {
+                console.error('PremiumGames class not found!');
+                gameContainer.innerHTML = '<p style="color: red; text-align: center;">Error: Premium Games not loaded!</p>';
+            }
+        }
+        
+        // Auto-start the game when page loads
+        window.addEventListener('load', function() {
+            setTimeout(testSolitaire, 500);
+        });
+    </script>
+</body>
+</html>

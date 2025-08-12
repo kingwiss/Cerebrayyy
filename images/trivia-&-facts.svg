@@ -1,0 +1,255 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <linearGradient id="bookGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3498db;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2980b9;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="lightbulbGradient" cx="50%" cy="30%" r="70%">
+      <stop offset="0%" style="stop-color:#f1c40f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f39c12;stop-opacity:1" />
+    </radialGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="100" height="100" fill="#ecf0f1"/>
+  
+  <!-- Open book -->
+  <g transform="translate(50,50)">
+    <!-- Book pages -->
+    <path d="M-20,0 Q-20,-15 0,-15 Q20,-15 20,0 L20,15 Q20,20 15,20 L-15,20 Q-20,20 -20,15 Z" fill="#fff" stroke="#bdc3c7" stroke-width="1"/>
+    
+    <!-- Book spine -->
+    <rect x="-1" y="-15" width="2" height="35" fill="#2c3e50"/>
+    
+    <!-- Left page -->
+    <path d="M-20,0 Q-20,-15 0,-15 L0,20 L-15,20 Q-20,20 -20,15 Z" fill="#f8f9fa"/>
+    
+    <!-- Right page -->
+    <path d="M0,-15 Q20,-15 20,0 L20,15 Q20,20 15,20 L0,20 Z" fill="#fff"/>
+    
+    <!-- Text lines on left page -->
+    <g stroke="#2c3e50" stroke-width="0.5" opacity="0.7">
+      <line x1="-17" y1="-10" x2="-3" y2="-10"/>
+      <line x1="-17" y1="-7" x2="-5" y2="-7"/>
+      <line x1="-17" y1="-4" x2="-4" y2="-4"/>
+      <line x1="-17" y1="-1" x2="-6" y2="-1"/>
+      <line x1="-17" y1="2" x2="-3" y2="2"/>
+      <line x1="-17" y1="5" x2="-7" y2="5"/>
+      <line x1="-17" y1="8" x2="-4" y2="8"/>
+      <line x1="-17" y1="11" x2="-5" y2="11"/>
+      <line x1="-17" y1="14" x2="-8" y2="14"/>
+    </g>
+    
+    <!-- Text lines on right page -->
+    <g stroke="#2c3e50" stroke-width="0.5" opacity="0.7">
+      <line x1="3" y1="-10" x2="17" y2="-10"/>
+      <line x1="3" y1="-7" x2="15" y2="-7"/>
+      <line x1="3" y1="-4" x2="16" y2="-4"/>
+      <line x1="3" y1="-1" x2="14" y2="-1"/>
+      <line x1="3" y1="2" x2="17" y2="2"/>
+      <line x1="3" y1="5" x2="13" y2="5"/>
+      <line x1="3" y1="8" x2="16" y2="8"/>
+      <line x1="3" y1="11" x2="15" y2="11"/>
+      <line x1="3" y1="14" x2="12" y2="14"/>
+    </g>
+  </g>
+  
+  <!-- Question mark -->
+  <g transform="translate(25,25)">
+    <circle cx="0" cy="0" r="8" fill="#e74c3c" opacity="0.9"/>
+    <text x="0" y="3" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#fff">?</text>
+  </g>
+  
+  <!-- Exclamation mark (fact) -->
+  <g transform="translate(75,25)">
+    <circle cx="0" cy="0" r="8" fill="#27ae60" opacity="0.9"/>
+    <text x="0" y="3" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#fff">!</text>
+  </g>
+  
+  <!-- Light bulb (knowledge) -->
+  <g transform="translate(20,75)">
+    <!-- Bulb -->
+    <circle cx="0" cy="-2" r="6" fill="url(#lightbulbGradient)"/>
+    <path d="M-4,2 Q-4,4 -2,4 L2,4 Q4,4 4,2" fill="#95a5a6"/>
+    
+    <!-- Base -->
+    <rect x="-2" y="4" width="4" height="2" fill="#7f8c8d" rx="1"/>
+    
+    <!-- Light rays -->
+    <g stroke="#f1c40f" stroke-width="2" opacity="0.8">
+      <line x1="-10" y1="-2" x2="-8" y2="-2"/>
+      <line x1="8" y1="-2" x2="10" y2="-2"/>
+      <line x1="0" y1="-12" x2="0" y2="-10"/>
+      <line x1="-7" y1="-9" x2="-6" y2="-8"/>
+      <line x1="6" y1="-8" x2="7" y2="-9"/>
+      <line x1="-7" y1="5" x2="-6" y2="4"/>
+      <line x1="6" y1="4" x2="7" y2="5"/>
+    </g>
+  </g>
+  
+  <!-- Brain (knowledge) -->
+  <g transform="translate(80,75)">
+    <!-- Brain outline -->
+    <path d="M-6,-4 Q-8,-6 -6,-8 Q-4,-10 -2,-8 Q0,-10 2,-8 Q4,-10 6,-8 Q8,-6 6,-4 Q8,-2 6,0 Q8,2 6,4 Q4,6 2,4 Q0,6 -2,4 Q-4,6 -6,4 Q-8,2 -6,0 Q-8,-2 -6,-4" fill="#e91e63" opacity="0.8"/>
+    
+    <!-- Brain folds -->
+    <g stroke="#c2185b" stroke-width="1" fill="none" opacity="0.6">
+      <path d="M-4,-2 Q-2,-4 0,-2 Q2,-4 4,-2"/>
+      <path d="M-4,0 Q-2,2 0,0 Q2,2 4,0"/>
+      <path d="M-4,2 Q-2,0 0,2 Q2,0 4,2"/>
+    </g>
+  </g>
+  
+  <!-- Quiz card -->
+  <g transform="translate(75,50)">
+    <!-- Card background -->
+    <rect x="-8" y="-6" width="16" height="12" fill="#fff" stroke="#bdc3c7" stroke-width="1" rx="2"/>
+    
+    <!-- Card header -->
+    <rect x="-8" y="-6" width="16" height="3" fill="#9b59b6" rx="2"/>
+    <rect x="-8" y="-3.5" width="16" height="1" fill="#9b59b6"/>
+    
+    <!-- Quiz text -->
+    <text x="0" y="-4.5" text-anchor="middle" font-family="Arial" font-size="2" fill="#fff" font-weight="bold">QUIZ</text>
+    
+    <!-- Question lines -->
+    <g stroke="#2c3e50" stroke-width="0.5">
+      <line x1="-6" y1="-1" x2="6" y2="-1"/>
+      <line x1="-6" y1="1" x2="4" y2="1"/>
+      <line x1="-6" y1="3" x2="5" y2="3"/>
+    </g>
+    
+    <!-- Multiple choice options -->
+    <g fill="none" stroke="#2c3e50" stroke-width="0.5">
+      <circle cx="-5" cy="-1" r="0.5"/>
+      <circle cx="-5" cy="1" r="0.5"/>
+      <circle cx="-5" cy="3" r="0.5"/>
+    </g>
+    
+    <!-- Selected answer -->
+    <circle cx="-5" cy="1" r="0.3" fill="#27ae60"/>
+  </g>
+  
+  <!-- Encyclopedia stack -->
+  <g transform="translate(25,50)">
+    <!-- Book 1 (bottom) -->
+    <rect x="-8" y="2" width="16" height="3" fill="#e74c3c" rx="0.5"/>
+    <rect x="-7" y="2.5" width="14" height="2" fill="#c0392b"/>
+    
+    <!-- Book 2 (middle) -->
+    <rect x="-7" y="-1" width="14" height="3" fill="#27ae60" rx="0.5"/>
+    <rect x="-6" y="-0.5" width="12" height="2" fill="#229954"/>
+    
+    <!-- Book 3 (top) -->
+    <rect x="-6" y="-4" width="12" height="3" fill="url(#bookGradient)" rx="0.5"/>
+    <rect x="-5" y="-3.5" width="10" height="2" fill="#2980b9"/>
+    
+    <!-- Book spines -->
+    <g fill="#fff" font-family="Arial" font-size="1.5" text-anchor="middle">
+      <text x="0" y="4" fill="#fff">VOL 1</text>
+      <text x="0" y="1" fill="#fff">VOL 2</text>
+      <text x="0" y="-2" fill="#fff">VOL 3</text>
+    </g>
+  </g>
+  
+  <!-- Fact bubbles -->
+  <g fill="#3498db" opacity="0.8">
+    <!-- Fact bubble 1 -->
+    <g transform="translate(15,15)">
+      <ellipse cx="0" cy="0" rx="6" ry="4" fill="#3498db"/>
+      <text x="0" y="1" text-anchor="middle" font-family="Arial" font-size="2" fill="#fff">FACT</text>
+    </g>
+    
+    <!-- Fact bubble 2 -->
+    <g transform="translate(85,15)">
+      <ellipse cx="0" cy="0" rx="6" ry="4" fill="#f39c12"/>
+      <text x="0" y="1" text-anchor="middle" font-family="Arial" font-size="2" fill="#fff">INFO</text>
+    </g>
+  </g>
+  
+  <!-- Globe (world knowledge) -->
+  <g transform="translate(50,20)">
+    <!-- Globe -->
+    <circle cx="0" cy="0" r="6" fill="#3498db" opacity="0.9"/>
+    
+    <!-- Continents -->
+    <g fill="#27ae60" opacity="0.8">
+      <!-- North America -->
+      <path d="M-4,-2 Q-2,-4 0,-2 Q-1,0 -3,0 Z"/>
+      <!-- Europe/Africa -->
+      <path d="M1,-3 Q3,-2 2,0 Q1,2 0,1 Q1,-1 1,-3"/>
+      <!-- Asia -->
+      <path d="M2,-1 Q4,0 3,2 Q2,3 1,2 Q2,1 2,-1"/>
+    </g>
+    
+    <!-- Grid lines -->
+    <g stroke="#2980b9" stroke-width="0.5" fill="none" opacity="0.6">
+      <circle cx="0" cy="0" r="6"/>
+      <ellipse cx="0" cy="0" rx="6" ry="3"/>
+      <ellipse cx="0" cy="0" rx="3" ry="6"/>
+      <line x1="-6" y1="0" x2="6" y2="0"/>
+      <line x1="0" y1="-6" x2="0" y2="6"/>
+    </g>
+  </g>
+  
+  <!-- Trophy (achievement) -->
+  <g transform="translate(80,50)">
+    <!-- Trophy cup -->
+    <path d="M-3,-2 Q-4,-4 -2,-4 L2,-4 Q4,-4 3,-2 L3,2 Q3,4 0,4 Q-3,4 -3,2 Z" fill="#f1c40f"/>
+    
+    <!-- Trophy handles -->
+    <g stroke="#f39c12" stroke-width="1.5" fill="none">
+      <path d="M-3,-1 Q-5,-1 -5,1 Q-5,3 -3,3"/>
+      <path d="M3,-1 Q5,-1 5,1 Q5,3 3,3"/>
+    </g>
+    
+    <!-- Trophy base -->
+    <rect x="-2" y="4" width="4" height="2" fill="#e67e22"/>
+    <rect x="-3" y="6" width="6" height="1" fill="#d35400"/>
+    
+    <!-- Trophy shine -->
+    <ellipse cx="-1" cy="-1" rx="1" ry="2" fill="#fff" opacity="0.6"/>
+  </g>
+  
+  <!-- Numbers and symbols -->
+  <g fill="#7f8c8d" opacity="0.6">
+    <!-- Mathematical symbols -->
+    <text x="10" y="90" font-family="Arial" font-size="8">π</text>
+    <text x="90" y="90" font-family="Arial" font-size="6">∞</text>
+    <text x="5" y="50" font-family="Arial" font-size="5">√</text>
+    <text x="95" y="35" font-family="Arial" font-size="4">∑</text>
+    
+    <!-- Random facts -->
+    <text x="35" y="85" font-family="Arial" font-size="3">42</text>
+    <text x="65" y="85" font-family="Arial" font-size="3">1969</text>
+    <text x="15" y="35" font-family="Arial" font-size="3">299,792,458</text>
+  </g>
+  
+  <!-- Knowledge connections -->
+  <g stroke="#95a5a6" stroke-width="1" opacity="0.4" fill="none">
+    <path d="M25,25 Q40,35 50,20"/>
+    <path d="M75,25 Q60,35 50,20"/>
+    <path d="M20,75 Q35,60 50,50"/>
+    <path d="M80,75 Q65,60 50,50"/>
+    <path d="M25,50 Q37,45 50,50"/>
+    <path d="M75,50 Q63,45 50,50"/>
+  </g>
+  
+  <!-- Sparkles (knowledge discovery) -->
+  <g fill="#f1c40f" opacity="0.7">
+    <g transform="translate(40,30)">
+      <path d="M0,-2 L0.5,0 L0,2 L-0.5,0 Z"/>
+      <path d="M-2,0 L0,-0.5 L2,0 L0,0.5 Z"/>
+    </g>
+    
+    <g transform="translate(60,70)">
+      <path d="M0,-1.5 L0.3,0 L0,1.5 L-0.3,0 Z"/>
+      <path d="M-1.5,0 L0,-0.3 L1.5,0 L0,0.3 Z"/>
+    </g>
+    
+    <g transform="translate(30,65)">
+      <path d="M0,-1 L0.2,0 L0,1 L-0.2,0 Z"/>
+      <path d="M-1,0 L0,-0.2 L1,0 L0,0.2 Z"/>
+    </g>
+  </g>
+</svg>

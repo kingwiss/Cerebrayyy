@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+        }
+        .container {
+            background: rgba(255,255,255,0.1);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Cerebray Test</h1>
+        <p>If you can see this, the basic HTML/CSS is working.</p>
+        <div id="test-output">JavaScript not loaded yet...</div>
+    </div>
+
+    <script>
+        console.log('Test script loaded!');
+        document.getElementById('test-output').textContent = 'JavaScript is working!';
+        
+        // Test if external libraries would load
+        setTimeout(() => {
+            const testDiv = document.getElementById('test-output');
+            testDiv.innerHTML = `
+                <p>JavaScript is working!</p>
+                <p>jQuery available: ${typeof $ !== 'undefined'}</p>
+                <p>Current time: ${new Date().toLocaleTimeString()}</p>
+            `;
+        }, 1000);
+    </script>
+</body>
+</html>

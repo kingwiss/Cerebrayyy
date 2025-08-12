@@ -1,0 +1,66 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="skyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#74b9ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0984e3;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="birdGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#feca57;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff9ff3;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="pipeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00b894;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00a085;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Sky background -->
+  <circle cx="100" cy="100" r="90" fill="url(#skyGradient)" opacity="0.2"/>
+  
+  <!-- Clouds -->
+  <g opacity="0.4">
+    <ellipse cx="60" cy="40" rx="15" ry="8" fill="#fff"/>
+    <ellipse cx="70" cy="35" rx="12" ry="6" fill="#fff"/>
+    <ellipse cx="140" cy="50" rx="18" ry="10" fill="#fff"/>
+    <ellipse cx="150" cy="45" rx="14" ry="7" fill="#fff"/>
+  </g>
+  
+  <!-- Pipes -->
+  <rect x="140" y="20" width="25" height="60" fill="url(#pipeGradient)" rx="3"/>
+  <rect x="135" y="75" width="35" height="8" fill="url(#pipeGradient)" rx="4"/>
+  
+  <rect x="140" y="120" width="25" height="60" fill="url(#pipeGradient)" rx="3"/>
+  <rect x="135" y="115" width="35" height="8" fill="url(#pipeGradient)" rx="4"/>
+  
+  <!-- Pipe highlights -->
+  <rect x="142" y="22" width="3" height="56" fill="#fff" opacity="0.3" rx="1"/>
+  <rect x="142" y="122" width="3" height="56" fill="#fff" opacity="0.3" rx="1"/>
+  
+  <!-- Flappy Bird -->
+  <g transform="translate(80,100)">
+    <!-- Bird body -->
+    <ellipse cx="0" cy="0" rx="15" ry="12" fill="url(#birdGradient)"/>
+    <!-- Bird wing -->
+    <ellipse cx="-5" cy="-3" rx="8" ry="6" fill="url(#birdGradient)" opacity="0.8">
+      <animateTransform attributeName="transform" type="rotate" values="0;-20;0" dur="0.5s" repeatCount="indefinite"/>
+    </ellipse>
+    <!-- Bird beak -->
+    <polygon points="12,0 20,-2 20,2" fill="#ff6b6b"/>
+    <!-- Bird eye -->
+    <circle cx="5" cy="-4" r="3" fill="#fff"/>
+    <circle cx="6" cy="-4" r="2" fill="#333"/>
+    <!-- Eye highlight -->
+    <circle cx="7" cy="-5" r="1" fill="#fff"/>
+  </g>
+  
+  <!-- Flight path -->
+  <path d="M 20 120 Q 50 80 80 100 Q 110 120 140 100" stroke="url(#birdGradient)" stroke-width="2" fill="none" opacity="0.5" stroke-dasharray="3,3">
+    <animate attributeName="stroke-dashoffset" values="0;6" dur="1s" repeatCount="indefinite"/>
+  </path>
+  
+  <!-- Ground -->
+  <rect x="0" y="180" width="200" height="20" fill="url(#pipeGradient)" opacity="0.6"/>
+  
+  <!-- Floating animation for bird -->
+  <animateTransform attributeName="transform" type="translate" values="0,0;0,-3;0,0" dur="1s" repeatCount="indefinite"/>
+</svg>

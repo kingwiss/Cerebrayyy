@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="techGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00D4AA;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#0099CC;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0066FF;stop-opacity:1" />
+    </linearGradient>
+    <filter id="circuitGlow">
+      <feGaussianBlur stdDeviation="1" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <circle cx="50" cy="50" r="45" fill="url(#techGrad)" opacity="0.1"/>
+  
+  <!-- Central processor/chip -->
+  <rect x="35" y="35" width="30" height="30" fill="none" stroke="url(#techGrad)" stroke-width="2" rx="3"/>
+  <rect x="40" y="40" width="20" height="20" fill="url(#techGrad)" opacity="0.3" rx="2"/>
+  
+  <!-- Circuit lines -->
+  <g stroke="url(#techGrad)" stroke-width="2" fill="none" filter="url(#circuitGlow)">
+    <!-- Horizontal lines -->
+    <line x1="20" y1="35" x2="35" y2="35"/>
+    <line x1="65" y1="35" x2="80" y2="35"/>
+    <line x1="20" y1="50" x2="35" y2="50"/>
+    <line x1="65" y1="50" x2="80" y2="50"/>
+    <line x1="20" y1="65" x2="35" y2="65"/>
+    <line x1="65" y1="65" x2="80" y2="65"/>
+    
+    <!-- Vertical lines -->
+    <line x1="35" y1="20" x2="35" y2="35"/>
+    <line x1="50" y1="20" x2="50" y2="35"/>
+    <line x1="65" y1="20" x2="65" y2="35"/>
+    <line x1="35" y1="65" x2="35" y2="80"/>
+    <line x1="50" y1="65" x2="50" y2="80"/>
+    <line x1="65" y1="65" x2="65" y2="80"/>
+  </g>
+  
+  <!-- Connection nodes -->
+  <g fill="url(#techGrad)">
+    <circle cx="20" cy="35" r="2">
+      <animate attributeName="r" values="2;3;2" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="80" cy="35" r="2">
+      <animate attributeName="r" values="2;3;2" dur="2.3s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="20" cy="50" r="2">
+      <animate attributeName="r" values="2;3;2" dur="2.6s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="80" cy="50" r="2">
+      <animate attributeName="r" values="2;3;2" dur="2.9s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="20" cy="65" r="2">
+      <animate attributeName="r" values="2;3;2" dur="3.2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="80" cy="65" r="2">
+      <animate attributeName="r" values="2;3;2" dur="3.5s" repeatCount="indefinite"/>
+    </circle>
+    
+    <!-- Top and bottom nodes -->
+    <circle cx="35" cy="20" r="2">
+      <animate attributeName="r" values="2;3;2" dur="1.8s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="50" cy="20" r="2">
+      <animate attributeName="r" values="2;3;2" dur="2.1s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="65" cy="20" r="2">
+      <animate attributeName="r" values="2;3;2" dur="2.4s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="35" cy="80" r="2">
+      <animate attributeName="r" values="2;3;2" dur="2.7s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="50" cy="80" r="2">
+      <animate attributeName="r" values="2;3;2" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="65" cy="80" r="2">
+      <animate attributeName="r" values="2;3;2" dur="3.3s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+  
+  <!-- Central processing indicator -->
+  <circle cx="50" cy="50" r="3" fill="#FFFFFF" opacity="0.8">
+    <animate attributeName="opacity" values="0.8;1;0.8" dur="1s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Data flow particles -->
+  <g opacity="0.6">
+    <circle cx="25" cy="35" r="1" fill="url(#techGrad)">
+      <animateMotion dur="3s" repeatCount="indefinite">
+        <mpath href="#dataPath1"/>
+      </animateMotion>
+    </circle>
+    <circle cx="75" cy="50" r="1" fill="url(#techGrad)">
+      <animateMotion dur="3.5s" repeatCount="indefinite">
+        <mpath href="#dataPath2"/>
+      </animateMotion>
+    </circle>
+  </g>
+  
+  <!-- Hidden paths for animation -->
+  <defs>
+    <path id="dataPath1" d="M 25,35 L 35,35 L 35,45 L 45,45"/>
+    <path id="dataPath2" d="M 75,50 L 65,50 L 65,55 L 55,55"/>
+  </defs>
+</svg>

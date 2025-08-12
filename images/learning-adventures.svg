@@ -1,0 +1,202 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <linearGradient id="bookGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3498db;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2980b9;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="compassGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f1c40f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f39c12;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="100" height="100" fill="#ecf0f1"/>
+  
+  <!-- Open book -->
+  <g transform="translate(50,60)">
+    <!-- Left page -->
+    <path d="M-15,0 Q-15,-8 -8,-10 L8,-10 Q15,-8 15,0 L15,15 Q15,18 12,18 L-12,18 Q-15,18 -15,15 Z" 
+          fill="url(#bookGradient)"/>
+    <!-- Right page -->
+    <path d="M15,0 Q15,-8 8,-10 L-8,-10 Q-15,-8 -15,0 L-15,15 Q-15,18 -12,18 L12,18 Q15,18 15,15 Z" 
+          fill="#fff" stroke="#bdc3c7" stroke-width="0.5"/>
+    
+    <!-- Book spine -->
+    <rect x="-1" y="-10" width="2" height="28" fill="#2c3e50"/>
+    
+    <!-- Text lines on pages -->
+    <g stroke="#bdc3c7" stroke-width="0.5" opacity="0.7">
+      <!-- Left page lines -->
+      <line x1="-12" y1="-5" x2="-3" y2="-5"/>
+      <line x1="-12" y1="-2" x2="-3" y2="-2"/>
+      <line x1="-12" y1="1" x2="-3" y2="1"/>
+      <line x1="-12" y1="4" x2="-3" y2="4"/>
+      <line x1="-12" y1="7" x2="-3" y2="7"/>
+      <line x1="-12" y1="10" x2="-3" y2="10"/>
+      
+      <!-- Right page lines -->
+      <line x1="3" y1="-5" x2="12" y2="-5"/>
+      <line x1="3" y1="-2" x2="12" y2="-2"/>
+      <line x1="3" y1="1" x2="12" y2="1"/>
+      <line x1="3" y1="4" x2="12" y2="4"/>
+      <line x1="3" y1="7" x2="12" y2="7"/>
+      <line x1="3" y1="10" x2="12" y2="10"/>
+    </g>
+    
+    <!-- Illustration on left page -->
+    <g transform="translate(-8,-2)">
+      <circle cx="0" cy="0" r="2" fill="#f1c40f"/>
+      <polygon points="-1,-3 1,-3 2,0 1,3 -1,3 -2,0" fill="#e74c3c"/>
+    </g>
+  </g>
+  
+  <!-- Compass -->
+  <g transform="translate(25,25)">
+    <circle cx="0" cy="0" r="8" fill="url(#compassGradient)" stroke="#e67e22" stroke-width="1"/>
+    <circle cx="0" cy="0" r="6" fill="#fff"/>
+    
+    <!-- Compass needle -->
+    <polygon points="0,-4 1,0 0,4 -1,0" fill="#e74c3c"/>
+    <polygon points="0,-4 -1,0 0,4 1,0" fill="#ecf0f1"/>
+    <circle cx="0" cy="0" r="1" fill="#2c3e50"/>
+    
+    <!-- Compass directions -->
+    <g fill="#2c3e50" font-family="Arial" font-size="3" font-weight="bold" text-anchor="middle">
+      <text x="0" y="-7">N</text>
+      <text x="5" y="1">E</text>
+      <text x="0" y="8">S</text>
+      <text x="-5" y="1">W</text>
+    </g>
+    
+    <!-- Compass markings -->
+    <g stroke="#2c3e50" stroke-width="0.5">
+      <line x1="0" y1="-5" x2="0" y2="-4"/>
+      <line x1="5" y1="0" x2="4" y2="0"/>
+      <line x1="0" y1="5" x2="0" y2="4"/>
+      <line x1="-5" y1="0" x2="-4" y2="0"/>
+    </g>
+  </g>
+  
+  <!-- Magnifying glass -->
+  <g transform="translate(75,30)">
+    <!-- Magnifying glass lens -->
+    <circle cx="0" cy="0" r="6" fill="#ecf0f1" stroke="#95a5a6" stroke-width="2"/>
+    <circle cx="0" cy="0" r="4" fill="none" stroke="#bdc3c7" stroke-width="0.5"/>
+    
+    <!-- Magnifying glass handle -->
+    <rect x="4" y="4" width="2" height="8" fill="#8b4513" transform="rotate(45)"/>
+    
+    <!-- Magnified content -->
+    <g transform="scale(1.5)">
+      <text x="0" y="1" text-anchor="middle" font-family="Arial" font-size="2" fill="#2c3e50">ABC</text>
+    </g>
+  </g>
+  
+  <!-- Graduation cap -->
+  <g transform="translate(75,75)">
+    <!-- Cap base -->
+    <ellipse cx="0" cy="0" rx="8" ry="3" fill="#2c3e50"/>
+    <!-- Cap top -->
+    <rect x="-6" y="-2" width="12" height="1" fill="#2c3e50"/>
+    <!-- Tassel -->
+    <line x1="6" y1="-2" x2="8" y2="-6" stroke="#f1c40f" stroke-width="1"/>
+    <circle cx="8" cy="-6" r="1" fill="#f1c40f"/>
+    <!-- Tassel strings -->
+    <g stroke="#f1c40f" stroke-width="0.5">
+      <line x1="8" y1="-5" x2="8" y2="-3"/>
+      <line x1="7.5" y1="-5" x2="7.5" y2="-3"/>
+      <line x1="8.5" y1="-5" x2="8.5" y2="-3"/>
+    </g>
+  </g>
+  
+  <!-- Telescope -->
+  <g transform="translate(20,70)">
+    <!-- Telescope body -->
+    <rect x="0" y="-2" width="15" height="4" fill="#34495e" rx="2"/>
+    <rect x="12" y="-1.5" width="5" height="3" fill="#2c3e50" rx="1.5"/>
+    
+    <!-- Telescope lens -->
+    <circle cx="17" cy="0" r="1.5" fill="#3498db" opacity="0.7"/>
+    <circle cx="17" cy="0" r="1" fill="#ecf0f1" opacity="0.5"/>
+    
+    <!-- Telescope eyepiece -->
+    <rect x="-2" y="-1" width="2" height="2" fill="#2c3e50"/>
+    
+    <!-- Telescope stand -->
+    <g stroke="#7f8c8d" stroke-width="1.5">
+      <line x1="7" y1="2" x2="5" y2="8"/>
+      <line x1="7" y1="2" x2="9" y2="8"/>
+      <line x1="5" y1="8" x2="9" y2="8"/>
+    </g>
+  </g>
+  
+  <!-- Light bulb (idea) -->
+  <g transform="translate(25,50)">
+    <!-- Bulb glass -->
+    <circle cx="0" cy="0" r="5" fill="#f1c40f" opacity="0.8" stroke="#f39c12" stroke-width="1"/>
+    <!-- Filament -->
+    <g stroke="#e67e22" stroke-width="1" fill="none">
+      <path d="M-2,-2 Q0,0 2,-2"/>
+      <path d="M-2,2 Q0,0 2,2"/>
+    </g>
+    <!-- Base -->
+    <rect x="-2" y="5" width="4" height="2" fill="#95a5a6"/>
+    <rect x="-1.5" y="6" width="3" height="0.5" fill="#7f8c8d"/>
+    
+    <!-- Light rays -->
+    <g stroke="#f1c40f" stroke-width="1.5" opacity="0.6">
+      <line x1="0" y1="-8" x2="0" y2="-10"/>
+      <line x1="6" y1="-6" x2="7" y2="-7"/>
+      <line x1="8" y1="0" x2="10" y2="0"/>
+      <line x1="6" y1="6" x2="7" y2="7"/>
+      <line x1="0" y1="8" x2="0" y2="10"/>
+      <line x1="-6" y1="6" x2="-7" y2="7"/>
+      <line x1="-8" y1="0" x2="-10" y2="0"/>
+      <line x1="-6" y1="-6" x2="-7" y2="-7"/>
+    </g>
+  </g>
+  
+  <!-- Map -->
+  <g transform="translate(50,25)">
+    <rect x="-8" y="-6" width="16" height="12" fill="#f4d1ae" stroke="#d35400" stroke-width="1"/>
+    
+    <!-- Map features -->
+    <g stroke="#8b4513" stroke-width="1" fill="none">
+      <!-- Rivers -->
+      <path d="M-6,2 Q0,0 6,3"/>
+      <path d="M-4,-3 Q2,-1 5,-4"/>
+    </g>
+    
+    <!-- Mountains -->
+    <g fill="#95a5a6">
+      <polygon points="-4,-2 -2,-5 0,-2"/>
+      <polygon points="2,1 4,-2 6,1"/>
+    </g>
+    
+    <!-- Cities -->
+    <g fill="#e74c3c">
+      <circle cx="-3" cy="3" r="0.8"/>
+      <circle cx="4" cy="-1" r="0.8"/>
+      <circle cx="1" cy="4" r="0.8"/>
+    </g>
+    
+    <!-- Compass rose -->
+    <g transform="translate(5,-4)" fill="#2c3e50">
+      <polygon points="0,-1 0.5,0 0,1 -0.5,0"/>
+      <text x="0" y="-1.5" text-anchor="middle" font-family="Arial" font-size="1">N</text>
+    </g>
+  </g>
+  
+  <!-- Adventure path -->
+  <g stroke="#e74c3c" stroke-width="2" fill="none" stroke-dasharray="3,2" opacity="0.7">
+    <path d="M10,10 Q30,20 50,15 Q70,10 90,25 Q85,40 75,50 Q60,45 50,55 Q40,65 25,60 Q15,55 20,80 Q35,85 50,90"/>
+  </g>
+  
+  <!-- Knowledge stars -->
+  <g fill="#f1c40f" opacity="0.8">
+    <polygon points="85,50 86,52 88,51 87,53 89,54 87,53 86,55 85,53 83,54 85,52 84,50 86,51"/>
+    <polygon points="15,35 16,36 17,35 16,37 18,37 16,37 16,38 15,37 14,37 15,36 14,35 16,35"/>
+    <polygon points="65,10 66,11 67,10 66,12 68,12 66,12 66,13 65,12 64,12 65,11 64,10 66,10"/>
+  </g>
+</svg>

@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Detox Games: Offline Activities for the Modern World | Cerebray</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Discover engaging offline games and activities for digital detox. Learn how to disconnect from screens and reconnect with real-world fun and entertainment.">
+    <meta name="keywords" content="digital detox, offline games, screen-free activities, unplugged entertainment, analog games, board games, outdoor activities">
+    <meta name="author" content="Cerebray">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://boredom-buster.com/post-3.html">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Digital Detox Games: Offline Activities for the Modern World">
+    <meta property="og:description" content="Discover engaging offline games and activities for digital detox. Learn how to disconnect from screens and reconnect with real-world fun.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://boredom-buster.com/post-3.html">
+    <meta property="og:image" content="https://boredom-buster.com/images/digital-detox-preview.jpg">
+    <meta property="og:site_name" content="Cerebray">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Digital Detox Games: Offline Activities for the Modern World">
+    <meta name="twitter:description" content="Discover engaging offline games and activities for digital detox.">
+    <meta name="twitter:image" content="https://boredom-buster.com/images/digital-detox-preview.jpg">
+    
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "Digital Detox Games: Offline Activities for the Modern World",
+        "description": "Discover engaging offline games and activities for digital detox.",
+        "author": {
+            "@type": "Organization",
+            "name": "Cerebray"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "Cerebray",
+            "url": "https://boredom-buster.com"
+        },
+        "datePublished": "2025-01-12T00:00:00Z",
+        "dateModified": "2025-01-12T00:00:00Z",
+        "url": "https://boredom-buster.com/post-3.html",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://boredom-buster.com/post-3.html"
+        }
+    }
+    </script>
+    
+    <!-- Preconnect for Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Authentication Modal -->
+    <link rel="stylesheet" href="auth-modal.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <!-- Appwrite SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.1"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8fafc;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav a:hover {
+            color: #667eea;
+        }
+
+        /* Article Container */
+        .article-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Article Header */
+        .article-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 3rem 0;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border-radius: 16px;
+            margin-top: 2rem;
+        }
+
+        .article-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .article-meta {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .article-tags {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Article Content */
+        .article-content {
+            background: white;
+            padding: 3rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 3rem;
+        }
+
+        .article-content h2 {
+            color: #10b981;
+            font-size: 1.5rem;
+            margin: 2rem 0 1rem 0;
+            font-weight: 600;
+        }
+
+        .article-content h3 {
+            color: #333;
+            font-size: 1.2rem;
+            margin: 1.5rem 0 0.75rem 0;
+            font-weight: 600;
+        }
+
+        .article-content p {
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+            color: #555;
+        }
+
+        .article-content ul, .article-content ol {
+            margin: 1rem 0 1.5rem 2rem;
+        }
+
+        .article-content li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        .detox-card {
+            background: #f0fdf4;
+            border-left: 4px solid #10b981;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .detox-card h4 {
+            color: #10b981;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .activity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .activity-item {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .activity-item:hover {
+            border-color: #10b981;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.15);
+        }
+
+        .activity-item h4 {
+            color: #10b981;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .activity-item p {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0;
+        }
+
+        .quote-box {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            border-left: 4px solid #10b981;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 8px;
+            font-style: italic;
+            position: relative;
+        }
+
+        .quote-box::before {
+            content: '"';
+            font-size: 3rem;
+            color: #10b981;
+            position: absolute;
+            top: -0.5rem;
+            left: 1rem;
+            font-weight: bold;
+        }
+
+        .quote-author {
+            text-align: right;
+            margin-top: 1rem;
+            font-weight: 600;
+            color: #10b981;
+        }
+
+        .benefits-list {
+            background: #f0fdf4;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+        }
+
+        .benefits-list h4 {
+            color: #10b981;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .benefits-list ul {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+
+        .benefits-list li {
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Social Sharing */
+        .social-sharing {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .social-sharing h3 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .social-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .social-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .social-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .social-btn.twitter {
+            background: #1da1f2;
+            color: white;
+        }
+
+        .social-btn.facebook {
+            background: #4267b2;
+            color: white;
+        }
+
+        .social-btn.linkedin {
+            background: #0077b5;
+            color: white;
+        }
+
+        /* Comments Section */
+        .comments-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .comments-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .comments-header h2 {
+            color: #333;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .change-name-btn {
+            background: none;
+            border: none;
+            color: #10b981;
+            cursor: pointer;
+            font-weight: 500;
+            text-decoration: underline;
+        }
+
+        /* Comment Form */
+        .comment-form {
+            margin-bottom: 2rem;
+        }
+
+        .comment-input {
+            width: 100%;
+            min-height: 100px;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+        }
+
+        .comment-input:focus {
+            outline: none;
+            border-color: #10b981;
+        }
+
+        .comment-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .comment-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background 0.3s ease;
+        }
+
+        .comment-btn:hover {
+            background: #059669;
+        }
+
+        /* Comments List */
+        .comments-list {
+            margin-top: 2rem;
+        }
+
+        .comment {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #10b981;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .comment-author {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .comment-author.authenticated {
+            color: #2563eb;
+        }
+
+        .comment-author.anonymous {
+            color: #6b7280;
+        }
+
+        .auth-verified {
+            color: #10b981;
+            margin-left: 0.25rem;
+            font-size: 0.875rem;
+        }
+
+        .auth-badge {
+            color: #10b981;
+            font-size: 0.875rem;
+        }
+
+        /* Auth Required Section */
+        .auth-required {
+            text-align: center;
+            padding: 2rem;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+
+        .auth-required p {
+            color: #64748b;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .auth-required i {
+            margin-right: 0.5rem;
+        }
+
+        .appwrite-signin-btn {
+            background: #4285f4;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background-color 0.2s;
+        }
+
+        .appwrite-signin-btn:hover {
+            background: #3367d6;
+        }
+
+        .comment-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .comment-time {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #ef4444;
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 4px;
+            transition: background 0.2s ease;
+        }
+
+        .delete-btn:hover {
+            background: #fee2e2;
+        }
+
+        .comment-content {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .comment-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .reply-btn {
+            background: none;
+            border: none;
+            color: #10b981;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            transition: background 0.2s ease;
+        }
+
+        .reply-btn:hover {
+            background: #f0fdf4;
+        }
+
+        /* Reply Form */
+        .reply-form {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .reply-user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .reply-form textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .reply-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+        }
+
+        .post-reply-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.9rem;
+        }
+
+        .cancel-reply-btn {
+            background: #6b7280;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        /* Replies */
+        .replies {
+            margin-top: 1rem;
+            margin-left: 1rem;
+            border-left: 2px solid #e2e8f0;
+            padding-left: 1rem;
+        }
+
+        .reply {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* No Comments */
+        .no-comments {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 2rem;
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #10b981;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.error {
+            background: #ef4444;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav {
+                gap: 1rem;
+            }
+
+            .article-container {
+                padding: 1rem;
+            }
+
+            .article-header {
+                padding: 2rem 1rem;
+                margin-top: 1rem;
+            }
+
+            .article-header h1 {
+                font-size: 1.75rem;
+            }
+
+            .article-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .article-content {
+                padding: 1.5rem;
+            }
+
+            .activity-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .social-sharing {
+                padding: 1.5rem;
+            }
+
+            .social-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .comments-section {
+                padding: 1.5rem;
+            }
+
+            .comments-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+        }
+
+        /* Visual indicators for comment visibility */
+        .comments-list {
+            border: 2px solid #e8f5e8;
+            border-radius: 8px;
+            padding: 1rem;
+            background: linear-gradient(135deg, #f8fff8 0%, #f0f8f0 100%);
+            position: relative;
+        }
+
+        .comments-list::before {
+            content: "👁️ Comments visible to everyone";
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .auth-required .reply-btn {
+            background: #ff9800 !important;
+            color: white !important;
+            border: none !important;
+        }
+
+        .auth-required .reply-btn:hover {
+            background: #f57c00 !important;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">
+                <i class="fas fa-gamepad"></i>
+                Cerebray
+            </a>
+            <nav class="nav">
+                <a href="/">Home</a>
+                <a href="/blog.html">Blog</a>
+                <a href="/contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="article-container">
+        <article>
+            <header class="article-header">
+                <h1>Digital Detox Games: Offline Activities for the Modern World</h1>
+                <div class="article-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-user"></i>
+                        <span>Cerebray</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-calendar"></i>
+                        <span>January 12, 2025</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-clock"></i>
+                        <span>8 min read</span>
+                    </div>
+                </div>
+                <div class="article-tags">
+                    <span class="tag">Digital Detox</span>
+                    <span class="tag">Offline Games</span>
+                    <span class="tag">Screen-Free</span>
+                    <span class="tag">Wellness</span>
+                </div>
+            </header>
+
+            <div class="article-content">
+                <p>In our hyperconnected world, where screens dominate our daily lives and digital notifications constantly compete for our attention, the concept of a digital detox has become more crucial than ever. While technology brings countless benefits, taking intentional breaks from our devices can significantly improve our mental health, creativity, and relationships. The key to a successful digital detox isn't just putting devices away—it's replacing screen time with engaging, fulfilling offline activities.</p>
+
+                <div class="quote-box">
+                    The real world is not a device. It's a place where you can touch, smell, taste, and truly connect with others. Sometimes we need to unplug to plug back into life.
+                    <div class="quote-author">— Digital Wellness Expert</div>
+                </div>
+
+                <h2>Why Digital Detox Matters</h2>
+                <p>Research consistently shows that excessive screen time can lead to digital fatigue, decreased attention spans, sleep disruption, and reduced face-to-face social skills. A digital detox provides an opportunity to reset our relationship with technology, reduce stress, and rediscover the joy of analog experiences.</p>
+
+                <div class="benefits-list">
+                    <h4>🌟 Benefits of Digital Detox</h4>
+                    <ul>
+                        <li>Improved sleep quality and circadian rhythm regulation</li>
+                        <li>Enhanced focus and concentration abilities</li>
+                        <li>Stronger real-world relationships and social connections</li>
+                        <li>Increased creativity and problem-solving skills</li>
+                        <li>Better physical health through reduced sedentary time</li>
+                        <li>Greater mindfulness and present-moment awareness</li>
+                    </ul>
+                </div>
+
+                <h2>Classic Board Games: Timeless Entertainment</h2>
+                <p>Board games offer the perfect antidote to digital overload. They provide structured fun, social interaction, and cognitive challenges without any screens involved. Modern board game design has evolved far beyond traditional games, offering sophisticated mechanics and engaging themes for all ages.</p>
+
+                <div class="activity-grid">
+                    <div class="activity-item">
+                        <h4><i class="fas fa-chess"></i> Strategy Games</h4>
+                        <p>Chess, Checkers, Go, and modern strategy games like Ticket to Ride or Splendor challenge your mind and improve strategic thinking.</p>
+                    </div>
+                    <div class="activity-item">
+                        <h4><i class="fas fa-users"></i> Party Games</h4>
+                        <p>Games like Codenames, Wavelength, or classic Charades bring people together and create memorable shared experiences.</p>
+                    </div>
+                    <div class="activity-item">
+                        <h4><i class="fas fa-puzzle-piece"></i> Cooperative Games</h4>
+                        <p>Work together in games like Pandemic or Forbidden Island, where players collaborate to achieve common goals.</p>
+                    </div>
+                    <div class="activity-item">
+                        <h4><i class="fas fa-dice"></i> Quick Games</h4>
+                        <p>Fast-paced games like Sushi Go!, Love Letter, or Exploding Kittens provide instant fun without long commitments.</p>
+                    </div>
+                </div>
+
+                <h2>Outdoor Adventures and Physical Activities</h2>
+                <p>Nothing beats the rejuvenating power of fresh air and physical movement. Outdoor activities naturally disconnect us from digital distractions while providing exercise, vitamin D, and a connection to nature.</p>
+
+                <h3>Nature-Based Activities</h3>
+                <div class="detox-card">
+                    <h4>🌲 Forest Bathing & Hiking</h4>
+                    <p>Immerse yourself in nature through mindful walking, hiking, or the Japanese practice of "shinrin-yoku" (forest bathing). These activities reduce stress hormones and boost immune function.</p>
+                </div>
+
+                <div class="detox-card">
+                    <h4>🏕️ Camping & Stargazing</h4>
+                    <p>Disconnect completely by spending time in nature. Camping forces a digital detox while stargazing reminds us of the vastness beyond our screens.</p>
+                </div>
+
+                <h3>Active Games and Sports</h3>
+                <ul>
+                    <li><strong>Frisbee & Flying Disc Games:</strong> Ultimate frisbee, disc golf, or casual throwing</li>
+                    <li><strong>Traditional Sports:</strong> Basketball, soccer, tennis, or badminton</li>
+                    <li><strong>Water Activities:</strong> Swimming, kayaking, paddleboarding, or beach volleyball</li>
+                    <li><strong>Winter Sports:</strong> Skiing, snowboarding, ice skating, or snowshoeing</li>
+                    <li><strong>Cycling Adventures:</strong> Road biking, mountain biking, or leisurely bike tours</li>
+                </ul>
+
+                <h2>Creative and Artistic Pursuits</h2>
+                <p>Engaging in creative activities provides a meditative escape from digital noise while producing tangible results that boost self-esteem and provide lasting satisfaction.</p>
+
+                <div class="activity-grid">
+                    <div class="activity-item">
+                        <h4><i class="fas fa-paint-brush"></i> Visual Arts</h4>
+                        <p>Drawing, painting, sketching, watercolors, or mixed media art. Start with simple supplies and let creativity flow.</p>
+                    </div>
+                    <div class="activity-item">
+                        <h4><i class="fas fa-cut"></i> Crafts & DIY</h4>
+                        <p>Knitting, crocheting, woodworking, pottery, jewelry making, or upcycling projects that create useful items.</p>
+                    </div>
+                    <div class="activity-item">
+                        <h4><i class="fas fa-music"></i> Music Making</h4>
+                        <p>Learn an instrument, sing, compose songs, or join a local choir or band for social musical experiences.</p>
+                    </div>
+                    <div class="activity-item">
+                        <h4><i class="fas fa-pen"></i> Writing & Journaling</h4>
+                        <p>Creative writing, poetry, journaling, letter writing, or starting that novel you've always dreamed about.</p>
+                    </div>
+                </div>
+
+                <h2>Social Connection Games</h2>
+                <p>Human connection is one of the most important aspects of well-being that digital devices often fail to provide authentically. Face-to-face social activities build stronger relationships and improve emotional intelligence.</p>
+
+                <h3>Conversation and Communication Games</h3>
+                <div class="detox-card">
+                    <h4>💬 Deep Conversation Starters</h4>
+                    <p>Use conversation cards, philosophical questions, or storytelling prompts to have meaningful discussions with friends and family.</p>
+                </div>
+
+                <div class="detox-card">
+                    <h4>🎭 Improv and Role-Playing</h4>
+                    <p>Try improvisational games, charades, or tabletop role-playing games that encourage creativity and social interaction.</p>
+                </div>
+
+                <h3>Group Activities</h3>
+                <ul>
+                    <li><strong>Cooking Together:</strong> Plan and prepare meals as a group activity</li>
+                    <li><strong>Book Clubs:</strong> Read and discuss books with others</li>
+                    <li><strong>Game Nights:</strong> Regular gatherings focused on board games or card games</li>
+                    <li><strong>Volunteer Work:</strong> Community service that brings people together for a cause</li>
+                    <li><strong>Learning Groups:</strong> Language exchange, skill sharing, or hobby clubs</li>
+                </ul>
+
+                <h2>Mindfulness and Meditation Practices</h2>
+                <p>Digital detox provides an excellent opportunity to develop mindfulness practices that can improve mental clarity, reduce anxiety, and enhance overall well-being.</p>
+
+                <div class="detox-card">
+                    <h4>🧘 Meditation Techniques</h4>
+                    <p>Practice breathing exercises, body scans, walking meditation, or loving-kindness meditation without apps or digital guidance.</p>
+                </div>
+
+                <div class="detox-card">
+                    <h4>📖 Analog Learning</h4>
+                    <p>Read physical books, practice calligraphy, learn origami, or study subjects through traditional methods without digital aids.</p>
+                </div>
+
+                <h2>Puzzle and Brain Games</h2>
+                <p>Keep your mind sharp with analog puzzles and brain teasers that provide the cognitive benefits of digital games without the screen time.</p>
+
+                <div class="activity-grid">
+                    <div class="activity-item">
+                        <h4><i class="fas fa-puzzle-piece"></i> Jigsaw Puzzles</h4>
+                        <p>From 100 to 5000 pieces, jigsaw puzzles provide meditative focus and a sense of accomplishment.</p>
+                    </div>
+                    <div class="activity-item">
+                        <h4><i class="fas fa-calculator"></i> Number Games</h4>
+                        <p>Sudoku, crosswords, word searches, and mathematical puzzles challenge different cognitive skills.</p>
+                    </div>
+                    <div class="activity-item">
+                        <h4><i class="fas fa-cube"></i> 3D Puzzles</h4>
+                        <p>Rubik's cubes, mechanical puzzles, and 3D brain teasers provide hands-on problem-solving challenges.</p>
+                    </div>
+                    <div class="activity-item">
+                        <h4><i class="fas fa-lightbulb"></i> Logic Games</h4>
+                        <p>Riddles, lateral thinking puzzles, and logic problems that can be solved with pen and paper.</p>
+                    </div>
+                </div>
+
+                <h2>Creating Your Digital Detox Plan</h2>
+                <p>A successful digital detox requires planning and intention. Start small with short periods of disconnection and gradually increase the duration as you become more comfortable with offline activities.</p>
+
+                <h3>Detox Strategies</h3>
+                <div class="benefits-list">
+                    <h4>📱 Practical Tips for Digital Detox</h4>
+                    <ul>
+                        <li>Start with device-free meals and bedtime routines</li>
+                        <li>Designate specific hours or days as screen-free time</li>
+                        <li>Create physical spaces in your home that are device-free zones</li>
+                        <li>Plan offline activities in advance to avoid boredom</li>
+                        <li>Inform friends and family about your detox plans</li>
+                        <li>Use analog alternatives: physical books, paper maps, traditional games</li>
+                        <li>Focus on one offline activity at a time for deeper engagement</li>
+                    </ul>
+                </div>
+
+                <h2>Making It Sustainable</h2>
+                <p>The goal isn't to eliminate technology entirely but to develop a healthier relationship with digital devices. Regular digital detox periods can help you appreciate both the benefits of technology and the irreplaceable value of offline experiences.</p>
+
+                <div class="quote-box">
+                    Technology is a useful servant but a dangerous master. The key is maintaining control over when and how we engage with our digital tools.
+                    <div class="quote-author">— Mindful Technology Advocate</div>
+                </div>
+
+                <h2>Conclusion: Rediscovering the Analog World</h2>
+                <p>Digital detox games and activities offer more than just a break from screens—they provide opportunities for deeper connections, creative expression, physical health, and mental clarity. By intentionally incorporating offline activities into our lives, we can enjoy the benefits of technology while maintaining our humanity and well-being.</p>
+
+                <p>Remember, the most sophisticated game console can't replicate the satisfaction of completing a challenging jigsaw puzzle, the joy of a spontaneous outdoor adventure, or the warmth of face-to-face laughter with friends. In our quest to stay connected digitally, let's not forget the importance of connecting with ourselves, others, and the physical world around us.</p>
+
+                <h3>Start Your Digital Detox Today:</h3>
+                <ul>
+                    <li>Choose one offline activity from this article to try this week</li>
+                    <li>Schedule regular device-free time in your daily routine</li>
+                    <li>Invite friends or family to join you in analog activities</li>
+                    <li>Create a dedicated space for offline hobbies and games</li>
+                    <li>Track how offline activities make you feel compared to screen time</li>
+                </ul>
+            </div>
+        </article>
+
+        <!-- Social Sharing -->
+        <section class="social-sharing">
+            <h3>Share This Article</h3>
+            <div class="social-buttons">
+                <button class="social-btn twitter" onclick="shareOnTwitter()">
+                    <i class="fab fa-twitter"></i>
+                    Share on Twitter
+                </button>
+                <button class="social-btn facebook" onclick="shareOnFacebook()">
+                    <i class="fab fa-facebook"></i>
+                    Share on Facebook
+                </button>
+                <button class="social-btn linkedin" onclick="shareOnLinkedIn()">
+                    <i class="fab fa-linkedin"></i>
+                    Share on LinkedIn
+                </button>
+            </div>
+        </section>
+
+        <!-- Comments Section -->
+        <section class="comments-section">
+            <div class="comments-header">
+                <h2><i class="fas fa-comments"></i> Comments</h2>
+                <div id="userInfo" style="display: none;">
+                    <span id="userEmail"></span>
+                    <button onclick="signOut()" class="sign-out-btn">Sign Out</button>
+                </div>
+            </div>
+
+            <div id="authRequired" class="auth-required">
+                <p><i class="fas fa-lock"></i> Please sign in to post comments</p>
+                <button onclick="openAuthModal('login')" class="appwrite-signin-btn">
+                    <i class="fas fa-sign-in-alt"></i> Sign In
+                </button>
+            </div>
+
+            <div class="comment-form" id="commentForm" style="display: none;">
+                <textarea id="commentInput" class="comment-input" placeholder="Share your thoughts about digital detox and offline activities..."></textarea>
+                <div class="comment-actions">
+                    <div class="user-info">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Press Ctrl+Enter to post quickly</span>
+                    </div>
+                    <button class="comment-btn" onclick="addComment()">
+                        <i class="fas fa-paper-plane"></i>
+                        Post Comment
+                    </button>
+                </div>
+            </div>
+
+            <div id="commentsList" class="comments-list">
+                <p class="no-comments">No comments yet. Be the first to share your thoughts!</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Define postId for this article
+        const postId = 'post-3';
+        
+        // Social sharing functions
+        function shareOnTwitter() {
+            const url = encodeURIComponent(window.location.href);
+            const text = encodeURIComponent('Digital Detox Games: Offline Activities for the Modern World');
+            window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+        }
+
+        function shareOnFacebook() {
+            const url = encodeURIComponent(window.location.href);
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+        }
+
+        function shareOnLinkedIn() {
+            const url = encodeURIComponent(window.location.href);
+            const title = encodeURIComponent('Digital Detox Games: Offline Activities for the Modern World');
+            window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}&title=${title}`, '_blank');
+        }
+    </script>
+    <script src="auth-modal.js"></script>
+    <script src="blog.js"></script>
+    <script src="article-comments.js"></script>
+</body>
+</html>

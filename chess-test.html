@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess Test</title>
+    
+    <!-- Chess.js and Chessboard.js libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+    <script src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css">
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        #board {
+            width: 400px;
+            margin: 20px auto;
+        }
+        #status {
+            margin: 20px 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chess Puzzle Test</h1>
+    <div id="status">White to move and checkmate!</div>
+    <div id="board"></div>
+    <button onclick="newPuzzle()">New Puzzle</button>
+    <button onclick="showSolution()">Show Solution</button>
+    
+    <script>
+        let game;
+        let board;
+        let currentPuzzle;
+        let puzzleSolved = false;
+        
+        const puzzles = [
+            {
+                name: "Back Rank Mate",
+                fen: "6k1/5ppp/8/8/8/8/8/R6K w - - 0 1",
+                description: "White to move and checkmate! Find the back rank mate.",
+                solution: "Ra8#"
+            },
+            {
+                name: "Queen Mate",
+                fen: "4k3/4p3/4K3/8/8/8/8/3Q4 w - - 0 1",
+                description: "White to move and checkmate! Use the Queen.",
+                solution: "Qd8#"
+            },
+            {
+                name: "Rook Mate",
+                fen: "6k1/6pp/8/8/8/8/8/6RK w - - 0 1",
+                description: "White to move and checkmate! Find the rook mate.",
+                solution: "Rg8#"
+            },
+            {
+                name: "Smothered Mate",
+                fen: "6rk/6pp/7N/8/8/8/8/7K w - - 0 1",
+                description: "White to move and checkmate! Knight delivers mate.",
+                solution: "Nf7#"
+            }
+        ];
+        
+        function onDragStart(source, piece, position, orientation) {
+            // Don't pick up pieces if the game is over
+            if (game.game_over() || puzzleSolved) return false;
+            
+            // Only pick up white pieces
+            if (piece.search(/^b/) !== -1) return false;
+            
+            return true;
+        }
+        
+        function onDrop(source, target) {
+            // See if the move is legal
+            const move = game.move({
+                from: source,
+                to: target,
+                promotion: 'q'
+            });
+            
+            // Illegal move
+            if (move === null) return 'snapback';
+            
+            // Check if this move solves the puzzle
+            checkPuzzleSolution(move);
+            
+            return true;
+        }
+        
+        function onSnapEnd() {
+            board.position(game.fen());
+        }
+        
+        function checkPuzzleSolution(move) {
+            const status = document.getElementById('status');
+            
+            // Check if the game is in checkmate
+            if (game.in_checkmate()) {
+                status.textContent = '🎉 Checkmate! You solved the puzzle! 🎉';
+                status.style.color = '#4CAF50';
+                puzzleSolved = true;
+            } else if (game.in_check()) {
+                status.textContent = 'Check! But not checkmate yet. Try a different move.';
+                status.style.color = '#FF9800';
+                // Undo the move if it's not checkmate
+                game.undo();
+                board.position(game.fen());
+            } else {
+                status.textContent = 'Not checkmate. Try again!';
+                status.style.color = '#f44336';
+                // Undo the move
+                game.undo();
+                board.position(game.fen());
+            }
+        }
+        
+        function newPuzzle() {
+            currentPuzzle = puzzles[Math.floor(Math.random() * puzzles.length)];
+            game = new Chess(currentPuzzle.fen);
+            puzzleSolved = false;
+            
+            board.position(currentPuzzle.fen);
+            
+            const status = document.getElementById('status');
+            status.textContent = currentPuzzle.description;
+            status.style.color = '#333';
+        }
+        
+        function showSolution() {
+            const status = document.getElementById('status');
+            status.textContent = `💡 Solution: ${currentPuzzle.solution}`;
+            status.style.color = '#2196F3';
+            
+            setTimeout(() => {
+                status.textContent = currentPuzzle.description;
+                status.style.color = '#333';
+            }, 3000);
+        }
+        
+        // Initialize when page loads
+        $(document).ready(function() {
+            console.log('jQuery loaded:', typeof $ !== 'undefined');
+            console.log('Chess.js loaded:', typeof Chess !== 'undefined');
+            console.log('Chessboard.js loaded:', typeof Chessboard !== 'undefined');
+            
+            if (typeof Chess === 'undefined' || typeof Chessboard === 'undefined') {
+                document.getElementById('status').textContent = 'Error: Chess libraries not loaded!';
+                return;
+            }
+            
+            // Initialize first puzzle
+            currentPuzzle = puzzles[0];
+            game = new Chess(currentPuzzle.fen);
+            
+            // Create board
+            const config = {
+                draggable: true,
+                position: currentPuzzle.fen,
+                onDragStart: onDragStart,
+                onDrop: onDrop,
+                onSnapEnd: onSnapEnd
+            };
+            
+            board = Chessboard('board', config);
+            
+            document.getElementById('status').textContent = currentPuzzle.description;
+        });
+    </script>
+</body>
+</html>

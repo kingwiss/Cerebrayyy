@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="medievalGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4169E1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#191970;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="90" fill="url(#medievalGrad)" stroke="#2F4F4F" stroke-width="3"/>
+  
+  <!-- Castle -->
+  <rect x="70" y="80" width="60" height="80" fill="#696969" stroke="#2F4F4F" stroke-width="2"/>
+  <rect x="60" y="70" width="20" height="90" fill="#696969" stroke="#2F4F4F" stroke-width="2"/>
+  <rect x="120" y="70" width="20" height="90" fill="#696969" stroke="#2F4F4F" stroke-width="2"/>
+  
+  <!-- Castle towers -->
+  <polygon points="60,70 70,60 80,70" fill="#696969" stroke="#2F4F4F" stroke-width="2"/>
+  <polygon points="120,70 130,60 140,70" fill="#696969" stroke="#2F4F4F" stroke-width="2"/>
+  <polygon points="85,80 95,70 105,80" fill="#696969" stroke="#2F4F4F" stroke-width="2"/>
+  
+  <!-- Castle gate -->
+  <rect x="85" y="130" width="30" height="30" fill="#2F4F4F" stroke="#000" stroke-width="2" rx="15"/>
+  
+  <!-- Shield -->
+  <path d="M100,40 L85,45 L85,65 L100,75 L115,65 L115,45 Z" fill="#DC143C" stroke="#8B0000" stroke-width="2"/>
+  <path d="M95,50 L105,50 M95,55 L105,55 M95,60 L105,60" stroke="#FFD700" stroke-width="2"/>
+  
+  <!-- Sword -->
+  <rect x="125" y="100" width="4" height="40" fill="#C0C0C0" stroke="#696969" stroke-width="1"/>
+  <rect x="120" y="95" width="14" height="8" fill="#8B4513" stroke="#654321" stroke-width="1"/>
+  <circle cx="127" cy="99" r="3" fill="#FFD700" stroke="#B8860B" stroke-width="1"/>
+</svg>

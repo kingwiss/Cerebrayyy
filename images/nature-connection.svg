@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="natureGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#27AE60;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#2ECC71;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#58D68D;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="skyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3498DB;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#85C1E9;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="sunGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#F1C40F;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F39C12;stop-opacity:1" />
+    </radialGradient>
+  </defs>
+  
+  <!-- Sky background -->
+  <circle cx="50" cy="50" r="45" fill="url(#skyGrad)" opacity="0.3"/>
+  
+  <!-- Sun -->
+  <circle cx="75" cy="25" r="8" fill="url(#sunGrad)" opacity="0.8">
+    <animate attributeName="opacity" values="0.8;1;0.8" dur="4s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Sun rays -->
+  <g stroke="url(#sunGrad)" stroke-width="2" opacity="0.6">
+    <line x1="75" y1="10" x2="75" y2="15">
+      <animate attributeName="opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite"/>
+    </line>
+    <line x1="88" y1="25" x2="83" y2="25">
+      <animate attributeName="opacity" values="0.6;1;0.6" dur="2.3s" repeatCount="indefinite"/>
+    </line>
+    <line x1="85" y1="15" x2="82" y2="18">
+      <animate attributeName="opacity" values="0.6;1;0.6" dur="2.6s" repeatCount="indefinite"/>
+    </line>
+  </g>
+  
+  <!-- Mountains -->
+  <polygon points="10,70 25,45 40,70" fill="url(#natureGrad)" opacity="0.7"/>
+  <polygon points="30,70 45,50 60,70" fill="url(#natureGrad)" opacity="0.6"/>
+  
+  <!-- Tree trunk -->
+  <rect x="47" y="55" width="6" height="20" fill="#8B4513" opacity="0.8"/>
+  
+  <!-- Tree crown -->
+  <circle cx="50" cy="50" r="12" fill="url(#natureGrad)" opacity="0.8"/>
+  <circle cx="45" cy="45" r="8" fill="url(#natureGrad)" opacity="0.9"/>
+  <circle cx="55" cy="47" r="9" fill="url(#natureGrad)" opacity="0.7"/>
+  
+  <!-- Leaves falling -->
+  <g fill="url(#natureGrad)" opacity="0.8">
+    <ellipse cx="35" cy="40" rx="2" ry="3" transform="rotate(45 35 40)">
+      <animateTransform attributeName="transform" type="translate" values="0,0; 5,15; 0,30" dur="4s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.8;0.4;0" dur="4s" repeatCount="indefinite"/>
+    </ellipse>
+    <ellipse cx="65" cy="35" rx="2" ry="3" transform="rotate(-30 65 35)">
+      <animateTransform attributeName="transform" type="translate" values="0,0; -3,20; -8,40" dur="5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.8;0.4;0" dur="5s" repeatCount="indefinite"/>
+    </ellipse>
+  </g>
+  
+  <!-- Grass -->
+  <g stroke="url(#natureGrad)" stroke-width="2" fill="none" opacity="0.7">
+    <path d="M 15,75 Q 17,70 19,75">
+      <animate attributeName="d" values="M 15,75 Q 17,70 19,75; M 15,75 Q 17,68 19,75; M 15,75 Q 17,70 19,75" dur="3s" repeatCount="indefinite"/>
+    </path>
+    <path d="M 25,75 Q 27,68 29,75">
+      <animate attributeName="d" values="M 25,75 Q 27,68 29,75; M 25,75 Q 27,66 29,75; M 25,75 Q 27,68 29,75" dur="3.5s" repeatCount="indefinite"/>
+    </path>
+    <path d="M 70,75 Q 72,69 74,75">
+      <animate attributeName="d" values="M 70,75 Q 72,69 74,75; M 70,75 Q 72,67 74,75; M 70,75 Q 72,69 74,75" dur="2.8s" repeatCount="indefinite"/>
+    </path>
+    <path d="M 80,75 Q 82,71 84,75">
+      <animate attributeName="d" values="M 80,75 Q 82,71 84,75; M 80,75 Q 82,69 84,75; M 80,75 Q 82,71 84,75" dur="3.2s" repeatCount="indefinite"/>
+    </path>
+  </g>
+  
+  <!-- Butterfly -->
+  <g transform="translate(30,30)" opacity="0.8">
+    <ellipse cx="0" cy="-2" rx="3" ry="5" fill="url(#sunGrad)" opacity="0.7">
+      <animateTransform attributeName="transform" type="rotate" values="0;15;0;-15;0" dur="0.5s" repeatCount="indefinite"/>
+    </ellipse>
+    <ellipse cx="0" cy="2" rx="2" ry="3" fill="url(#sunGrad)" opacity="0.7">
+      <animateTransform attributeName="transform" type="rotate" values="0;-15;0;15;0" dur="0.5s" repeatCount="indefinite"/>
+    </ellipse>
+    <line x1="0" y1="-3" x2="0" y2="3" stroke="#333" stroke-width="1"/>
+    
+    <animateTransform attributeName="transform" type="translate" values="30,30; 40,25; 50,30; 60,35; 70,30; 30,30" dur="8s" repeatCount="indefinite"/>
+  </g>
+  
+  <!-- Ground -->
+  <ellipse cx="50" cy="85" rx="40" ry="8" fill="url(#natureGrad)" opacity="0.3"/>
+</svg>

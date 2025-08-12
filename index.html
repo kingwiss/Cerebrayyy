@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧠 Cerebray</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="auth-modal.css">
+    <link rel="stylesheet" href="premium-popup.css">
+    <link rel="stylesheet" href="stripe-payment.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <!-- Appwrite SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.1"></script>
+    
+    <!-- Stripe JavaScript SDK -->
+    <script src="https://js.stripe.com/v3/"></script>
+    
+    <!-- Libraries for the app -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- Chess libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+    <script src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"></script>
+    <script src="chess-pieces.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css">
+</head>
+<body>
+    
+    <div class="app-container">
+        <header class="app-header">
+            <!-- Top row with logo and user controls -->
+            <div class="header-top">
+                <div class="header-left">
+                    <h1><i class="fas fa-gamepad"></i></h1>
+                </div>
+                
+                <div class="header-right">
+                    <!-- Premium Toggle Button -->
+                    <button id="premiumToggleBtn" class="control-btn premium-toggle" title="Toggle Premium Mode (Testing)">
+                        <i class="fas fa-crown"></i>
+                        <span class="premium-label">Premium</span>
+                    </button>
+                    <!-- Premium Refresh Button (only visible in premium mode) -->
+                    <button id="premiumRefreshBtn" class="control-btn premium-refresh" title="Force refresh premium content" style="display: none;">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                    <button id="musicToggleBtn" class="control-btn music-toggle" title="Toggle background music">
+                        <i class="fas fa-music"></i>
+                    </button>
+                    <!-- Enhanced Sign-In Button -->
+                    <div id="mainSignInBtn" class="google-signin-btn">
+                        <button id="appwriteSignInBtn" class="appwrite-signin-btn" onclick="openAuthModal('login')">
+                            <i class="fas fa-sign-in-alt"></i> Sign In
+                        </button>
+                    </div>
+                    
+                    <!-- User Profile (hidden by default) -->
+                    <div id="userProfile" class="user-profile" style="display: none;">
+                        <img id="userAvatar" class="user-avatar" src="" alt="User Avatar">
+                        <span id="userName" class="user-name"></span>
+                        <button id="signOutBtn" class="sign-out-btn">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+
+            
+            <!-- Navigation menu below logo -->
+            <div class="header-nav">
+                <nav class="main-nav">
+                    <a href="index.html" class="nav-link active" id="homeTab">
+                        <i class="fas fa-home"></i> Home
+                    </a>
+                    <a href="blog.html" class="nav-link" id="blogTab">
+                        <i class="fas fa-blog"></i> Blog
+                    </a>
+                    <button class="nav-link saved-cards-btn" id="savedCardsBtn">
+                        <i class="fas fa-bookmark"></i> Saved Cards
+                    </button>
+                    <button class="nav-link contact-btn" id="contactBtn">
+                        <i class="fas fa-envelope"></i> Contact Us
+                    </button>
+                </nav>
+            </div>
+        </header>
+
+        <div class="cards-container" id="cardsContainer">
+            <!-- Cards will be dynamically generated here -->
+        </div>
+
+
+
+        <!-- Floating New Cards Button -->
+        <button class="refresh-btn floating-refresh-btn" id="refreshBtn">
+            <i class="fas fa-sync-alt"></i> New Cards
+        </button>
+
+        <div class="instructions">
+            <p><i class="fas fa-hand-pointer"></i> Swipe cards away or click the refresh button for new activities!</p>
+        </div>
+
+        <!-- Footer Menu -->
+        <footer class="app-footer">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="privacy-policy.html" class="footer-link">
+                        <i class="fas fa-shield-alt"></i> Privacy Policy
+                    </a>
+                    <span class="footer-separator">|</span>
+                    <a href="terms-of-service.html" class="footer-link">
+                        <i class="fas fa-file-contract"></i> Terms of Service
+                    </a>
+                </div>
+                <div class="footer-copyright">
+                    <p>&copy; 2024 Cerebray. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Game Modals -->
+    <div class="modal" id="gameModal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <div id="gameContent"></div>
+        </div>
+    </div>
+
+    <!-- Contact Us Modal -->
+    <div class="modal" id="contactModal">
+        <div class="modal-content contact-modal-content">
+            <span class="close" id="closeContactModal">&times;</span>
+            <div class="contact-form-container">
+                <h2><i class="fas fa-envelope"></i> Contact Us</h2>
+                <p>Have a question, suggestion, or just want to say hello? We'd love to hear from you!</p>
+                
+                <form action="https://formsubmit.co/fredwisseh@gmail.com" method="POST" class="contact-form" id="contactForm">
+                    <!-- FormSubmit.io configuration -->
+                    <input type="hidden" name="_subject" value="New Contact Form Submission from Cerebray">
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="hidden" name="_template" value="table">
+                    <input type="hidden" name="_next" value="http://localhost:8000/index.html?success=true">
+                    
+                    <div class="form-group">
+                        <label for="contactName">
+                            <i class="fas fa-user"></i> Name
+                        </label>
+                        <input type="text" id="contactName" name="name" required placeholder="Your full name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contactEmail">
+                            <i class="fas fa-envelope"></i> Email
+                        </label>
+                        <input type="email" id="contactEmail" name="email" required placeholder="your.email@example.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contactMessage">
+                            <i class="fas fa-comment"></i> Message
+                        </label>
+                        <textarea id="contactMessage" name="message" required placeholder="Tell us what's on your mind..." rows="5"></textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-paper-plane"></i> Send Message
+                        </button>
+                        <button type="button" class="cancel-btn" id="cancelContactBtn">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Saved Cards Modal -->
+    <div class="modal" id="savedCardsModal">
+        <div class="modal-content saved-cards-modal-content">
+            <div class="saved-cards-header">
+                <h2><i class="fas fa-bookmark"></i> Saved Cards</h2>
+                <span class="close" id="closeSavedCardsModal">&times;</span>
+            </div>
+            <div class="saved-cards-list" id="savedCardsList">
+                <!-- Saved cards will be dynamically generated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Daily Content Backend System -->
+    <script src="daily-content-backend.js"></script>
+    
+    <!-- Premium Content System -->
+    <script src="premium-content-backend.js"></script>
+    <link rel="stylesheet" href="premium-games.css">
+    <script src="premium-games.js"></script>
+    
+    <!-- User Tier Management System -->
+    <script src="user-tier-manager.js"></script>
+    
+    <!-- Stripe Payment System -->
+    <script src="stripe-payment.js"></script>
+    
+    <!-- Premium Popup System -->
+    <script src="premium-popup.js"></script>
+    
+    <script src="auth-modal.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

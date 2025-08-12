@@ -1,0 +1,111 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="riddleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#a29bfe;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6c5ce7;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="questionGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fd79a8;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#fdcb6e;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="lightbulbGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffeaa7;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#fdcb6e;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="90" fill="url(#riddleGradient)" opacity="0.1"/>
+  
+  <!-- Question mark -->
+  <g transform="translate(100,100)">
+    <!-- Question mark curve -->
+    <path d="M -15 -25 Q -15 -35 -5 -35 Q 15 -35 15 -20 Q 15 -5 0 0 L 0 10" 
+          stroke="url(#questionGradient)" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <!-- Question mark dot -->
+    <circle cx="0" cy="20" r="4" fill="url(#questionGradient)"/>
+    
+    <!-- Glow effect -->
+    <circle cx="0" cy="0" r="50" fill="none" stroke="url(#questionGradient)" stroke-width="1" opacity="0.3">
+      <animate attributeName="r" values="50;55;50" dur="3s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+  
+  <!-- Lightbulb (idea) -->
+  <g transform="translate(60,60)" opacity="0.8">
+    <!-- Bulb -->
+    <ellipse cx="0" cy="0" rx="8" ry="12" fill="url(#lightbulbGradient)"/>
+    <!-- Bulb base -->
+    <rect x="-6" y="8" width="12" height="4" rx="1" fill="#ddd"/>
+    <rect x="-5" y="12" width="10" height="2" rx="1" fill="#bbb"/>
+    
+    <!-- Light rays -->
+    <g opacity="0.6">
+      <line x1="-15" y1="-15" x2="-12" y2="-12" stroke="url(#lightbulbGradient)" stroke-width="2" stroke-linecap="round"/>
+      <line x1="15" y1="-15" x2="12" y2="-12" stroke="url(#lightbulbGradient)" stroke-width="2" stroke-linecap="round"/>
+      <line x1="0" y1="-20" x2="0" y2="-17" stroke="url(#lightbulbGradient)" stroke-width="2" stroke-linecap="round"/>
+      <line x1="-20" y1="0" x2="-17" y2="0" stroke="url(#lightbulbGradient)" stroke-width="2" stroke-linecap="round"/>
+      <line x1="20" y1="0" x2="17" y2="0" stroke="url(#lightbulbGradient)" stroke-width="2" stroke-linecap="round"/>
+    </g>
+    
+    <!-- Filament -->
+    <path d="M -3 -5 Q 0 -8 3 -5 Q 0 -2 -3 -5" stroke="#333" stroke-width="1" fill="none"/>
+    
+    <!-- Glow animation -->
+    <circle cx="0" cy="0" r="15" fill="url(#lightbulbGradient)" opacity="0.2">
+      <animate attributeName="opacity" values="0.2;0.4;0.2" dur="2s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+  
+  <!-- Puzzle pieces -->
+  <g transform="translate(140,140)" opacity="0.7">
+    <!-- Puzzle piece 1 -->
+    <path d="M 0 0 L 15 0 Q 20 -5 15 -10 L 0 -10 Q -5 -15 -10 -10 L -10 5 Q -5 10 0 5 Z" 
+          fill="url(#riddleGradient)" opacity="0.8"/>
+    <!-- Puzzle piece 2 -->
+    <path d="M 15 0 L 25 0 Q 30 5 25 10 L 15 10 Q 10 15 15 20 L 0 20 Q -5 15 0 10 L 0 0" 
+          fill="url(#questionGradient)" opacity="0.6" transform="translate(5,-5)"/>
+  </g>
+  
+  <!-- Thinking bubbles -->
+  <g opacity="0.5">
+    <circle cx="40" cy="120" r="3" fill="url(#riddleGradient)">
+      <animate attributeName="cy" values="120;100;120" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="50" cy="110" r="4" fill="url(#riddleGradient)">
+      <animate attributeName="cy" values="110;90;110" dur="3.2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="65" cy="95" r="6" fill="url(#riddleGradient)">
+      <animate attributeName="cy" values="95;75;95" dur="3.5s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+  
+  <!-- Key (solution) -->
+  <g transform="translate(150,70)" opacity="0.6">
+    <circle cx="0" cy="0" r="6" fill="none" stroke="url(#lightbulbGradient)" stroke-width="2"/>
+    <rect x="6" y="-1" width="12" height="2" fill="url(#lightbulbGradient)"/>
+    <rect x="15" y="-3" width="3" height="2" fill="url(#lightbulbGradient)"/>
+    <rect x="15" y="1" width="3" height="2" fill="url(#lightbulbGradient)"/>
+    
+    <!-- Key glow -->
+    <circle cx="0" cy="0" r="12" fill="none" stroke="url(#lightbulbGradient)" stroke-width="1" opacity="0.3">
+      <animate attributeName="opacity" values="0.3;0.6;0.3" dur="2.5s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+  
+  <!-- Mystery symbols -->
+  <g opacity="0.3" font-family="serif" font-size="16" fill="url(#riddleGradient)">
+    <text x="30" y="40" transform="rotate(15)">?</text>
+    <text x="160" y="30" transform="rotate(-10)">!</text>
+    <text x="170" y="160" transform="rotate(20)">?</text>
+    <text x="20" y="170" transform="rotate(-15)">!</text>
+  </g>
+  
+  <!-- Magnifying glass -->
+  <g transform="translate(40,160)" opacity="0.6">
+    <circle cx="0" cy="0" r="8" fill="none" stroke="url(#questionGradient)" stroke-width="2"/>
+    <line x1="6" y1="6" x2="12" y2="12" stroke="url(#questionGradient)" stroke-width="2" stroke-linecap="round"/>
+    <!-- Magnified content -->
+    <text x="-3" y="2" font-family="serif" font-size="8" fill="url(#questionGradient)">?</text>
+  </g>
+</svg>

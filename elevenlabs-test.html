@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElevenLabs API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .test-section {
+            background: #2a2a2a;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border: 1px solid #444;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        button:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+        .log {
+            background: #000;
+            color: #0f0;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+        .error { color: #f44; }
+        .success { color: #4f4; }
+        .info { color: #44f; }
+    </style>
+</head>
+<body>
+    <h1>🎤 ElevenLabs API Test</h1>
+    
+    <div class="test-section">
+        <h2>Test ElevenLabs TTS</h2>
+        <button onclick="testElevenLabs()">Test ElevenLabs API</button>
+        <button onclick="testVoices()">List Available Voices</button>
+        <button onclick="clearLog()">Clear Log</button>
+        <div id="log" class="log"></div>
+    </div>
+
+    <script>
+        const apiKey = 'sk_35e98a8d5bfb8244fec7489f5a1228b082a8096cf0566940';
+        const baseUrl = 'https://api.elevenlabs.io/v1';
+        const voiceId = 'EXAVITQu4vr4xnSDxMaL'; // Bella
+        
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            const className = type === 'error' ? 'error' : type === 'success' ? 'success' : 'info';
+            logDiv.innerHTML += `<span class="${className}">[${timestamp}] ${message}</span>\n`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+        
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+        }
+        
+        async function testVoices() {
+            log('🔍 Testing ElevenLabs voices endpoint...', 'info');
+            
+            try {
+                const response = await fetch(`${baseUrl}/voices`, {
+                    method: 'GET',
+                    headers: {
+                        'xi-api-key': apiKey
+                    }
+                });
+                
+                log(`Response status: ${response.status}`, response.ok ? 'success' : 'error');
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    log(`✅ Found ${data.voices.length} voices`, 'success');
+                    data.voices.forEach(voice => {
+                        log(`  - ${voice.name} (${voice.voice_id})`, 'info');
+                    });
+                } else {
+                    const errorText = await response.text();
+                    log(`❌ API Error: ${errorText}`, 'error');
+                }
+            } catch (error) {
+                log(`❌ Network Error: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testElevenLabs() {
+            log('🎤 Testing ElevenLabs TTS generation...', 'info');
+            
+            const testText = "Hello! This is a test of ElevenLabs text to speech.";
+            
+            try {
+                log(`Using voice ID: ${voiceId}`, 'info');
+                log(`Text: "${testText}"`, 'info');
+                
+                const response = await fetch(`${baseUrl}/text-to-speech/${voiceId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'audio/mpeg',
+                        'Content-Type': 'application/json',
+                        'xi-api-key': apiKey
+                    },
+                    body: JSON.stringify({
+                        text: testText,
+                        model_id: 'eleven_turbo_v2',
+                        voice_settings: {
+                            stability: 0.4,
+                            similarity_boost: 0.6,
+                            style: 0.2,
+                            use_speaker_boost: true
+                        }
+                    })
+                });
+                
+                log(`Response status: ${response.status}`, response.ok ? 'success' : 'error');
+                log(`Response headers: ${JSON.stringify(Object.fromEntries(response.headers))}`, 'info');
+                
+                if (response.ok) {
+                    const audioBlob = await response.blob();
+                    log(`✅ Audio generated! Size: ${audioBlob.size} bytes`, 'success');
+                    
+                    // Create and play audio
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    const audio = new Audio(audioUrl);
+                    audio.volume = 0.8;
+                    
+                    audio.onloadeddata = () => {
+                        log(`🎵 Audio loaded, duration: ${audio.duration.toFixed(2)}s`, 'success');
+                    };
+                    
+                    audio.onended = () => {
+                        log('🎵 Audio playback completed', 'success');
+                        URL.revokeObjectURL(audioUrl);
+                    };
+                    
+                    audio.onerror = (e) => {
+                        log(`❌ Audio playback error: ${e.message}`, 'error');
+                    };
+                    
+                    try {
+                        await audio.play();
+                        log('▶️ Playing ElevenLabs audio...', 'success');
+                    } catch (playError) {
+                        log(`❌ Play error: ${playError.message}`, 'error');
+                    }
+                    
+                } else {
+                    const errorText = await response.text();
+                    log(`❌ API Error: ${errorText}`, 'error');
+                }
+                
+            } catch (error) {
+                log(`❌ Network Error: ${error.message}`, 'error');
+            }
+        }
+        
+        // Test on page load
+        window.onload = () => {
+            log('🚀 ElevenLabs API Test Ready', 'success');
+            log('Click "Test ElevenLabs API" to test TTS generation', 'info');
+            log('Click "List Available Voices" to check API connectivity', 'info');
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comment Persistence Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .clear-button {
+            background: #dc3545;
+        }
+        .clear-button:hover {
+            background: #c82333;
+        }
+        .results {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+        .success {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .error {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .info {
+            color: #17a2b8;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Comment Persistence Test</h1>
+    <p>This page tests whether comments persist properly and are visible to all users.</p>
+
+    <div class="test-section">
+        <h2>📊 Current Storage Status</h2>
+        <button class="test-button" onclick="checkStorage()">Check Storage</button>
+        <button class="test-button clear-button" onclick="clearAllComments()">Clear All Comments</button>
+        <div id="storageResults" class="results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>➕ Add Test Comments</h2>
+        <button class="test-button" onclick="addTestComment('1', 'User A')">Add Comment as User A (Post 1)</button>
+        <button class="test-button" onclick="addTestComment('1', 'User B')">Add Comment as User B (Post 1)</button>
+        <button class="test-button" onclick="addTestComment('2', 'User C')">Add Comment as User C (Post 2)</button>
+        <div id="addResults" class="results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔄 Persistence Test</h2>
+        <p>1. Add some test comments above</p>
+        <p>2. Refresh this page</p>
+        <p>3. Check if comments are still there</p>
+        <button class="test-button" onclick="location.reload()">Refresh Page</button>
+    </div>
+
+    <div class="test-section">
+        <h2>🔗 Test on Article Pages</h2>
+        <p>Visit these pages to see if comments are visible:</p>
+        <a href="post-1.html" target="_blank" style="display: inline-block; margin: 5px; padding: 10px; background: #28a745; color: white; text-decoration: none; border-radius: 4px;">Post 1</a>
+        <a href="post-2.html" target="_blank" style="display: inline-block; margin: 5px; padding: 10px; background: #28a745; color: white; text-decoration: none; border-radius: 4px;">Post 2</a>
+        <a href="post-3.html" target="_blank" style="display: inline-block; margin: 5px; padding: 10px; background: #28a745; color: white; text-decoration: none; border-radius: 4px;">Post 3</a>
+    </div>
+
+    <script>
+        function checkStorage() {
+            const results = document.getElementById('storageResults');
+            let output = '=== STORAGE CHECK ===\n\n';
+            
+            // Check all possible comment keys
+            const postIds = ['1', '2', '3', '4', '5'];
+            let totalComments = 0;
+            
+            postIds.forEach(postId => {
+                const key = `blog_comments_${postId}`;
+                const data = localStorage.getItem(key);
+                
+                if (data) {
+                    try {
+                        const comments = JSON.parse(data);
+                        output += `📝 Post ${postId}: ${comments.length} comments\n`;
+                        totalComments += comments.length;
+                        
+                        comments.forEach((comment, index) => {
+                            output += `   ${index + 1}. "${comment.content}" by ${comment.author}\n`;
+                        });
+                    } catch (e) {
+                        output += `❌ Post ${postId}: Invalid JSON data\n`;
+                    }
+                } else {
+                    output += `📭 Post ${postId}: No comments\n`;
+                }
+            });
+            
+            output += `\n📊 TOTAL COMMENTS: ${totalComments}\n`;
+            
+            if (totalComments > 0) {
+                output += '\n✅ Comments found! System is working.\n';
+                results.className = 'results success';
+            } else {
+                output += '\n⚠️ No comments found. Try adding some test comments.\n';
+                results.className = 'results info';
+            }
+            
+            results.textContent = output;
+        }
+        
+        function addTestComment(postId, userName) {
+            const key = `blog_comments_${postId}`;
+            const existing = localStorage.getItem(key);
+            let comments = [];
+            
+            if (existing) {
+                try {
+                    comments = JSON.parse(existing);
+                } catch (e) {
+                    console.error('Error parsing existing comments:', e);
+                }
+            }
+            
+            const newComment = {
+                id: Date.now().toString(),
+                content: `Test comment from ${userName} at ${new Date().toLocaleTimeString()}`,
+                author: userName,
+                userId: `test_user_${userName.toLowerCase().replace(' ', '_')}`,
+                timestamp: new Date().toISOString(),
+                isAuthenticated: true
+            };
+            
+            comments.push(newComment);
+            localStorage.setItem(key, JSON.stringify(comments));
+            
+            const results = document.getElementById('addResults');
+            results.textContent = `✅ Added comment for ${userName} to Post ${postId}`;
+            results.className = 'results success';
+            
+            // Auto-refresh storage check
+            setTimeout(checkStorage, 100);
+        }
+        
+        function clearAllComments() {
+            const postIds = ['1', '2', '3', '4', '5'];
+            postIds.forEach(postId => {
+                localStorage.removeItem(`blog_comments_${postId}`);
+            });
+            
+            const results = document.getElementById('storageResults');
+            results.textContent = '🗑️ All comments cleared!';
+            results.className = 'results info';
+        }
+        
+        // Auto-check storage on page load
+        window.addEventListener('load', checkStorage);
+    </script>
+</body>
+</html>

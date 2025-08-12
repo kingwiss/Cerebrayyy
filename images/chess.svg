@@ -1,0 +1,67 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="boardGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="kingGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#feca57;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff9ff3;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="crownGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff6b6b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ee5a52;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="90" fill="none" stroke="url(#boardGradient)" stroke-width="2" opacity="0.1"/>
+  
+  <!-- Chess board squares -->
+  <g opacity="0.3">
+    <rect x="60" y="60" width="20" height="20" fill="url(#boardGradient)"/>
+    <rect x="100" y="60" width="20" height="20" fill="url(#boardGradient)"/>
+    <rect x="80" y="80" width="20" height="20" fill="url(#boardGradient)"/>
+    <rect x="120" y="80" width="20" height="20" fill="url(#boardGradient)"/>
+    <rect x="60" y="100" width="20" height="20" fill="url(#boardGradient)"/>
+    <rect x="100" y="100" width="20" height="20" fill="url(#boardGradient)"/>
+    <rect x="80" y="120" width="20" height="20" fill="url(#boardGradient)"/>
+    <rect x="120" y="120" width="20" height="20" fill="url(#boardGradient)"/>
+  </g>
+  
+  <!-- Chess board border -->
+  <rect x="55" y="55" width="90" height="90" fill="none" stroke="url(#boardGradient)" stroke-width="2" rx="4"/>
+  
+  <!-- King piece -->
+  <g transform="translate(100,110)">
+    <!-- King base -->
+    <ellipse cx="0" cy="15" rx="12" ry="4" fill="url(#kingGradient)"/>
+    <!-- King body -->
+    <rect x="-8" y="0" width="16" height="20" rx="3" fill="url(#kingGradient)"/>
+    <!-- Crown -->
+    <polygon points="-10,-8 -5,-15 0,-12 5,-15 10,-8 8,-5 -8,-5" fill="url(#crownGradient)"/>
+    <!-- Crown jewel -->
+    <circle cx="0" cy="-10" r="2" fill="#fff" opacity="0.9"/>
+    <!-- Cross on crown -->
+    <line x1="0" y1="-18" x2="0" y2="-14" stroke="#fff" stroke-width="1.5"/>
+    <line x1="-2" y1="-16" x2="2" y2="-16" stroke="#fff" stroke-width="1.5"/>
+  </g>
+  
+  <!-- Checkmate arrows -->
+  <g opacity="0.7">
+    <path d="M 40 40 L 80 80" stroke="url(#crownGradient)" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+    <path d="M 160 40 L 120 80" stroke="url(#crownGradient)" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  </g>
+  
+  <!-- Arrow marker -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="url(#crownGradient)"/>
+    </marker>
+  </defs>
+  
+  <!-- Puzzle highlight -->
+  <circle cx="100" cy="100" r="85" fill="none" stroke="url(#kingGradient)" stroke-width="1" opacity="0.4" stroke-dasharray="5,5">
+    <animate attributeName="stroke-dashoffset" values="0;10" dur="2s" repeatCount="indefinite"/>
+  </circle>
+</svg>

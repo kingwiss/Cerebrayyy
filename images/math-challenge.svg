@@ -1,0 +1,132 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="mathGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00cec9;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#55a3ff;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="numberGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fd79a8;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#fdcb6e;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="calculatorGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#74b9ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0984e3;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="90" fill="url(#mathGradient)" opacity="0.1"/>
+  
+  <!-- Calculator -->
+  <g transform="translate(100,100)">
+    <rect x="-25" y="-35" width="50" height="70" rx="5" fill="url(#calculatorGradient)" opacity="0.8"/>
+    
+    <!-- Calculator screen -->
+    <rect x="-20" y="-30" width="40" height="15" rx="2" fill="#333"/>
+    <text x="15" y="-20" font-family="monospace" font-size="10" fill="#0f0" text-anchor="end">42</text>
+    
+    <!-- Calculator buttons -->
+    <g opacity="0.7">
+      <!-- Number buttons -->
+      <circle cx="-12" cy="-5" r="4" fill="#fff"/>
+      <text x="-12" y="-2" font-family="monospace" font-size="6" fill="#333" text-anchor="middle">7</text>
+      
+      <circle cx="0" cy="-5" r="4" fill="#fff"/>
+      <text x="0" y="-2" font-family="monospace" font-size="6" fill="#333" text-anchor="middle">8</text>
+      
+      <circle cx="12" cy="-5" r="4" fill="#fff"/>
+      <text x="12" y="-2" font-family="monospace" font-size="6" fill="#333" text-anchor="middle">9</text>
+      
+      <circle cx="-12" cy="5" r="4" fill="#fff"/>
+      <text x="-12" y="8" font-family="monospace" font-size="6" fill="#333" text-anchor="middle">4</text>
+      
+      <circle cx="0" cy="5" r="4" fill="#fff"/>
+      <text x="0" y="8" font-family="monospace" font-size="6" fill="#333" text-anchor="middle">5</text>
+      
+      <circle cx="12" cy="5" r="4" fill="#fff"/>
+      <text x="12" y="8" font-family="monospace" font-size="6" fill="#333" text-anchor="middle">6</text>
+      
+      <!-- Operation buttons -->
+      <circle cx="20" cy="-5" r="4" fill="url(#numberGradient)"/>
+      <text x="20" y="-2" font-family="monospace" font-size="6" fill="#fff" text-anchor="middle">+</text>
+      
+      <circle cx="20" cy="5" r="4" fill="url(#numberGradient)"/>
+      <text x="20" y="8" font-family="monospace" font-size="6" fill="#fff" text-anchor="middle">=</text>
+    </g>
+  </g>
+  
+  <!-- Mathematical symbols floating around -->
+  <g opacity="0.6" font-family="serif" font-size="20" fill="url(#numberGradient)">
+    <text x="50" y="50" transform="rotate(15)">π</text>
+    <text x="150" y="60" transform="rotate(-10)">∑</text>
+    <text x="40" y="150" transform="rotate(20)">∞</text>
+    <text x="160" y="140" transform="rotate(-15)">√</text>
+  </g>
+  
+  <!-- Equation -->
+  <g transform="translate(60,40)" opacity="0.7">
+    <text font-family="serif" font-size="14" fill="url(#mathGradient)">
+      <tspan x="0" y="0">x² + y² = r²</tspan>
+    </text>
+    <!-- Equation underline -->
+    <line x1="0" y1="5" x2="60" y2="5" stroke="url(#mathGradient)" stroke-width="1"/>
+  </g>
+  
+  <!-- Geometric shapes -->
+  <g transform="translate(150,50)" opacity="0.5">
+    <!-- Triangle -->
+    <polygon points="0,-10 -8,6 8,6" fill="none" stroke="url(#mathGradient)" stroke-width="2"/>
+    <!-- Angle indicator -->
+    <path d="M -6 4 Q -4 2 -2 4" stroke="url(#numberGradient)" stroke-width="1" fill="none"/>
+  </g>
+  
+  <!-- Number sequence -->
+  <g transform="translate(40,120)" opacity="0.6">
+    <text font-family="monospace" font-size="12" fill="url(#numberGradient)">
+      <tspan x="0" y="0">1, 1, 2, 3, 5, 8...</tspan>
+    </text>
+  </g>
+  
+  <!-- Graph/coordinate system -->
+  <g transform="translate(140,120)" opacity="0.5">
+    <!-- Axes -->
+    <line x1="-15" y1="0" x2="15" y2="0" stroke="url(#mathGradient)" stroke-width="1"/>
+    <line x1="0" y1="-15" x2="0" y2="15" stroke="url(#mathGradient)" stroke-width="1"/>
+    
+    <!-- Curve -->
+    <path d="M -12 12 Q 0 -8 12 12" stroke="url(#numberGradient)" stroke-width="2" fill="none"/>
+    
+    <!-- Grid points -->
+    <circle cx="-10" cy="0" r="1" fill="url(#mathGradient)"/>
+    <circle cx="10" cy="0" r="1" fill="url(#mathGradient)"/>
+    <circle cx="0" cy="-10" r="1" fill="url(#mathGradient)"/>
+    <circle cx="0" cy="10" r="1" fill="url(#mathGradient)"/>
+  </g>
+  
+  <!-- Floating numbers -->
+  <g opacity="0.4">
+    <text x="30" y="80" font-family="serif" font-size="16" fill="url(#numberGradient)">42</text>
+    <text x="170" y="100" font-family="serif" font-size="14" fill="url(#mathGradient)">7</text>
+    <text x="20" y="180" font-family="serif" font-size="12" fill="url(#numberGradient)">∅</text>
+  </g>
+  
+  <!-- Mathematical operations -->
+  <g transform="translate(50,160)" opacity="0.6">
+    <text font-family="serif" font-size="18" fill="url(#mathGradient)">
+      <tspan x="0" y="0">+</tspan>
+      <tspan x="15" y="0">−</tspan>
+      <tspan x="30" y="0">×</tspan>
+      <tspan x="45" y="0">÷</tspan>
+    </text>
+  </g>
+  
+  <!-- Animated calculation -->
+  <g transform="translate(120,160)" opacity="0.7">
+    <text font-family="monospace" font-size="10" fill="url(#numberGradient)">
+      <tspan x="0" y="0">2 + 2 = </tspan>
+      <tspan x="35" y="0">
+        <animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite"/>4
+      </tspan>
+    </text>
+  </g>
+</svg>

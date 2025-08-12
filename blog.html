@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cerebray Blog - Creative Activities & Entertainment Ideas for 2025</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Discover creative ways to beat boredom with our comprehensive blog featuring indoor activities, digital detox games, family fun, and AI-powered entertainment ideas for 2025.">
+    <meta name="keywords" content="cerebray, indoor activities, entertainment, family fun, creative activities, digital detox, AI entertainment, 2025 activities">
+    <meta name="author" content="Cerebray">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://boredom-buster.com/blog">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Cerebray Blog - Creative Activities & Entertainment Ideas for 2025">
+    <meta property="og:description" content="Discover creative ways to beat boredom with our comprehensive blog featuring indoor activities, digital detox games, family fun, and AI-powered entertainment ideas for 2025.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://cerebray.com/blog">
+    <meta property="og:image" content="https://cerebray.com/images/blog-preview.jpg">
+    <meta property="og:site_name" content="Cerebray">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Cerebray Blog - Creative Activities & Entertainment Ideas for 2025">
+    <meta name="twitter:description" content="Discover creative ways to beat boredom with our comprehensive blog featuring indoor activities, digital detox games, family fun, and AI-powered entertainment ideas for 2025.">
+    <meta name="twitter:image" content="https://cerebray.com/images/blog-preview.jpg">
+    
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Blog",
+        "name": "Cerebray Blog",
+        "description": "Creative activities and entertainment ideas to beat boredom",
+        "url": "https://cerebray.com/blog",
+        "publisher": {
+            "@type": "Organization",
+            "name": "Cerebray",
+            "url": "https://cerebray.com"
+        },
+        "blogPost": [
+            {
+                "@type": "BlogPosting",
+                "headline": "10 Mind-Blowing Indoor Activities to Beat Boredom in 2025",
+                "url": "https://cerebray.com/post-1.html",
+                "author": {
+                    "@type": "Organization",
+                    "name": "Cerebray"
+                }
+            },
+            {
+                "@type": "BlogPosting",
+                "headline": "The Psychology of Fun: Why Games Are Essential for Mental Health",
+                "url": "https://cerebray.com/post-2.html",
+                "author": {
+                    "@type": "Organization",
+                    "name": "Cerebray"
+                }
+            },
+            {
+                "@type": "BlogPosting",
+                "headline": "Digital Detox Games: Offline Activities for the Modern World",
+                "url": "https://cerebray.com/post-3.html",
+                "author": {
+                    "@type": "Organization",
+                    "name": "Cerebray"
+                }
+            },
+            {
+                "@type": "BlogPosting",
+                "headline": "Family Fun in 2025: Multi-Generational Activities Everyone Will Love",
+                "url": "https://cerebray.com/post-4.html",
+                "author": {
+                    "@type": "Organization",
+                    "name": "Cerebray"
+                }
+            },
+            {
+                "@type": "BlogPosting",
+                "headline": "The Future of Entertainment: AI-Powered Personalized Fun",
+                "url": "https://cerebray.com/post-5.html",
+                "author": {
+                    "@type": "Organization",
+                    "name": "Cerebray"
+                }
+            }
+        ]
+    }
+    </script>
+    
+    <!-- Preconnect for Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <!-- Appwrite SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.1"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav a:hover {
+            color: #667eea;
+        }
+
+        .nav a.active {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .blog-header {
+            text-align: center;
+            margin-bottom: 4rem;
+            color: white;
+        }
+
+        .blog-header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .blog-header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Blog Grid */
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .blog-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .blog-card-image {
+            height: 200px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .blog-card-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(102, 126, 234, 0.8), rgba(118, 75, 162, 0.8));
+        }
+
+        .blog-card-image i {
+            position: relative;
+            z-index: 1;
+        }
+
+        .blog-card-content {
+            padding: 1.5rem;
+        }
+
+        .blog-card-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .blog-card-author {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .blog-card-date {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .blog-card h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+            color: #333;
+        }
+
+        .blog-card-excerpt {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .blog-card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            background: #f0f2ff;
+            color: #667eea;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .read-more {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #667eea;
+            font-weight: 600;
+            text-decoration: none;
+            transition: gap 0.3s ease;
+        }
+
+        .read-more:hover {
+            gap: 0.75rem;
+        }
+
+        /* Newsletter Section */
+        .newsletter {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .newsletter h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .newsletter p {
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+
+        .newsletter-form {
+            display: flex;
+            gap: 1rem;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .newsletter-form input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .newsletter-form input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .newsletter-form button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .newsletter-form button:hover {
+            background: #5a6fd8;
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+            color: #666;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav {
+                gap: 1rem;
+            }
+
+            .container {
+                padding: 2rem 1rem;
+            }
+
+            .blog-header h1 {
+                font-size: 2rem;
+            }
+
+            .blog-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .newsletter-form {
+                flex-direction: column;
+            }
+
+            .newsletter {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .blog-header h1 {
+                font-size: 1.75rem;
+            }
+
+            .blog-card-content {
+                padding: 1rem;
+            }
+
+            .blog-card h2 {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">
+                <i class="fas fa-gamepad"></i>
+                Cerebray
+            </a>
+            <nav class="nav">
+                <a href="/">Home</a>
+                <a href="/blog.html" class="active">Blog</a>
+                <a href="/contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="blog-header">
+            <i class="fas fa-gamepad"></i>
+            <h1>Cerebray Blog</h1>
+            <p>Discover creative ways to beat boredom and make every moment count!</p>
+        </div>
+
+        <div class="blog-grid">
+            <article class="blog-card" onclick="window.location.href='post-1.html'">
+                <div class="blog-card-image">
+                    <i class="fas fa-home"></i>
+                </div>
+                <div class="blog-card-content">
+                    <div class="blog-card-meta">
+                        <div class="blog-card-author">
+                            <i class="fas fa-user"></i>
+                            <span>Cerebray</span>
+                        </div>
+                        <div class="blog-card-date">
+                            <i class="fas fa-calendar"></i>
+                            <span>January 15, 2025</span>
+                        </div>
+                    </div>
+                    <h2>10 Mind-Blowing Indoor Activities to Beat Boredom in 2025</h2>
+                    <p class="blog-card-excerpt">
+                        Discover innovative indoor activities that will transform your space into an adventure playground. From virtual reality experiences to creative DIY projects, these activities will keep you engaged for hours.
+                    </p>
+                    <div class="blog-card-tags">
+                        <span class="tag">Indoor Activities</span>
+                        <span class="tag">Entertainment</span>
+                        <span class="tag">DIY</span>
+                    </div>
+                    <span class="read-more">
+                        Read Full Article <i class="fas fa-arrow-right"></i>
+                    </span>
+                </div>
+            </article>
+
+            <article class="blog-card" onclick="window.location.href='post-2.html'">
+                <div class="blog-card-image">
+                    <i class="fas fa-gamepad"></i>
+                </div>
+                <div class="blog-card-content">
+                    <div class="blog-card-meta">
+                        <div class="blog-card-author">
+                            <i class="fas fa-user"></i>
+                            <span>Cerebray</span>
+                        </div>
+                        <div class="blog-card-date">
+                            <i class="fas fa-calendar"></i>
+                            <span>January 12, 2025</span>
+                        </div>
+                    </div>
+                    <h2>The Psychology of Fun: Why Games Are Essential for Mental Health</h2>
+                    <p class="blog-card-excerpt">
+                        Explore the science behind fun and discover how games and playful activities can significantly improve your mental well-being, reduce stress, and boost cognitive function.
+                    </p>
+                    <div class="blog-card-tags">
+                        <span class="tag">Psychology</span>
+                        <span class="tag">Mental Health</span>
+                        <span class="tag">Games</span>
+                    </div>
+                    <span class="read-more">
+                        Read Full Article <i class="fas fa-arrow-right"></i>
+                    </span>
+                </div>
+            </article>
+
+            <article class="blog-card" onclick="window.location.href='post-3.html'">
+                <div class="blog-card-image">
+                    <i class="fas fa-leaf"></i>
+                </div>
+                <div class="blog-card-content">
+                    <div class="blog-card-meta">
+                        <div class="blog-card-author">
+                            <i class="fas fa-user"></i>
+                            <span>Cerebray</span>
+                        </div>
+                        <div class="blog-card-date">
+                            <i class="fas fa-calendar"></i>
+                            <span>January 10, 2025</span>
+                        </div>
+                    </div>
+                    <h2>Digital Detox Games: Offline Activities for the Modern World</h2>
+                    <p class="blog-card-excerpt">
+                        Break free from screen addiction with engaging offline activities. Learn about board games, outdoor adventures, and creative pursuits that will help you reconnect with the real world.
+                    </p>
+                    <div class="blog-card-tags">
+                        <span class="tag">Digital Detox</span>
+                        <span class="tag">Offline Games</span>
+                        <span class="tag">Wellness</span>
+                    </div>
+                    <span class="read-more">
+                        Read Full Article <i class="fas fa-arrow-right"></i>
+                    </span>
+                </div>
+            </article>
+
+            <article class="blog-card" onclick="window.location.href='post-4.html'">
+                <div class="blog-card-image">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="blog-card-content">
+                    <div class="blog-card-meta">
+                        <div class="blog-card-author">
+                            <i class="fas fa-user"></i>
+                            <span>Cerebray</span>
+                        </div>
+                        <div class="blog-card-date">
+                            <i class="fas fa-calendar"></i>
+                            <span>January 8, 2025</span>
+                        </div>
+                    </div>
+                    <h2>Family Fun in 2025: Multi-Generational Activities Everyone Will Love</h2>
+                    <p class="blog-card-excerpt">
+                        Bridge the generation gap with activities that bring families together. From tech-savvy grandparents to energetic kids, discover games and activities that everyone can enjoy.
+                    </p>
+                    <div class="blog-card-tags">
+                        <span class="tag">Family</span>
+                        <span class="tag">Multi-generational</span>
+                        <span class="tag">Bonding</span>
+                    </div>
+                    <span class="read-more">
+                        Read Full Article <i class="fas fa-arrow-right"></i>
+                    </span>
+                </div>
+            </article>
+
+            <article class="blog-card" onclick="window.location.href='post-5.html'">
+                <div class="blog-card-image">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="blog-card-content">
+                    <div class="blog-card-meta">
+                        <div class="blog-card-author">
+                            <i class="fas fa-user"></i>
+                            <span>Cerebray</span>
+                        </div>
+                        <div class="blog-card-date">
+                            <i class="fas fa-calendar"></i>
+                            <span>January 5, 2025</span>
+                        </div>
+                    </div>
+                    <h2>The Future of Entertainment: AI-Powered Personalized Fun</h2>
+                    <p class="blog-card-excerpt">
+                        Step into the future of entertainment with AI-powered games and activities. Learn how artificial intelligence is revolutionizing the way we play and have fun.
+                    </p>
+                    <div class="blog-card-tags">
+                        <span class="tag">AI</span>
+                        <span class="tag">Future Tech</span>
+                        <span class="tag">Innovation</span>
+                    </div>
+                    <span class="read-more">
+                        Read Full Article <i class="fas fa-arrow-right"></i>
+                    </span>
+                </div>
+            </article>
+        </div>
+
+        <section class="newsletter">
+            <h3>Stay Updated</h3>
+            <p>Get the latest boredom-busting ideas delivered to your inbox</p>
+            <form class="newsletter-form" onsubmit="return false;">
+                <input type="email" placeholder="Enter your email" required>
+                <button type="submit">Subscribe</button>
+            </form>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2025 Cerebray. All rights reserved. | Making every moment count.</p>
+        </div>
+    </footer>
+</body>
+</html>

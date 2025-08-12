@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="observationGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4A90E2;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7B68EE;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="45" fill="url(#observationGrad)" opacity="0.1"/>
+  
+  <!-- Magnifying glass handle -->
+  <line x1="65" y1="65" x2="80" y2="80" stroke="url(#observationGrad)" stroke-width="4" stroke-linecap="round"/>
+  
+  <!-- Magnifying glass lens -->
+  <circle cx="45" cy="45" r="20" fill="none" stroke="url(#observationGrad)" stroke-width="3"/>
+  
+  <!-- Eye in the center -->
+  <ellipse cx="45" cy="45" rx="12" ry="8" fill="url(#observationGrad)" opacity="0.8"/>
+  <ellipse cx="45" cy="45" rx="6" ry="4" fill="#FFFFFF"/>
+  <circle cx="47" cy="45" r="2" fill="url(#observationGrad)"/>
+  
+  <!-- Observation dots around -->
+  <circle cx="25" cy="25" r="2" fill="url(#observationGrad)" opacity="0.6">
+    <animate attributeName="opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="75" cy="25" r="2" fill="url(#observationGrad)" opacity="0.6">
+    <animate attributeName="opacity" values="0.6;1;0.6" dur="2.5s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="25" cy="75" r="2" fill="url(#observationGrad)" opacity="0.6">
+    <animate attributeName="opacity" values="0.6;1;0.6" dur="3s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- Search rays -->
+  <g opacity="0.7">
+    <line x1="45" y1="15" x2="45" y2="20" stroke="url(#observationGrad)" stroke-width="2">
+      <animate attributeName="opacity" values="0.7;1;0.7" dur="1.5s" repeatCount="indefinite"/>
+    </line>
+    <line x1="65" y1="20" x2="62" y2="25" stroke="url(#observationGrad)" stroke-width="2">
+      <animate attributeName="opacity" values="0.7;1;0.7" dur="1.8s" repeatCount="indefinite"/>
+    </line>
+    <line x1="75" y1="45" x2="70" y2="45" stroke="url(#observationGrad)" stroke-width="2">
+      <animate attributeName="opacity" values="0.7;1;0.7" dur="2.2s" repeatCount="indefinite"/>
+    </line>
+  </g>
+</svg>

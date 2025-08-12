@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <defs>
+    <linearGradient id="gamepadGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Main gamepad body -->
+  <path d="M16 6c-6 0-10 3-12 8-1 2 0 4 2 5l3 1c2 0 3-1 4-3l1-2h4l1 2c1 2 2 3 4 3l3-1c2-1 3-3 2-5-2-5-6-8-12-8z" 
+        fill="url(#gamepadGradient)" 
+        stroke="#4a5568" 
+        stroke-width="1"/>
+  
+  <!-- Left D-pad -->
+  <rect x="8" y="13" width="1.5" height="6" rx="0.5" fill="#ffffff"/>
+  <rect x="5.5" y="15.25" width="6" height="1.5" rx="0.5" fill="#ffffff"/>
+  
+  <!-- Right action buttons -->
+  <circle cx="22" cy="13" r="1.5" fill="#ffffff"/>
+  <circle cx="25" cy="16" r="1.5" fill="#ffffff"/>
+  <circle cx="19" cy="16" r="1.5" fill="#ffffff"/>
+  <circle cx="22" cy="19" r="1.5" fill="#ffffff"/>
+  
+  <!-- Button labels -->
+  <text x="22" y="14.5" text-anchor="middle" font-family="Arial, sans-serif" font-size="2.5" fill="#4a5568" font-weight="bold">Y</text>
+  <text x="25" y="17.5" text-anchor="middle" font-family="Arial, sans-serif" font-size="2.5" fill="#4a5568" font-weight="bold">B</text>
+  <text x="19" y="17.5" text-anchor="middle" font-family="Arial, sans-serif" font-size="2.5" fill="#4a5568" font-weight="bold">X</text>
+  <text x="22" y="20.5" text-anchor="middle" font-family="Arial, sans-serif" font-size="2.5" fill="#4a5568" font-weight="bold">A</text>
+</svg>

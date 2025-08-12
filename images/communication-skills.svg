@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="commGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#E74C3C;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#F39C12;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F1C40F;stop-opacity:1" />
+    </linearGradient>
+    <filter id="speechGlow">
+      <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <circle cx="50" cy="50" r="45" fill="url(#commGrad)" opacity="0.1"/>
+  
+  <!-- Main speech bubble -->
+  <ellipse cx="45" cy="40" rx="25" ry="18" fill="none" stroke="url(#commGrad)" stroke-width="3" filter="url(#speechGlow)"/>
+  
+  <!-- Speech bubble tail -->
+  <path d="M 35,55 L 30,65 L 40,58 Z" fill="none" stroke="url(#commGrad)" stroke-width="3" filter="url(#speechGlow)"/>
+  
+  <!-- Sound waves -->
+  <g fill="none" stroke="url(#commGrad)" stroke-width="2" opacity="0.7">
+    <path d="M 75,30 Q 85,40 75,50">
+      <animate attributeName="opacity" values="0.7;1;0.7" dur="2s" repeatCount="indefinite"/>
+    </path>
+    <path d="M 78,25 Q 90,40 78,55">
+      <animate attributeName="opacity" values="0.7;1;0.7" dur="2.3s" repeatCount="indefinite"/>
+    </path>
+    <path d="M 81,20 Q 95,40 81,60">
+      <animate attributeName="opacity" values="0.7;1;0.7" dur="2.6s" repeatCount="indefinite"/>
+    </path>
+  </g>
+  
+  <!-- Text lines inside speech bubble -->
+  <g stroke="url(#commGrad)" stroke-width="2" opacity="0.8">
+    <line x1="30" y1="35" x2="55" y2="35">
+      <animate attributeName="opacity" values="0.8;1;0.8" dur="1.5s" repeatCount="indefinite"/>
+    </line>
+    <line x1="25" y1="40" x2="60" y2="40">
+      <animate attributeName="opacity" values="0.8;1;0.8" dur="1.8s" repeatCount="indefinite"/>
+    </line>
+    <line x1="30" y1="45" x2="50" y2="45">
+      <animate attributeName="opacity" values="0.8;1;0.8" dur="2.1s" repeatCount="indefinite"/>
+    </line>
+  </g>
+  
+  <!-- Person speaking (simplified) -->
+  <!-- Head -->
+  <circle cx="25" cy="70" r="6" fill="url(#commGrad)" opacity="0.6"/>
+  
+  <!-- Body -->
+  <ellipse cx="25" cy="85" rx="4" ry="8" fill="url(#commGrad)" opacity="0.6"/>
+  
+  <!-- Microphone/megaphone -->
+  <g transform="translate(15,65) rotate(-30)">
+    <rect x="0" y="0" width="8" height="3" fill="url(#commGrad)" opacity="0.8" rx="1"/>
+    <circle cx="8" cy="1.5" r="1.5" fill="url(#commGrad)" opacity="0.9"/>
+  </g>
+  
+  <!-- Listening ear -->
+  <g transform="translate(75,65)">
+    <path d="M 0,0 Q 5,-3 8,0 Q 5,3 0,0" fill="url(#commGrad)" opacity="0.7"/>
+    <circle cx="2" cy="0" r="1" fill="url(#commGrad)" opacity="0.9"/>
+  </g>
+  
+  <!-- Connection lines -->
+  <g stroke="url(#commGrad)" stroke-width="1" opacity="0.5" stroke-dasharray="2,2">
+    <line x1="35" y1="55" x2="25" y2="65">
+      <animate attributeName="opacity" values="0.5;0.8;0.5" dur="3s" repeatCount="indefinite"/>
+    </line>
+    <line x1="65" y1="45" x2="75" y2="65">
+      <animate attributeName="opacity" values="0.5;0.8;0.5" dur="3.5s" repeatCount="indefinite"/>
+    </line>
+  </g>
+  
+  <!-- Floating communication symbols -->
+  <g fill="url(#commGrad)" opacity="0.6">
+    <text x="20" y="25" font-family="Arial" font-size="8" font-weight="bold">💬</text>
+    <text x="70" y="20" font-family="Arial" font-size="6" font-weight="bold">🗣️</text>
+    <text x="15" y="45" font-family="Arial" font-size="6" font-weight="bold">👂</text>
+    
+    <animateTransform attributeName="transform" type="translate" values="0,0; 2,-2; 0,0" dur="4s" repeatCount="indefinite"/>
+  </g>
+  
+  <!-- Feedback loop -->
+  <path d="M 70,70 Q 50,85 30,70" fill="none" stroke="url(#commGrad)" stroke-width="2" opacity="0.4" stroke-dasharray="3,3">
+    <animate attributeName="stroke-dashoffset" values="0;6;0" dur="2s" repeatCount="indefinite"/>
+  </path>
+</svg>

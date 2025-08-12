@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="psychGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF69B4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#C71585;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="100" cy="100" r="90" fill="url(#psychGrad)" stroke="#8B008B" stroke-width="3"/>
+  
+  <!-- Brain outline -->
+  <path d="M70,80 Q60,70 70,60 Q80,50 100,55 Q120,50 130,60 Q140,70 130,80 Q135,90 130,100 Q125,110 115,115 Q100,120 85,115 Q75,110 70,100 Q65,90 70,80" 
+        fill="#FFB6C1" stroke="#8B008B" stroke-width="3"/>
+  
+  <!-- Brain divisions -->
+  <path d="M100,55 Q110,65 115,80 Q110,95 100,105 Q90,95 85,80 Q90,65 100,55" 
+        stroke="#8B008B" stroke-width="2" fill="none"/>
+  
+  <!-- Brain folds -->
+  <path d="M75,70 Q85,75 95,70" stroke="#8B008B" stroke-width="1.5" fill="none"/>
+  <path d="M105,70 Q115,75 125,70" stroke="#8B008B" stroke-width="1.5" fill="none"/>
+  <path d="M80,85 Q90,90 100,85" stroke="#8B008B" stroke-width="1.5" fill="none"/>
+  <path d="M100,85 Q110,90 120,85" stroke="#8B008B" stroke-width="1.5" fill="none"/>
+  <path d="M85,100 Q95,105 105,100" stroke="#8B008B" stroke-width="1.5" fill="none"/>
+  
+  <!-- Thought bubbles -->
+  <circle cx="60" cy="50" r="8" fill="#E6E6FA" stroke="#8B008B" stroke-width="2" opacity="0.8"/>
+  <circle cx="50" cy="40" r="6" fill="#E6E6FA" stroke="#8B008B" stroke-width="2" opacity="0.8"/>
+  <circle cx="45" cy="30" r="4" fill="#E6E6FA" stroke="#8B008B" stroke-width="2" opacity="0.8"/>
+  
+  <circle cx="140" cy="50" r="8" fill="#E6E6FA" stroke="#8B008B" stroke-width="2" opacity="0.8"/>
+  <circle cx="150" cy="40" r="6" fill="#E6E6FA" stroke="#8B008B" stroke-width="2" opacity="0.8"/>
+  <circle cx="155" cy="30" r="4" fill="#E6E6FA" stroke="#8B008B" stroke-width="2" opacity="0.8"/>
+  
+  <!-- Lightbulb (idea) -->
+  <circle cx="100" cy="150" r="12" fill="#FFFF00" stroke="#FFD700" stroke-width="2"/>
+  <rect x="95" y="160" width="10" height="8" fill="#C0C0C0" stroke="#696969" stroke-width="1"/>
+  <line x1="85" y1="145" x2="90" y2="150" stroke="#FFD700" stroke-width="2"/>
+  <line x1="110" y1="150" x2="115" y2="145" stroke="#FFD700" stroke-width="2"/>
+  <line x1="85" y1="155" x2="90" y2="150" stroke="#FFD700" stroke-width="2"/>
+  <line x1="110" y1="150" x2="115" y2="155" stroke="#FFD700" stroke-width="2"/>
+  
+  <!-- Gears (thinking process) -->
+  <circle cx="160" cy="120" r="10" fill="#C0C0C0" stroke="#696969" stroke-width="2"/>
+  <polygon points="160,110 165,115 160,120 155,115" fill="#696969"/>
+  <polygon points="150,120 155,125 160,120 155,115" fill="#696969"/>
+  <polygon points="160,130 165,125 160,120 155,125" fill="#696969"/>
+  <polygon points="170,120 165,115 160,120 165,125" fill="#696969"/>
+  
+  <circle cx="40" cy="120" r="8" fill="#C0C0C0" stroke="#696969" stroke-width="2"/>
+  <polygon points="40,112 44,116 40,120 36,116" fill="#696969"/>
+  <polygon points="32,120 36,124 40,120 36,116" fill="#696969"/>
+  <polygon points="40,128 44,124 40,120 36,124" fill="#696969"/>
+  <polygon points="48,120 44,116 40,120 44,124" fill="#696969"/>
+</svg>

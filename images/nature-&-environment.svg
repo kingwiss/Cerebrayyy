@@ -1,0 +1,161 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <linearGradient id="skyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3498db;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2980b9;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="treeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#27ae60;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#229954;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="sunGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#f1c40f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f39c12;stop-opacity:1" />
+    </radialGradient>
+  </defs>
+  
+  <!-- Sky background -->
+  <rect width="100" height="60" fill="url(#skyGradient)"/>
+  
+  <!-- Ground -->
+  <rect x="0" y="60" width="100" height="40" fill="#2ecc71"/>
+  
+  <!-- Sun -->
+  <g transform="translate(80,20)">
+    <circle cx="0" cy="0" r="8" fill="url(#sunGradient)"/>
+    <!-- Sun rays -->
+    <g stroke="#f1c40f" stroke-width="2" opacity="0.8">
+      <line x1="0" y1="-12" x2="0" y2="-15"/>
+      <line x1="8.5" y1="-8.5" x2="10.6" y2="-10.6"/>
+      <line x1="12" y1="0" x2="15" y2="0"/>
+      <line x1="8.5" y1="8.5" x2="10.6" y2="10.6"/>
+      <line x1="0" y1="12" x2="0" y2="15"/>
+      <line x1="-8.5" y1="8.5" x2="-10.6" y2="10.6"/>
+      <line x1="-12" y1="0" x2="-15" y2="0"/>
+      <line x1="-8.5" y1="-8.5" x2="-10.6" y2="-10.6"/>
+    </g>
+  </g>
+  
+  <!-- Mountains -->
+  <g fill="#95a5a6" opacity="0.7">
+    <polygon points="0,60 20,30 40,60"/>
+    <polygon points="30,60 50,25 70,60"/>
+    <polygon points="60,60 80,35 100,60"/>
+  </g>
+  
+  <!-- Tree 1 -->
+  <g transform="translate(25,65)">
+    <!-- Tree trunk -->
+    <rect x="-2" y="10" width="4" height="15" fill="#8b4513"/>
+    <!-- Tree crown -->
+    <circle cx="0" cy="5" r="8" fill="url(#treeGradient)"/>
+    <circle cx="-4" cy="8" r="6" fill="url(#treeGradient)"/>
+    <circle cx="4" cy="8" r="6" fill="url(#treeGradient)"/>
+  </g>
+  
+  <!-- Tree 2 -->
+  <g transform="translate(70,68)">
+    <!-- Tree trunk -->
+    <rect x="-1.5" y="8" width="3" height="12" fill="#8b4513"/>
+    <!-- Tree crown -->
+    <circle cx="0" cy="3" r="6" fill="url(#treeGradient)"/>
+    <circle cx="-3" cy="6" r="4" fill="url(#treeGradient)"/>
+    <circle cx="3" cy="6" r="4" fill="url(#treeGradient)"/>
+  </g>
+  
+  <!-- Flowers -->
+  <g transform="translate(15,75)">
+    <!-- Flower 1 -->
+    <g>
+      <rect x="-0.5" y="0" width="1" height="8" fill="#27ae60"/>
+      <g transform="translate(0,-2)">
+        <circle cx="0" cy="0" r="1.5" fill="#e74c3c"/>
+        <circle cx="-2" cy="0" r="1" fill="#e74c3c"/>
+        <circle cx="2" cy="0" r="1" fill="#e74c3c"/>
+        <circle cx="0" cy="-2" r="1" fill="#e74c3c"/>
+        <circle cx="0" cy="2" r="1" fill="#e74c3c"/>
+        <circle cx="0" cy="0" r="0.5" fill="#f1c40f"/>
+      </g>
+    </g>
+  </g>
+  
+  <g transform="translate(85,78)">
+    <!-- Flower 2 -->
+    <g>
+      <rect x="-0.5" y="0" width="1" height="6" fill="#27ae60"/>
+      <g transform="translate(0,-1)">
+        <circle cx="0" cy="0" r="1" fill="#9b59b6"/>
+        <circle cx="-1.5" cy="0" r="0.8" fill="#9b59b6"/>
+        <circle cx="1.5" cy="0" r="0.8" fill="#9b59b6"/>
+        <circle cx="0" cy="-1.5" r="0.8" fill="#9b59b6"/>
+        <circle cx="0" cy="1.5" r="0.8" fill="#9b59b6"/>
+        <circle cx="0" cy="0" r="0.3" fill="#f1c40f"/>
+      </g>
+    </g>
+  </g>
+  
+  <!-- Clouds -->
+  <g fill="#ecf0f1" opacity="0.8">
+    <!-- Cloud 1 -->
+    <g transform="translate(20,15)">
+      <circle cx="0" cy="0" r="4"/>
+      <circle cx="5" cy="0" r="5"/>
+      <circle cx="10" cy="0" r="4"/>
+      <circle cx="2.5" cy="-2" r="3"/>
+      <circle cx="7.5" cy="-2" r="3"/>
+    </g>
+    
+    <!-- Cloud 2 -->
+    <g transform="translate(60,10)">
+      <circle cx="0" cy="0" r="3"/>
+      <circle cx="4" cy="0" r="4"/>
+      <circle cx="8" cy="0" r="3"/>
+      <circle cx="2" cy="-1.5" r="2.5"/>
+      <circle cx="6" cy="-1.5" r="2.5"/>
+    </g>
+  </g>
+  
+  <!-- Butterfly -->
+  <g transform="translate(45,40)">
+    <!-- Butterfly body -->
+    <ellipse cx="0" cy="0" rx="0.5" ry="4" fill="#2c3e50"/>
+    <!-- Butterfly wings -->
+    <g fill="#e74c3c" opacity="0.8">
+      <ellipse cx="-2" cy="-1" rx="2" ry="3" transform="rotate(-20)"/>
+      <ellipse cx="2" cy="-1" rx="2" ry="3" transform="rotate(20)"/>
+      <ellipse cx="-1.5" cy="2" rx="1.5" ry="2" transform="rotate(-10)"/>
+      <ellipse cx="1.5" cy="2" rx="1.5" ry="2" transform="rotate(10)"/>
+    </g>
+    <!-- Wing spots -->
+    <g fill="#2c3e50" opacity="0.6">
+      <circle cx="-2" cy="-1" r="0.5"/>
+      <circle cx="2" cy="-1" r="0.5"/>
+      <circle cx="-1.5" cy="2" r="0.3"/>
+      <circle cx="1.5" cy="2" r="0.3"/>
+    </g>
+    <!-- Antennae -->
+    <g stroke="#2c3e50" stroke-width="0.5" fill="none">
+      <path d="M-0.5,-4 Q-1,-6 -0.5,-7"/>
+      <path d="M0.5,-4 Q1,-6 0.5,-7"/>
+    </g>
+  </g>
+  
+  <!-- Grass blades -->
+  <g stroke="#27ae60" stroke-width="1" fill="none" opacity="0.6">
+    <path d="M10,85 Q12,80 10,75"/>
+    <path d="M35,88 Q37,83 35,78"/>
+    <path d="M55,87 Q57,82 55,77"/>
+    <path d="M90,86 Q92,81 90,76"/>
+  </g>
+  
+  <!-- Earth/recycling symbol -->
+  <g transform="translate(50,85)">
+    <circle cx="0" cy="0" r="6" fill="#3498db" opacity="0.7"/>
+    <!-- Continents -->
+    <g fill="#27ae60" opacity="0.8">
+      <ellipse cx="-2" cy="-1" rx="2" ry="3"/>
+      <ellipse cx="2" cy="1" rx="1.5" ry="2"/>
+      <circle cx="0" cy="-3" r="1"/>
+    </g>
+  </g>
+</svg>

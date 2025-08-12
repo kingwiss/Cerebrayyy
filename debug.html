@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Debug Test</h1>
+        <div id="app">
+            <p>Initial HTML content loaded</p>
+        </div>
+        <div id="debug-output"></div>
+    </div>
+
+    <script>
+        console.log("Script tag loaded");
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("DOM Content Loaded");
+            
+            const app = document.getElementById('app');
+            const debugOutput = document.getElementById('debug-output');
+            
+            if (app) {
+                console.log("App element found");
+                app.innerHTML = '<h2>JavaScript is working!</h2><p>DOM manipulation successful</p>';
+                debugOutput.innerHTML = '<p>✅ JavaScript execution confirmed</p>';
+            } else {
+                console.error("App element not found");
+                debugOutput.innerHTML = '<p>❌ App element not found</p>';
+            }
+            
+            // Test if we can create new elements
+            const testDiv = document.createElement('div');
+            testDiv.innerHTML = '<p>✅ Element creation works</p>';
+            debugOutput.appendChild(testDiv);
+        });
+    </script>
+</body>
+</html>
