@@ -961,26 +961,26 @@ body {
 /* Mobile floating action button */
 @media (max-width: 768px) {
     .app-container {
-        padding: 15px;
+        padding: 8px 15px; /* Reduced top/bottom padding */
         padding-bottom: 80px; /* Add space for floating button */
     }
     
     .app-header {
         flex-direction: column;
         text-align: left;
-        margin-bottom: 50px; /* Increased margin to prevent overlap */
-        gap: 20px;
+        margin-bottom: 20px; /* Reduced margin to bring cards closer */
+        gap: 15px;
         position: relative;
         z-index: 100; /* Ensure header stays above cards */
-        padding-bottom: 30px; /* Extra padding at bottom of header */
-        margin-top: 35px;
+        padding-bottom: 15px; /* Reduced padding at bottom of header */
+        margin-top: 15px; /* Reduced top margin to lower logo */
         margin-left: -15px;
-        padding: 10px 15px 30px 15px;
+        padding: 10px 15px 15px 15px;
     }
     
     .app-header h1 {
         font-size: 4rem;
-        margin-bottom: 15px; /* Increased margin */
+        margin-bottom: 8px; /* Reduced margin for tighter spacing */
     }
     
     /* Mobile header layout - new structure */
@@ -999,7 +999,7 @@ body {
         width: 100%;
         display: flex;
         justify-content: center;
-        margin-bottom: 20px;
+        margin-bottom: 10px; /* Reduced margin to bring cards closer */
     }
     
     .main-nav {
@@ -1051,7 +1051,7 @@ body {
     
     .header-center {
         order: 2;
-        margin: 15px 0;
+        margin: 8px 0; /* Reduced margin for tighter spacing */
     }
     
     .header-right {
@@ -1335,17 +1335,17 @@ body {
     
     /* Mobile-optimized card dimensions - compact for better mobile experience */
     .cards-container {
-        margin-top: 0px !important; /* No margin to close gap with header */
-        height: calc(100vh - 120px) !important; /* More space for navigation and footer */
-        min-height: calc(100vh - 120px) !important;
+        margin-top: -10px !important; /* Negative margin to bring cards even closer to header */
+        height: calc(100vh - 80px) !important; /* Increased height for taller cards */
+        min-height: calc(100vh - 80px) !important;
     }
     
     .card {
         width: 320px !important; /* Fixed width - never gets slimmer */
         max-width: 450px !important; /* Maximum width cap */
         min-width: 320px !important; /* Minimum width enforced */
-        height: calc(100vh - 180px) !important; /* Compact height to fit screen without scrolling */
-        min-height: calc(100vh - 180px) !important; /* Ensure cards fit in viewport */
+        height: calc(100vh - 140px) !important; /* Increased height for better content display */
+        min-height: calc(100vh - 140px) !important; /* Ensure cards fit in viewport */
         margin: 0 auto !important; /* Center the cards */
     }
     
