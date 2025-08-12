@@ -350,8 +350,8 @@ body {
 
 .cards-container {
     position: relative;
-    height: 650px;
-    margin: 0 auto;
+    min-height: 650px;
+    margin: 0 auto 40px auto; /* Add bottom margin to create space before footer */
     perspective: 1000px;
     flex: 1;
     display: flex;
@@ -659,7 +659,7 @@ body {
 .instructions {
     text-align: center;
     color: #666;
-    margin-top: 30px;
+    margin: 30px 0 40px 0; /* Add bottom margin to create space before footer */
     font-size: 1.1rem;
     opacity: 0.75;
     text-shadow: none;
