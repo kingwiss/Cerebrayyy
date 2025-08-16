@@ -85,6 +85,32 @@
 
 
     <script src="stripe-payment.js"></script>
+    <script>
+        // Pre-populate email field with authenticated user's email
+        document.addEventListener('DOMContentLoaded', function() {
+            const emailInput = document.getElementById('email');
+            
+            // Check for user email in sessionStorage (set by premium-popup.js)
+            const userEmail = sessionStorage.getItem('userEmail');
+            
+            if (userEmail && emailInput) {
+                emailInput.value = userEmail;
+                emailInput.readOnly = true;
+                emailInput.style.backgroundColor = '#f5f5f5';
+                emailInput.style.cursor = 'not-allowed';
+                
+                // Add a note that the email is from their account
+                const emailGroup = emailInput.parentElement;
+                const emailNote = document.createElement('small');
+                emailNote.textContent = 'Using email from your logged-in account';
+                emailNote.style.color = '#666';
+                emailNote.style.fontSize = '12px';
+                emailNote.style.marginTop = '4px';
+                emailNote.style.display = 'block';
+                emailGroup.appendChild(emailNote);
+            }
+        });
+    </script>
 
 </body>
 </html>

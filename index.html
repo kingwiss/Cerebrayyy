@@ -224,12 +224,31 @@
     <script src="premium-popup.js"></script>
     
     <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const checkApp = setInterval(() => {
+                if (typeof App !== 'undefined') {
+                    clearInterval(checkApp);
+                    window.app = new App();
+                    window.app.init();
+                }
+            }, 100);
+        });
+    </script>
     
     <!-- Performance Monitoring and Optimization -->
     <script src="performance-monitor.js"></script>
     <script src="web-vitals-tracker.js"></script>
     <script src="performance-optimizer.js"></script>
-    
-
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const premiumButton = document.getElementById('premiumToggleBtn');
+            if (premiumButton) {
+                premiumButton.addEventListener('click', () => {
+                    app.togglePremiumMode();
+                });
+            }
+        });
+    </script>
 </body>
 </html>

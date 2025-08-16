@@ -366,9 +366,59 @@ class StripePaymentProcessor {
                 recurring: true
             };
             
-            // Store in localStorage
+            // Store in localStorage for backward compatibility
             localStorage.setItem('premiumMode', 'true');
             localStorage.setItem('premiumData', JSON.stringify(premiumData));
+            
+            // Integrate with UserTierManager if available
+            if (window.UserTierManager) {
+                // Create or get existing tier manager instance
+                let tierManager = window.app?.tierManager;
+                if (!tierManager) {
+                    tierManager = new window.UserTierManager();
+                    if (window.app) {
+                        window.app.tierManager = tierManager;
+                    }
+                }
+                
+                // Upgrade user to premium tier
+                const upgradeResult = tierManager.upgradeToPremium({
+                    startDate: premiumData.startDate,
+                    endDate: premiumData.endDate,
+                    subscriptionId: subscriptionId,
+                    status: 'active'
+                });
+                
+                console.log('🌟 Tier manager upgrade result:', upgradeResult);
+            }
+            
+            // Update server-side user tier if authentication system is available
+            if (window.authSystem && window.authSystem.isAuthenticated()) {
+                const currentUser = window.authSystem.getCurrentUser();
+                if (currentUser && currentUser.email) {
+                    // Call server endpoint to upgrade user tier
+                    fetch('/api/user/upgrade', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${window.authSystem.getToken()}`
+                        },
+                        body: JSON.stringify({
+                            email: currentUser.email,
+                            subscriptionId: subscriptionId,
+                            premiumData: premiumData
+                        })
+                    }).then(response => {
+                        if (response.ok) {
+                            console.log('✅ Server-side user tier upgraded successfully');
+                        } else {
+                            console.warn('⚠️ Failed to upgrade server-side user tier');
+                        }
+                    }).catch(error => {
+                        console.warn('⚠️ Error upgrading server-side user tier:', error);
+                    });
+                }
+            }
             
             // Dispatch custom event
             window.dispatchEvent(new CustomEvent('premiumActivated', {
