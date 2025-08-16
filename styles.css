@@ -319,116 +319,11 @@ body {
     font-weight: 600;
 }
 
-/* Premium Refresh Button */
-.premium-refresh {
-    background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
-    border: none;
-    color: white;
-    padding: 8px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(78, 205, 196, 0.3);
-    margin-right: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 40px;
-}
-
-.premium-refresh:hover {
-    background: linear-gradient(135deg, #44a08d 0%, #4ecdc4 100%);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(78, 205, 196, 0.4);
-}
-
-.premium-refresh:active {
-    transform: translateY(0px);
-    box-shadow: 0 2px 4px rgba(78, 205, 196, 0.3);
-}
 
 
 
-/* Google Sign-In Styles */
-.google-signin-btn {
-    display: inline-block;
-}
 
-.appwrite-signin-btn {
-    background: linear-gradient(135deg, #4285f4, #34a853);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 25px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    box-shadow: 0 4px 15px rgba(66, 133, 244, 0.3);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.appwrite-signin-btn:hover {
-    background: linear-gradient(135deg, #3367d6, #2d8f47);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(66, 133, 244, 0.4);
-}
-
-.user-profile {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: rgba(255, 255, 255, 0.9);
-    padding: 8px 15px;
-    border-radius: 25px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.user-avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    border: 2px solid #4ecdc4;
-    object-fit: cover;
-}
-
-.user-name {
-    font-weight: 600;
-    color: #333;
-    font-size: 14px;
-    max-width: 50px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.sign-out-btn {
-    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-    color: white;
-    border: none;
-    padding: 6px 10px;
-    border-radius: 15px;
-    cursor: pointer;
-    font-size: 12px;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.sign-out-btn:hover {
-    background: linear-gradient(135deg, #ee5a24, #ff6b6b);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(255, 107, 107, 0.3);
-}
+/* Authentication styles removed */
 
 
 
@@ -460,15 +355,14 @@ body {
     transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease-out;
     transform-style: preserve-3d;
     transform: translate3d(0, 0, 0); /* Force hardware acceleration */
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden; /* Let card-content handle scrolling */
     user-select: none;
     will-change: transform, opacity;
     backface-visibility: hidden;
     border: 1px solid rgba(0,0,0,0.05);
     /* Touch screen optimizations */
     -webkit-overflow-scrolling: touch;
-    touch-action: none; /* Prevent all default touch behaviors to allow custom swipe handling */
+    touch-action: auto; /* Allow both horizontal and vertical touch actions for swipe and scroll */
     -webkit-tap-highlight-color: rgba(0,0,0,0);
     -webkit-touch-callout: none;
 }
@@ -480,36 +374,42 @@ body {
 .card:nth-child(1) {
     z-index: 4;
     transform: translate3d(0px, 0px, 0) rotate(0deg);
+    will-change: transform;
 }
 
 .card:nth-child(2) {
     z-index: 3;
-    transform: translate3d(min(-20px, -2vw), 10px, 0) rotate(-5deg);
-    transition-delay: 0.05s; /* Reduced delay for faster stacking */
+    transform: translate3d(min(-20px, -2vw), 10px, 0) rotate(0deg);
+    transition-delay: 0.02s; /* Faster stacking */
+    will-change: transform;
 }
 
 .card:nth-child(3) {
     z-index: 2;
-    transform: translate3d(min(-40px, -4vw), 20px, 0) rotate(-10deg);
-    transition-delay: 0.1s; /* Reduced delay for faster stacking */
+    transform: translate3d(min(-40px, -4vw), 20px, 0) rotate(0deg);
+    transition-delay: 0.04s; /* Faster stacking */
+    will-change: transform;
 }
 
 .card:nth-child(4) {
     z-index: 1;
-    transform: translate3d(min(-60px, -6vw), 30px, 0) rotate(-15deg);
-    transition-delay: 0.15s; /* Reduced delay for faster stacking */
+    transform: translate3d(min(-60px, -6vw), 30px, 0) rotate(0deg);
+    transition-delay: 0.06s; /* Faster stacking */
+    will-change: transform;
 }
 
 .card:hover:not(.swiped) {
-    transform: translate3d(0, -10px, 0) scale(1.02);
+    transform: translate3d(0, -10px, 0);
     z-index: 10 !important;
     box-shadow: 0 25px 45px rgba(0,0,0,0.2);
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease-out;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease-out;
+    will-change: transform, box-shadow;
 }
 
 .card.swiped {
     pointer-events: none;
-    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease-out !important;
+    transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.3s ease-out !important;
+    will-change: transform, opacity;
 }
 
 .card-content {
@@ -517,14 +417,51 @@ body {
     display: flex;
     flex-direction: column;
     box-sizing: border-box; /* Include padding in height calculation */
-    /* Touch screen optimizations */
+    height: 100%; /* Take full height of card */
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+    /* Enhanced touch screen optimizations */
     -webkit-overflow-scrolling: touch;
     touch-action: pan-y; /* Allow vertical scrolling within content area */
+    /* Improved momentum scrolling */
+    scroll-behavior: smooth;
+    overscroll-behavior: contain;
+    /* Better scroll performance */
+    will-change: scroll-position;
+    transform: translateZ(0); /* Hardware acceleration */
     /* Allow text selection in content area */
     -webkit-user-select: text;
     -moz-user-select: text;
     -ms-user-select: text;
     user-select: text;
+}
+
+/* Touch feedback removed - will be rebuilt with proper implementation */
+
+/* Enhanced touch feedback for buttons */
+button.touch-active,
+.btn.touch-active,
+.play-btn.touch-active {
+    background-color: rgba(102, 126, 234, 0.8) !important;
+    color: white !important;
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.25), 0 0 0 2px rgba(102, 126, 234, 0.4) !important;
+    opacity: 0.95 !important;
+    transition: all 0.1s ease !important;
+}
+
+/* Touch feedback for cards */
+.card.touch-active {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2), inset 0 1px 3px rgba(255, 255, 255, 0.1) !important;
+    opacity: 0.95 !important;
+    transition: all 0.1s ease !important;
+}
+
+/* Touch feedback for navigation links */
+.nav-link.touch-active {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+    opacity: 0.9 !important;
 }
 
 /* Custom scrollbar for webkit browsers */
@@ -589,30 +526,85 @@ body {
     position: absolute;
     top: -5px;
     right: 10px;
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.95);
     border: 2px solid #ddd;
     border-radius: 50%;
-    width: 44px; /* Increased for better touch target */
-    height: 44px; /* Increased for better touch target */
+    width: 52px; /* Increased for better touch target */
+    height: 52px; /* Increased for better touch target */
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    font-size: 16px; /* Larger font for better visibility */
+    font-size: 18px; /* Larger font for better visibility */
     color: #666;
     z-index: 10;
     /* Touch optimizations */
     -webkit-tap-highlight-color: rgba(0,0,0,0);
     touch-action: manipulation;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
     user-select: none;
+    /* Ensure minimum touch target */
+    min-width: 52px;
+    min-height: 52px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    position: relative;
+    overflow: hidden;
 }
 
 .sound-toggle:hover {
     background: rgba(255, 255, 255, 1);
     border-color: #4ecdc4;
     color: #4ecdc4;
-    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(78, 205, 196, 0.3);
+}
+
+.sound-toggle:active {
+    background: rgba(78, 205, 196, 0.1);
+    border-color: #4ecdc4;
+    box-shadow: 0 2px 8px rgba(78, 205, 196, 0.4);
+    transition: all 0.1s ease;
+}
+
+/* Touch-specific feedback for sound toggle */
+@media (hover: none) and (pointer: coarse) {
+    .sound-toggle:hover {
+        transform: none;
+        background: rgba(255, 255, 255, 0.95);
+        border-color: #ddd;
+        color: #666;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .sound-toggle:active {
+        background: rgba(78, 205, 196, 0.1);
+        border-color: #4ecdc4;
+        color: #4ecdc4;
+        box-shadow: 0 2px 8px rgba(78, 205, 196, 0.4);
+    }
+}
+
+/* Ripple effect for sound toggle */
+.sound-toggle::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(78, 205, 196, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease;
+    pointer-events: none;
+}
+
+.sound-toggle:active::before {
+    width: 60px;
+    height: 60px;
 }
 
 .sound-toggle.sound-on {
@@ -719,7 +711,7 @@ body {
     background: linear-gradient(45deg, #4facfe, #00f2fe);
     color: white;
     border: none;
-    padding: 14px 28px;
+    padding: 16px 32px;
     border-radius: 50px;
     font-weight: 700;
     cursor: pointer;
@@ -728,11 +720,235 @@ body {
     text-transform: uppercase;
     letter-spacing: 1px;
     box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+    /* Touch optimizations */
+    min-height: 52px;
+    min-width: 120px;
+    font-size: 16px;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    overflow: hidden;
 }
 
 .play-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    box-shadow: 0 6px 20px rgba(79, 172, 254, 0.5);
+}
+
+.play-btn:active {
+    background: linear-gradient(45deg, #3d8bfe, #00d4fe);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 10px rgba(79, 172, 254, 0.6);
+    transition: all 0.1s ease;
+}
+
+/* Touch-specific feedback for play button */
+@media (hover: none) and (pointer: coarse) {
+    .play-btn:hover {
+        transform: none;
+    }
+    
+    .play-btn:active {
+        background: linear-gradient(45deg, #3d8bfe, #00d4fe);
+        box-shadow: 0 2px 10px rgba(79, 172, 254, 0.6);
+        opacity: 0.9;
+    }
+}
+
+/* Ripple effect for play button */
+.play-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease;
+    pointer-events: none;
+}
+
+.play-btn:active::before {
+    width: 120px;
+    height: 120px;
+}
+
+/* Game play button styles - enhanced for touch */
+.game-play-btn {
+    background: linear-gradient(45deg, #4facfe, #00f2fe);
+    color: white;
+    border: none;
+    padding: 16px 32px;
+    border-radius: 50px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+    /* Enhanced touch optimizations */
+    min-height: 56px;
+    min-width: 140px;
+    font-size: 16px;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+    /* Ensure proper z-index for touch events */
+    z-index: 10;
+    /* Better touch target */
+    padding: 18px 36px;
+    margin: 20px 0;
+}
+
+.game-play-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(79, 172, 254, 0.5);
+}
+
+.game-play-btn:active {
+    background: linear-gradient(45deg, #3d8bfe, #00d4fe);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 10px rgba(79, 172, 254, 0.6);
+    transition: all 0.1s ease;
+}
+
+/* Enhanced touch-specific feedback for game play button */
+@media (hover: none) and (pointer: coarse) {
+    .game-play-btn {
+        min-height: 60px;
+        min-width: 160px;
+        padding: 20px 40px;
+        font-size: 18px;
+        margin: 25px 0;
+    }
+    
+    .game-play-btn:hover {
+        transform: none;
+    }
+    
+    .game-play-btn:active {
+        background: linear-gradient(45deg, #3d8bfe, #00d4fe);
+        box-shadow: 0 2px 10px rgba(79, 172, 254, 0.6);
+        opacity: 0.9;
+    }
+}
+
+/* Enhanced ripple effect for game play button */
+.game-play-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease;
+    pointer-events: none;
+}
+
+.game-play-btn:active::before {
+    width: 140px;
+    height: 140px;
+}
+
+/* Show answer button styles - enhanced for touch */
+.show-answer-btn {
+    background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+    color: white;
+    border: none;
+    padding: 16px 32px;
+    border-radius: 50px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+    /* Enhanced touch optimizations */
+    min-height: 56px;
+    min-width: 140px;
+    font-size: 16px;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+    /* Ensure proper z-index for touch events */
+    z-index: 10;
+    /* Better touch target */
+    padding: 18px 36px;
+    margin: 20px 0;
+}
+
+.show-answer-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.5);
+}
+
+.show-answer-btn:active {
+    background: linear-gradient(45deg, #ee5a24, #d63031);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 10px rgba(255, 107, 107, 0.6);
+    transition: all 0.1s ease;
+}
+
+/* Enhanced touch-specific feedback for show answer button */
+@media (hover: none) and (pointer: coarse) {
+    .show-answer-btn {
+        min-height: 60px;
+        min-width: 160px;
+        padding: 20px 40px;
+        font-size: 18px;
+        margin: 25px 0;
+    }
+    
+    .show-answer-btn:hover {
+        transform: none;
+    }
+    
+    .show-answer-btn:active {
+        background: linear-gradient(45deg, #ee5a24, #d63031);
+        box-shadow: 0 2px 10px rgba(255, 107, 107, 0.6);
+        opacity: 0.9;
+    }
+}
+
+/* Enhanced ripple effect for show answer button */
+.show-answer-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease;
+    pointer-events: none;
+}
+
+.show-answer-btn:active::before {
+    width: 140px;
+    height: 140px;
 }
 
 .swipe-indicator {
@@ -796,18 +1012,65 @@ body {
     position: absolute;
     right: 20px;
     top: 15px;
+    /* Touch optimizations for close button */
+    min-height: 48px;
+    min-width: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    z-index: 1001;
+    transition: all 0.2s ease;
+    border-radius: 50%;
+    /* Better touch target area */
+    padding: 10px;
+    right: 10px;
+    top: 5px;
 }
 
 .close:hover {
     color: #000;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.close:active {
+    transform: scale(0.9);
+    background: rgba(0, 0, 0, 0.2);
+}
+
+/* Touch-specific feedback for close button */
+@media (hover: none) and (pointer: coarse) {
+    .close {
+        min-height: 52px;
+        min-width: 52px;
+        font-size: 32px;
+        right: 8px;
+        top: 3px;
+    }
+    
+    .close:hover {
+        background: none;
+    }
+    
+    .close:active {
+        background: rgba(0, 0, 0, 0.15);
+        transform: scale(0.85);
+    }
 }
 
 /* Game Styles */
 .game-board {
     display: grid;
-    gap: 5px;
+    gap: 8px;
     margin: 20px auto;
     justify-content: center;
+    max-width: 100%;
+    padding: 10px;
 }
 
 .tic-tac-toe {
@@ -830,12 +1093,52 @@ body {
     justify-content: center;
     font-size: 2rem;
     font-weight: bold;
-    transition: all 0.2s ease;
+    transition: all 0.15s ease;
+    /* Enhanced touch optimizations */
+    min-height: 56px;
+    min-width: 56px;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    /* Visual feedback */
+    position: relative;
+    overflow: hidden;
+    /* Better mobile interaction */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .game-cell:hover {
     background: #e0e0e0;
     transform: scale(1.05);
+}
+
+/* Touch-specific feedback for game cells */
+@media (hover: none) and (pointer: coarse) {
+    .game-cell:active {
+        transform: scale(0.95);
+        background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .game-cell::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.3s ease, height 0.3s ease;
+        pointer-events: none;
+    }
+    
+    .game-cell:active::before {
+        width: 80px;
+        height: 80px;
+    }
 }
 
 .game-status {
@@ -850,12 +1153,30 @@ body {
     background: linear-gradient(45deg, #ff6b6b, #ee5a24);
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 12px 24px;
     border-radius: 20px;
     cursor: pointer;
     font-weight: 600;
-    margin: 10px auto;
+    margin: 15px auto;
     display: block;
+    /* Enhanced touch optimization */
+    min-height: 48px;
+    min-width: 120px;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    touch-action: manipulation;
+    user-select: none;
+    transition: all 0.15s ease;
+    font-size: 1rem;
+}
+
+.reset-game-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.reset-game-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 /* Chess puzzle styles */
@@ -1145,11 +1466,9 @@ body {
     
     .header-right {
         order: 3;
-        position: fixed;
-        top: 55px;
-        right: 10px;
-        width: auto;
-        z-index: 1001;
+        justify-content: flex-end !important;
+        width: auto !important;
+        flex: 0 0 auto !important;
     }
     
     /* Only the main refresh button becomes floating */
@@ -1248,46 +1567,7 @@ body {
 
 
     
-    /* Compact sign-in button for mobile */
-    .appwrite-signin-btn {
-        padding: 3px 8px !important;
-        font-size: 9px !important;
-        font-weight: bold !important;
-        border-radius: 12px !important;
-        gap: 3px !important;
-        box-shadow: 0 2px 8px rgba(66, 133, 244, 0.15);
-        min-width: auto;
-        height: auto !important;
-        line-height: 1.2 !important;
-    }
-    
-    .appwrite-signin-btn i {
-        font-size: 8px;
-    }
-    
-    /* User profile adjustments for mobile */
-    .user-profile {
-        padding: 3px 6px !important;
-        gap: 4px !important;
-        border-radius: 12px !important;
-        font-size: 9px !important;
-    }
-    
-    .user-avatar {
-        width: 20px !important;
-        height: 20px !important;
-    }
-    
-    .user-name {
-        font-size: 9px !important;
-        max-width: 60px !important;
-    }
-    
-    .sign-out-btn {
-        padding: 3px 5px !important;
-        font-size: 8px !important;
-        border-radius: 8px !important;
-    }
+    /* Authentication mobile styles removed */
     
     /* Voice selector adjustments for mobile */
     .voice-selector {
@@ -1396,25 +1676,42 @@ body {
         margin-right: 8px !important;
     }
     
-    /* Mobile game responsiveness */
+    /* Enhanced mobile game responsiveness */
+    .game-board {
+        gap: 6px !important;
+        padding: 8px !important;
+        margin: 15px auto !important;
+    }
+    
     .tic-tac-toe {
-        grid-template-columns: repeat(3, 60px) !important;
-        grid-template-rows: repeat(3, 60px) !important;
+        grid-template-columns: repeat(3, 70px) !important;
+        grid-template-rows: repeat(3, 70px) !important;
     }
     
     .connect4 {
-        grid-template-columns: repeat(7, 40px) !important;
-        grid-template-rows: repeat(6, 40px) !important;
+        grid-template-columns: repeat(7, 42px) !important;
+        grid-template-rows: repeat(6, 42px) !important;
     }
     
     .game-cell {
-        font-size: 1.5rem !important;
-        border-radius: 6px !important;
+        font-size: 1.6rem !important;
+        border-radius: 8px !important;
+        min-height: 60px !important;
+        min-width: 60px !important;
+        border-width: 1px !important;
     }
     
     .game-status {
-        font-size: 1rem !important;
-        margin: 15px 0 !important;
+        font-size: 1.1rem !important;
+        margin: 12px 0 !important;
+        padding: 0 10px !important;
+    }
+    
+    .reset-game-btn {
+        padding: 14px 28px !important;
+        font-size: 1.1rem !important;
+        min-height: 52px !important;
+        margin: 20px auto !important;
     }
     
     /* Chess board mobile responsiveness */
@@ -1428,30 +1725,7 @@ body {
         margin: 8px 0 !important;
     }
     
-    /* Even more compact sign-in button */
-    .appwrite-signin-btn {
-        padding: 2px 6px !important;
-        font-size: 8px !important;
-        font-weight: bold !important;
-        gap: 2px !important;
-        height: auto !important;
-        line-height: 1.2 !important;
-    }
-    
-    .appwrite-signin-btn i {
-        font-size: 7px;
-    }
-    
-    /* Smaller user profile for tiny screens */
-    .user-profile {
-        padding: 3px 6px !important;
-        gap: 4px !important;
-    }
-    
-    .user-avatar {
-        width: 20px !important;
-        height: 20px !important;
-    }
+    /* Authentication tiny screen styles removed */
     
     .user-name {
         font-size: 10px !important;
@@ -1498,17 +1772,21 @@ body {
         overflow-y: auto !important; /* Enable scrolling if needed */
     }
     
-    /* Optimized card stacking for mobile with hardware acceleration */
+    /* Optimized card stacking for mobile with hardware acceleration - all cards upright */
+    .card:nth-child(1) {
+        transform: translate3d(0px, 0px, 0) rotate(0deg) !important; /* Front card always upright */
+    }
+    
     .card:nth-child(2) {
-        transform: translate3d(-30px, 15px, 0) rotate(-3deg) !important;
+        transform: translate3d(-15px, 8px, 0) rotate(0deg) !important; /* Keep upright */
     }
     
     .card:nth-child(3) {
-        transform: translate3d(-60px, 30px, 0) rotate(-6deg) !important;
+        transform: translate3d(-30px, 16px, 0) rotate(0deg) !important; /* Keep upright */
     }
     
     .card:nth-child(4) {
-        transform: translate3d(-90px, 45px, 0) rotate(-9deg) !important;
+        transform: translate3d(-45px, 24px, 0) rotate(0deg) !important; /* Keep upright */
     }
     
     .card-title {
@@ -1526,9 +1804,38 @@ body {
     .sound-toggle {
         top: 10px !important; /* Move down from top */
         right: 15px !important; /* Move in from right */
-        width: 50px !important; /* Larger touch target */
-        height: 50px !important; /* Larger touch target */
-        font-size: 18px !important; /* Larger icon */
+        width: 56px !important; /* Larger touch target for mobile */
+        height: 56px !important; /* Larger touch target for mobile */
+        font-size: 20px !important; /* Larger icon for mobile */
+        min-width: 56px !important;
+        min-height: 56px !important;
+    }
+    
+    /* Enhanced play button for mobile */
+    .play-btn {
+        padding: 18px 36px !important;
+        min-height: 56px !important;
+        min-width: 140px !important;
+        font-size: 18px !important;
+        margin-top: 20px !important;
+    }
+    
+    /* Enhanced card back and save buttons for mobile */
+    .card-back-btn, .card-save-btn {
+        width: 56px !important;
+        height: 56px !important;
+        min-width: 56px !important;
+        min-height: 56px !important;
+        font-size: 20px !important;
+        top: 12px !important;
+    }
+    
+    .card-back-btn {
+        left: 12px !important;
+    }
+    
+    .card-save-btn {
+        right: 12px !important;
     }
     
     .card-header {
@@ -1547,9 +1854,9 @@ body {
 
 /* Touch screen optimizations for all interactive elements */
 button, .btn, .control-btn, .refresh-btn, .play-btn, .voice-selector, select, input {
-    /* Minimum touch target size */
-    min-height: 44px;
-    min-width: 44px;
+    /* Minimum touch target size - increased to 48px for better accessibility */
+    min-height: 48px;
+    min-width: 48px;
     /* Remove default touch highlights */
     -webkit-tap-highlight-color: rgba(0,0,0,0);
     /* Optimize touch interactions */
@@ -1561,6 +1868,48 @@ button, .btn, .control-btn, .refresh-btn, .play-btn, .voice-selector, select, in
     user-select: none;
     /* Improve touch responsiveness */
     cursor: pointer;
+    /* Add padding for better touch area */
+    padding: 8px 12px;
+    /* Smooth transitions for touch feedback */
+    transition: all 0.15s ease;
+    /* Visual touch feedback */
+    position: relative;
+    overflow: hidden;
+}
+
+/* Touch feedback animation */
+button:active, .btn:active, .control-btn:active, .refresh-btn:active, .play-btn:active {
+    transform: scale(0.95);
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Enhanced touch feedback for JavaScript-controlled touch events */
+.touch-active {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15) !important;
+    transition: background-color 0.1s ease, box-shadow 0.1s ease !important;
+}
+
+/* Enhanced touch feedback for card buttons removed - will be rebuilt */
+
+/* Ripple effect for touch feedback */
+button::before, .btn::before, .control-btn::before, .refresh-btn::before, .play-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease;
+    pointer-events: none;
+}
+
+button:active::before, .btn:active::before, .control-btn:active::before, .refresh-btn:active::before, .play-btn:active::before {
+    width: 100px;
+    height: 100px;
 }
 
 /* Chess board touch optimizations */
@@ -1630,9 +1979,11 @@ button, .btn, .control-btn, .refresh-btn, .play-btn, .voice-selector, select, in
     
     /* Better button spacing for touch */
     button, .sound-toggle, .voice-selector {
-        margin: 8px 4px;
-        min-height: 48px;
-        min-width: 48px;
+        margin: 10px 6px;
+        min-height: 52px;
+        min-width: 52px;
+        padding: 10px 14px;
+        font-size: 16px;
     }
     
     /* Improve scroll indicators */
@@ -1653,6 +2004,11 @@ canvas {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     user-select: none;
+    /* Hardware acceleration for better performance */
+    will-change: transform;
+    transform: translateZ(0);
+    /* Smooth interactions */
+    transition: transform 0.1s ease;
 }
 
 /* Modal touch optimizations */
@@ -1859,84 +2215,7 @@ canvas {
     font-size: 1.5rem;
 }
 
-/* Authentication Modal Styles */
-.auth-modal-content {
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 20px;
-    padding: 0;
-    max-width: 400px;
-    width: 90%;
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-    overflow: hidden;
-}
-
-.auth-modal-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.auth-modal-header h3 {
-    margin: 0;
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.close-modal {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 18px;
-    cursor: pointer;
-    padding: 5px;
-    border-radius: 50%;
-    transition: background 0.3s ease;
-}
-
-.close-modal:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
-
-.auth-modal-body {
-    padding: 30px;
-    text-align: center;
-    color: #333;
-}
-
-.auth-modal-body p {
-    margin-bottom: 25px;
-    font-size: 16px;
-    line-height: 1.5;
-}
-
-.auth-signin-btn {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: none;
-    padding: 15px 30px;
-    border-radius: 25px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    justify-content: center;
-}
-
-.auth-signin-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-}
+/* Authentication modal styles removed */
 
 /* Animations */
 @keyframes fadeIn {
@@ -2159,70 +2438,57 @@ canvas {
         margin-right: 6px !important;
     }
     
-    .appwrite-signin-btn {
-        padding: 1px 5px !important;
-        font-size: 7px !important;
-        font-weight: bold !important;
-        gap: 1px !important;
-        border-radius: 10px !important;
-        height: auto !important;
-        line-height: 1.2 !important;
-    }
-    
-    .appwrite-signin-btn i {
-        font-size: 6px;
-    }
+    /* Ultra-compact authentication styles removed */
     
     .header-right {
         top: 45px !important;
         right: 6px !important;
     }
     
-    .user-profile {
-        padding: 2px 3px !important;
-        gap: 2px !important;
-        border-radius: 10px !important;
-    }
-    
-    .user-avatar {
-        width: 16px !important;
-        height: 16px !important;
-    }
-    
-    .user-name {
-        font-size: 7px !important;
-        max-width: 40px !important;
-    }
-    
-    .sign-out-btn {
-        padding: 1px 3px !important;
-        font-size: 6px !important;
-        border-radius: 6px !important;
-    }
-    
     .cards-container {
         margin-top: 35px; /* Adjusted for ultra-compact button positioning */
     }
     
-    /* Extra small mobile game responsiveness */
+    /* Enhanced extra small mobile game responsiveness */
+    .game-board {
+        gap: 3px !important;
+        padding: 5px !important;
+        margin: 8px auto !important;
+        max-width: 95% !important;
+    }
+    
     .tic-tac-toe {
-        grid-template-columns: repeat(3, 50px) !important;
-        grid-template-rows: repeat(3, 50px) !important;
+        grid-template-columns: repeat(3, 55px) !important;
+        grid-template-rows: repeat(3, 55px) !important;
     }
     
     .connect4 {
-        grid-template-columns: repeat(7, 35px) !important;
-        grid-template-rows: repeat(6, 35px) !important;
+        grid-template-columns: repeat(7, 32px) !important;
+        grid-template-rows: repeat(6, 32px) !important;
     }
     
     .game-cell {
-        font-size: 1.2rem !important;
-        border-radius: 4px !important;
+        font-size: 1.1rem !important;
+        border-radius: 5px !important;
+        min-height: 48px !important;
+        min-width: 48px !important;
+        border-width: 1px !important;
+        padding: 2px !important;
     }
     
     .game-status {
+        font-size: 0.95rem !important;
+        margin: 8px 0 !important;
+        padding: 0 5px !important;
+        line-height: 1.3 !important;
+    }
+    
+    .reset-game-btn {
+        padding: 10px 16px !important;
         font-size: 0.9rem !important;
-        margin: 10px 0 !important;
+        min-height: 44px !important;
+        margin: 12px auto !important;
+        min-width: 100px !important;
     }
     
     /* Chess board extra small mobile responsiveness */
@@ -2236,23 +2502,39 @@ canvas {
         margin: 6px 0 !important;
     }
     
+    /* Flappy Bird canvas mobile responsiveness */
+    #flappyCanvas {
+        max-width: 95% !important;
+        width: 280px !important;
+        height: 224px !important;
+        margin: 10px auto !important;
+        display: block !important;
+    }
+    
+    .play-btn {
+        padding: 8px 16px !important;
+        font-size: 0.9rem !important;
+        min-height: 44px !important;
+        min-width: 100px !important;
+    }
+    
     /* Cards maintain desktop dimensions - no responsive sizing */
     
-    /* Override card positioning for very small screens */
+    /* Override card positioning for very small screens - all cards upright */
     .card:nth-child(1) {
         transform: translateX(0px) translateY(0px) rotate(0deg) !important;
     }
     
     .card:nth-child(2) {
-        transform: translateX(-5px) translateY(5px) rotate(-2deg) !important;
+        transform: translateX(-5px) translateY(5px) rotate(0deg) !important; /* Keep upright */
     }
     
     .card:nth-child(3) {
-        transform: translateX(-10px) translateY(10px) rotate(-4deg) !important;
+        transform: translateX(-10px) translateY(10px) rotate(0deg) !important; /* Keep upright */
     }
     
     .card:nth-child(4) {
-        transform: translateX(-15px) translateY(15px) rotate(-6deg) !important;
+        transform: translateX(-15px) translateY(15px) rotate(0deg) !important; /* Keep upright */
     }
 }
 
@@ -2263,23 +2545,38 @@ canvas {
         padding: 0 5px !important;
     }
     
+    /* Flappy Bird ultra-small screen optimization */
+    #flappyCanvas {
+        max-width: 90% !important;
+        width: 240px !important;
+        height: 192px !important;
+        margin: 8px auto !important;
+    }
+    
+    .play-btn {
+        padding: 6px 12px !important;
+        font-size: 0.8rem !important;
+        min-height: 40px !important;
+        min-width: 80px !important;
+    }
+    
     /* Cards maintain desktop dimensions - no responsive sizing */
     
-    /* Ensure all cards are centered with minimal offset */
+    /* Ensure all cards are centered with minimal offset - all cards upright */
     .card:nth-child(1) {
         transform: translateX(0px) translateY(0px) rotate(0deg) !important;
     }
     
     .card:nth-child(2) {
-        transform: translateX(-2px) translateY(2px) rotate(-1deg) !important;
+        transform: translateX(-2px) translateY(2px) rotate(0deg) !important; /* Keep upright */
     }
     
     .card:nth-child(3) {
-        transform: translateX(-4px) translateY(4px) rotate(-2deg) !important;
+        transform: translateX(-4px) translateY(4px) rotate(0deg) !important; /* Keep upright */
     }
     
     .card:nth-child(4) {
-        transform: translateX(-6px) translateY(6px) rotate(-3deg) !important;
+        transform: translateX(-6px) translateY(6px) rotate(0deg) !important; /* Keep upright */
     }
     
     .card-content {
@@ -2311,8 +2608,8 @@ canvas {
     position: absolute;
     top: 15px;
     left: 15px;
-    width: 40px;
-    height: 40px;
+    width: 48px;
+    height: 48px;
     background: rgba(255, 255, 255, 0.95);
     border: 2px solid #667eea;
     border-radius: 50%;
@@ -2320,23 +2617,47 @@ canvas {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 16px;
+    font-size: 18px;
     color: #667eea;
     transition: all 0.3s ease;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     z-index: 10;
     backdrop-filter: blur(10px);
+    /* Touch optimizations */
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    /* Ensure minimum touch target */
+    min-width: 48px;
+    min-height: 48px;
 }
 
 .card-back-btn:hover {
     background: #667eea;
     color: white;
-    transform: scale(1.1);
+    transform: scale(1.05);
     box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
 }
 
 .card-back-btn:active {
-    transform: scale(0.95);
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+}
+
+/* Touch-specific feedback */
+@media (hover: none) and (pointer: coarse) {
+    .card-back-btn:hover {
+        transform: none;
+    }
+    
+    .card-back-btn:active {
+        background: #667eea;
+        color: white;
+        transform: scale(0.95);
+    }
 }
 
 /* Card Save Button - Circular button on the card */
@@ -2344,8 +2665,8 @@ canvas {
     position: absolute;
     top: 15px;
     right: 15px;
-    width: 40px;
-    height: 40px;
+    width: 48px;
+    height: 48px;
     background: rgba(255, 255, 255, 0.95);
     border: 2px solid #28a745;
     border-radius: 50%;
@@ -2353,23 +2674,47 @@ canvas {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 16px;
+    font-size: 18px;
     color: #28a745;
     transition: all 0.3s ease;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     z-index: 10;
     backdrop-filter: blur(10px);
+    /* Touch optimizations */
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    /* Ensure minimum touch target */
+    min-width: 48px;
+    min-height: 48px;
 }
 
 .card-save-btn:hover {
     background: #28a745;
     color: white;
-    transform: scale(1.1);
+    transform: scale(1.05);
     box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
 }
 
 .card-save-btn:active {
-    transform: scale(0.95);
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+}
+
+/* Touch-specific feedback */
+@media (hover: none) and (pointer: coarse) {
+    .card-save-btn:hover {
+        transform: none;
+    }
+    
+    .card-save-btn:active {
+        background: #28a745;
+        color: white;
+        transform: scale(0.95);
+    }
 }
 
 .card-save-btn.saved {
@@ -2382,24 +2727,47 @@ canvas {
     background: #dc3545;
     border-color: #dc3545;
     box-shadow: 0 6px 20px rgba(220, 53, 69, 0.3);
+    transform: scale(1.05);
+}
+
+/* Touch-specific feedback for saved state */
+@media (hover: none) and (pointer: coarse) {
+    .card-save-btn.saved:hover {
+        transform: none;
+        background: #28a745;
+        border-color: #28a745;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .card-save-btn.saved:active {
+        background: #dc3545;
+        border-color: #dc3545;
+        transform: scale(0.95);
+    }
 }
 
 /* Mobile responsive adjustments */
 @media (max-width: 768px) {
     .card-back-btn {
-        width: 36px;
-        height: 36px;
-        font-size: 14px;
-        top: 12px;
-        left: 12px;
+        width: 44px;
+        height: 44px;
+        font-size: 16px;
+        top: 10px;
+        left: 10px;
+        /* Maintain touch target size */
+        min-width: 44px;
+        min-height: 44px;
     }
     
     .card-save-btn {
-        width: 36px;
-        height: 36px;
-        font-size: 14px;
-        top: 12px;
-        right: 12px;
+        width: 44px;
+        height: 44px;
+        font-size: 16px;
+        top: 10px;
+        right: 10px;
+        /* Maintain touch target size */
+        min-width: 44px;
+        min-height: 44px;
     }
 }
     
@@ -3103,7 +3471,117 @@ canvas {
         flex-direction: column;
         gap: 0.5rem;
     }
+}
+
+/* Enhanced Touch Screen Optimizations */
+@media (hover: none) and (pointer: coarse) {
+    /* Mobile-specific touch optimizations */
     
+    /* Ensure minimum touch target sizes (44px recommended) */
+    button, .btn, .nav-link, .sound-toggle, .close, .play-btn {
+        min-height: 44px !important;
+        min-width: 44px !important;
+        padding: 12px 16px !important;
+    }
+    
+    /* Enhanced card touch interactions */
+    .card {
+        /* Allow both horizontal swipe and vertical scroll */
+        touch-action: auto !important;
+        /* Improve touch responsiveness */
+        -webkit-user-select: none;
+        user-select: none;
+        /* Better touch feedback */
+        -webkit-tap-highlight-color: transparent;
+    }
+    
+    /* Card content scrolling optimization */
+    .card-content {
+        /* Smooth scrolling on mobile */
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+        /* Prevent overscroll bounce */
+        overscroll-behavior: contain;
+        /* Better scroll performance */
+        will-change: scroll-position;
+    }
+    
+    /* Improve button touch feedback */
+    button:active, .btn:active, .play-btn:active {
+        transform: scale(0.95);
+        transition: transform 0.1s ease;
+    }
+    
+    /* Navigation touch improvements */
+    .nav-link {
+        padding: 16px 20px !important;
+        margin: 4px 0 !important;
+    }
+    
+    /* Game elements touch optimization */
+    .game-cell, .premium-card {
+        min-height: 48px !important;
+        min-width: 48px !important;
+        touch-action: manipulation;
+    }
+    
+    /* Scrollbar improvements for mobile */
+    .card::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    .card-content::-webkit-scrollbar {
+        width: 4px;
+    }
+    
+    /* Better visual feedback for touch */
+    .touch-active {
+        background-color: rgba(255, 255, 255, 0.08) !important;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.12) !important;
+        opacity: 0.92 !important;
+        transition: background-color 0.08s ease, box-shadow 0.08s ease, opacity 0.08s ease !important;
+    }
+    
+    /* Prevent text selection during swipe */
+    .card * {
+        -webkit-user-select: none;
+        user-select: none;
+    }
+    
+    /* Allow text selection only in specific content areas */
+    .card-content p, .card-content span, .card-content div:not(.game-container) {
+        -webkit-user-select: text;
+        user-select: text;
+    }
+}
+
+/* Additional optimizations for all touch devices */
+@media (pointer: coarse) {
+    /* Larger touch targets for better accessibility */
+    .sound-toggle, .close {
+        padding: 12px !important;
+        min-height: 44px !important;
+        min-width: 44px !important;
+    }
+    
+    /* Better spacing for touch interactions */
+    .nav-links {
+        gap: 8px;
+    }
+    
+    /* Improved card stack spacing on touch devices */
+    .card:nth-child(2) {
+        transform: translate3d(-25px, 12px, 0) rotate(0deg);
+    }
+    
+    .card:nth-child(3) {
+        transform: translate3d(-50px, 24px, 0) rotate(0deg);
+    }
+    
+    .card:nth-child(4) {
+        transform: translate3d(-75px, 36px, 0) rotate(0deg);
+    }
+
     .footer-separator {
         display: none;
     }

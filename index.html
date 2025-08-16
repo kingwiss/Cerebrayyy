@@ -13,9 +13,9 @@
     <meta http-equiv="X-XSS-Protection" content="1; mode=block">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="auth-modal.css">
     <link rel="stylesheet" href="premium-popup.css">
     <link rel="stylesheet" href="stripe-payment.css">
+    <link rel="stylesheet" href="auth-modal.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
@@ -23,14 +23,17 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     
-    <!-- Security Configuration (Load First) -->
-    <script src="security-config.js"></script>
-    
-    <!-- Appwrite SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.1"></script>
+
     
     <!-- Stripe JavaScript SDK -->
     <script src="https://js.stripe.com/v3/"></script>
+    
+    <!-- Appwrite SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
+    
+
+    
+
     
     <!-- Libraries for the app -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -56,26 +59,20 @@
                         <i class="fas fa-crown"></i>
                         <span class="premium-label">Premium</span>
                     </button>
-                    <!-- Premium Refresh Button (only visible in premium mode) -->
-                    <button id="premiumRefreshBtn" class="control-btn premium-refresh" title="Force refresh premium content" style="display: none;">
-                        <i class="fas fa-sync-alt"></i>
-                    </button>
+
                     <button id="musicToggleBtn" class="control-btn music-toggle" title="Toggle background music">
                         <i class="fas fa-music"></i>
                     </button>
-                    <!-- Enhanced Sign-In Button -->
-                    <div id="mainSignInBtn" class="google-signin-btn">
-                        <button id="appwriteSignInBtn" class="appwrite-signin-btn" onclick="openAuthModal('login')">
-                            <i class="fas fa-sign-in-alt"></i> Sign In
-                        </button>
-                    </div>
                     
-                    <!-- User Profile (hidden by default) -->
-                    <div id="userProfile" class="user-profile" style="display: none;">
-                        <img id="userAvatar" class="user-avatar" src="" alt="User Avatar">
-                        <span id="userName" class="user-name"></span>
-                        <button id="signOutBtn" class="sign-out-btn">
-                            <i class="fas fa-sign-out-alt"></i>
+                    <!-- Authentication Controls -->
+                    <button id="signinBtn" class="signin-btn">
+                        <i class="fas fa-sign-in-alt"></i> Sign In
+                    </button>
+                    
+                    <div id="userInfo" class="user-info">
+                        <span id="usernameDisplay" class="username-display"></span>
+                        <button id="logoutBtn" class="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i> Logout
                         </button>
                     </div>
                 </div>
@@ -206,6 +203,9 @@
         </div>
     </div>
 
+    <!-- Authentication System -->
+    <script src="auth-system.js"></script>
+    
     <!-- Daily Content Backend System -->
     <script src="daily-content-backend.js"></script>
     
@@ -223,7 +223,6 @@
     <!-- Premium Popup System -->
     <script src="premium-popup.js"></script>
     
-    <script src="auth-modal.js"></script>
     <script src="script.js"></script>
     
     <!-- Performance Monitoring and Optimization -->
@@ -231,14 +230,6 @@
     <script src="web-vitals-tracker.js"></script>
     <script src="performance-optimizer.js"></script>
     
-    <script>
-        // Initialize performance monitoring in development
-        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-            console.log('🚀 Performance monitoring enabled');
-            console.log('Keyboard shortcuts:');
-            console.log('  Ctrl+Shift+P: Toggle Performance Monitor');
-            console.log('  Ctrl+Shift+V: Toggle Web Vitals Display');
-        }
-    </script>
+
 </body>
 </html>

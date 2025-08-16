@@ -1,451 +1,356 @@
 /**
- * User Tier Management System
- * Manages user subscription status and daily content allocation
- * Ensures proper card distribution based on user tier (Basic vs Premium)
+ * UserTierManager - Manages user subscription tiers and premium access
+ * Handles free/premium tier management, payment processing integration,
+ * and content access control for the Cerebray platform.
  */
 
 class UserTierManager {
     constructor() {
-        this.userId = this.getUserId();
-        this.today = this.getTodayString();
-        this.storageKey = 'boredom_buster_tier_';
+        this.userId = this.generateUserId();
+        this.currentTier = 'basic';
+        this.dailyCardLimit = 40; // Basic tier limit
+        this.cardsUsedToday = 0;
+        this.totalCardsGenerated = 0;
+        this.daysActive = 1;
+        this.premiumStartDate = null;
+        this.premiumEndDate = null;
+        this.subscriptionId = null;
+        this.subscriptionStatus = null;
+        this.lastResetDate = new Date().toDateString();
         
-        // Initialize user tier data
-        this.userTierData = this.loadUserTierData();
+        // Load existing data from localStorage
+        this.loadUserData();
         
-        // Initialize content backends
-        this.dailyContentBackend = null;
-        this.premiumContentBackend = null;
+        // Check if daily reset is needed
+        this.checkDailyReset();
         
-        console.log('🎯 User Tier Manager initialized for user:', this.userId);
-        console.log('👑 Current tier:', this.getCurrentTier());
-        console.log('📅 Today:', this.today);
+        // Check premium status from localStorage
+        this.checkPremiumStatus();
     }
 
-    // Get or create unique user ID
-    getUserId() {
-        let userId = localStorage.getItem('boredom_buster_user_id');
-        if (!userId) {
-            userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            localStorage.setItem('boredom_buster_user_id', userId);
+    generateUserId() {
+        return 'user_' + Math.random().toString(36).substr(2, 9);
+    }
+
+    loadUserData() {
+        try {
+            const savedData = localStorage.getItem('cerebray_user_tier_data');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                this.userId = data.userId || this.userId;
+                this.currentTier = data.currentTier || 'basic';
+                this.cardsUsedToday = data.cardsUsedToday || 0;
+                this.totalCardsGenerated = data.totalCardsGenerated || 0;
+                this.daysActive = data.daysActive || 1;
+                this.premiumStartDate = data.premiumStartDate;
+                this.premiumEndDate = data.premiumEndDate;
+                this.subscriptionId = data.subscriptionId;
+                this.subscriptionStatus = data.subscriptionStatus;
+                this.lastResetDate = data.lastResetDate || new Date().toDateString();
+            }
+            
+            // Update daily card limit based on tier
+            this.updateDailyCardLimit();
+        } catch (error) {
+            console.error('Error loading user data:', error);
         }
-        return userId;
     }
 
-    // Get today's date string
-    getTodayString() {
-        return new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
-    }
-
-    // Load or initialize user tier data
-    loadUserTierData() {
-        const stored = localStorage.getItem(this.storageKey + 'data');
-        if (stored) {
-            const data = JSON.parse(stored);
-            // Ensure all required fields exist
-            return {
-                userId: data.userId || this.userId,
-                tier: data.tier || 'basic',
-                subscriptionStatus: data.subscriptionStatus || 'inactive',
-                subscriptionStartDate: data.subscriptionStartDate || null,
-                subscriptionEndDate: data.subscriptionEndDate || null,
-                dailyCardLimits: data.dailyCardLimits || {
-                    basic: 40,
-                    premium: 100
-                },
-                dailyUsage: data.dailyUsage || {},
-                paymentHistory: data.paymentHistory || [],
-                trialUsed: data.trialUsed || false,
-                joinDate: data.joinDate || new Date().toISOString(),
-                lastActiveDate: this.today
+    saveUserData() {
+        try {
+            const data = {
+                userId: this.userId,
+                currentTier: this.currentTier,
+                cardsUsedToday: this.cardsUsedToday,
+                totalCardsGenerated: this.totalCardsGenerated,
+                daysActive: this.daysActive,
+                premiumStartDate: this.premiumStartDate,
+                premiumEndDate: this.premiumEndDate,
+                subscriptionId: this.subscriptionId,
+                subscriptionStatus: this.subscriptionStatus,
+                lastResetDate: this.lastResetDate
             };
+            localStorage.setItem('cerebray_user_tier_data', JSON.stringify(data));
+        } catch (error) {
+            console.error('Error saving user data:', error);
         }
+    }
 
-        // Create new user tier data
+    checkDailyReset() {
+        const today = new Date().toDateString();
+        if (this.lastResetDate !== today) {
+            this.resetDailyUsage();
+            this.daysActive++;
+            this.lastResetDate = today;
+            this.saveUserData();
+        }
+    }
+
+    checkPremiumStatus() {
+        try {
+            const premiumMode = localStorage.getItem('premiumMode');
+            const premiumData = localStorage.getItem('premiumData');
+            
+            if (premiumMode === 'true' && premiumData) {
+                const data = JSON.parse(premiumData);
+                
+                // Check if subscription is still valid
+                const endDate = new Date(data.endDate);
+                const now = new Date();
+                
+                if (now <= endDate && data.status === 'active') {
+                    this.currentTier = 'premium';
+                    this.premiumStartDate = data.startDate;
+                    this.premiumEndDate = data.endDate;
+                    this.subscriptionId = data.subscriptionId;
+                    this.subscriptionStatus = data.status;
+                    this.updateDailyCardLimit();
+                    this.saveUserData();
+                } else {
+                    // Subscription expired, clean up
+                    this.downgradeTier();
+                    localStorage.removeItem('premiumMode');
+                    localStorage.removeItem('premiumData');
+                }
+            }
+        } catch (error) {
+            console.error('Error checking premium status:', error);
+        }
+    }
+
+    updateDailyCardLimit() {
+        if (this.isPremium()) {
+            this.dailyCardLimit = 100; // Premium tier limit
+        } else {
+            this.dailyCardLimit = 40;  // Basic tier limit
+        }
+    }
+
+    isPremium() {
+        if (!this.premiumEndDate) return false;
+        
+        const now = new Date();
+        const endDate = new Date(this.premiumEndDate);
+        
+        if (now > endDate) {
+            // Premium expired, downgrade to basic
+            this.downgradeTier();
+            return false;
+        }
+        
+        return this.currentTier === 'premium';
+    }
+
+    isPremiumUser() {
+        return this.isPremium();
+    }
+
+    getCurrentTier() {
+        return this.currentTier;
+    }
+
+    getDailyCardLimit() {
+        return this.dailyCardLimit;
+    }
+
+    getCardsUsedToday() {
+        return this.cardsUsedToday;
+    }
+
+    hasReachedDailyLimit() {
+        return this.cardsUsedToday >= this.dailyCardLimit;
+    }
+
+    trackCardUsage(count = 1) {
+        if (this.hasReachedDailyLimit()) {
+            throw new Error('Daily card limit reached');
+        }
+        
+        this.cardsUsedToday += count;
+        this.totalCardsGenerated += count;
+        this.saveUserData();
+        
         return {
-            userId: this.userId,
-            tier: 'basic',
-            subscriptionStatus: 'inactive',
-            subscriptionStartDate: null,
-            subscriptionEndDate: null,
-            dailyCardLimits: {
-                basic: 40,
-                premium: 100
-            },
-            dailyUsage: {},
-            paymentHistory: [],
-            trialUsed: false,
-            joinDate: new Date().toISOString(),
-            lastActiveDate: this.today
+            cardsUsed: this.cardsUsedToday,
+            remainingCards: this.dailyCardLimit - this.cardsUsedToday,
+            dailyLimit: this.dailyCardLimit
         };
     }
 
-    // Save user tier data
-    saveUserTierData() {
-        this.userTierData.lastActiveDate = this.today;
-        localStorage.setItem(this.storageKey + 'data', JSON.stringify(this.userTierData));
+    resetDailyUsage() {
+        this.cardsUsedToday = 0;
+        this.saveUserData();
     }
 
-    // Get current user tier
-    getCurrentTier() {
-        // Check if subscription is still active
-        if (this.userTierData.tier === 'premium' && this.userTierData.subscriptionEndDate) {
-            const endDate = new Date(this.userTierData.subscriptionEndDate);
-            const today = new Date();
+    async upgradeToPremium(subscriptionData = null) {
+        try {
+            this.currentTier = 'premium';
             
-            if (today > endDate) {
-                // Subscription expired, downgrade to basic
-                this.downgradeTier();
-                return 'basic';
+            if (subscriptionData) {
+                this.premiumStartDate = subscriptionData.startDate;
+                this.premiumEndDate = subscriptionData.endDate;
+                this.subscriptionId = subscriptionData.subscriptionId;
+                this.subscriptionStatus = subscriptionData.status || 'active';
+            } else {
+                // Default to 1 month subscription
+                const startDate = new Date();
+                const endDate = new Date();
+                endDate.setMonth(startDate.getMonth() + 1);
+                
+                this.premiumStartDate = startDate.toISOString();
+                this.premiumEndDate = endDate.toISOString();
+                this.subscriptionStatus = 'active';
             }
-        }
-        
-        return this.userTierData.tier;
-    }
-
-    // Check if user is premium
-    isPremiumUser() {
-        return this.getCurrentTier() === 'premium';
-    }
-
-    // Alias for isPremiumUser (for compatibility)
-    isPremium() {
-        return this.isPremiumUser();
-    }
-
-    // Get cards used today
-    getCardsUsedToday() {
-        const usage = this.getTodayUsage();
-        return usage.cardsGenerated || 0;
-    }
-
-    // Check if user has reached daily limit
-    hasReachedDailyLimit() {
-        const usage = this.getTodayUsage();
-        const limit = this.getDailyCardLimit();
-        return usage.cardsGenerated >= limit;
-    }
-
-    // Track card usage (for testing)
-    trackCardUsage(count) {
-        const usage = this.getTodayUsage();
-        usage.cardsGenerated = Math.min(usage.cardsGenerated + count, this.getDailyCardLimit());
-        this.saveUserTierData();
-    }
-
-    // Get total cards generated across all days
-    getTotalCardsGenerated() {
-        let total = 0;
-        Object.values(this.userTierData.dailyUsage).forEach(dayUsage => {
-            total += dayUsage.cardsGenerated || 0;
-        });
-        return total;
-    }
-
-    // Get daily card limit for current tier
-    getDailyCardLimit() {
-        const tier = this.getCurrentTier();
-        return this.userTierData.dailyCardLimits[tier];
-    }
-
-    // Get today's card usage
-    getTodayUsage() {
-        if (!this.userTierData.dailyUsage[this.today]) {
-            this.userTierData.dailyUsage[this.today] = {
-                cardsGenerated: 0,
-                cardsViewed: 0,
-                gamesPlayed: 0,
-                lastReset: this.today
+            
+            this.updateDailyCardLimit();
+            this.saveUserData();
+            
+            return {
+                success: true,
+                subscriptionId: this.subscriptionId,
+                expiresAt: this.premiumEndDate
+            };
+        } catch (error) {
+            console.error('Error upgrading to premium:', error);
+            return {
+                success: false,
+                error: error.message
             };
         }
-        return this.userTierData.dailyUsage[this.today];
     }
 
-    // Check if user can get more cards today
-    canGetMoreCards() {
-        const usage = this.getTodayUsage();
-        const limit = this.getDailyCardLimit();
-        return usage.cardsGenerated < limit;
+    downgradeTier() {
+        this.currentTier = 'basic';
+        this.premiumStartDate = null;
+        this.premiumEndDate = null;
+        this.subscriptionId = null;
+        this.subscriptionStatus = null;
+        this.updateDailyCardLimit();
+        this.saveUserData();
     }
 
-    // Get remaining cards for today
-    getRemainingCards() {
-        const usage = this.getTodayUsage();
-        const limit = this.getDailyCardLimit();
-        return Math.max(0, limit - usage.cardsGenerated);
+    getUserStats() {
+        return {
+            userId: this.userId,
+            currentTier: this.currentTier,
+            isPremium: this.isPremium(),
+            dailyCardLimit: this.dailyCardLimit,
+            cardsUsedToday: this.cardsUsedToday,
+            totalCardsGenerated: this.totalCardsGenerated,
+            daysActive: this.daysActive,
+            premiumStartDate: this.premiumStartDate,
+            premiumEndDate: this.premiumEndDate,
+            subscriptionId: this.subscriptionId,
+            subscriptionStatus: this.subscriptionStatus
+        };
     }
 
-    // Initialize content backends based on tier
     async initializeContentBackends() {
+        // Initialize content backend systems if they exist
         try {
-            // Always initialize daily content backend
-            if (!this.dailyContentBackend) {
+            if (typeof DailyContentBackend !== 'undefined') {
                 this.dailyContentBackend = new DailyContentBackend();
             }
-
-            // Initialize premium backend only for premium users
-            if (this.isPremiumUser() && !this.premiumContentBackend) {
+            if (typeof PremiumContentBackend !== 'undefined') {
                 this.premiumContentBackend = new PremiumContentBackend();
             }
-
-            console.log('✅ Content backends initialized for tier:', this.getCurrentTier());
+            console.log('Content backends initialized successfully');
         } catch (error) {
-            console.error('❌ Failed to initialize content backends:', error);
+            console.warn('Some content backends not available:', error.message);
         }
     }
 
-    // Get today's cards based on user tier
     async getTodaysCards() {
-        await this.initializeContentBackends();
-        
-        const tier = this.getCurrentTier();
-        const usage = this.getTodayUsage();
-        const limit = this.getDailyCardLimit();
-
-        console.log(`📊 Getting cards for ${tier} user (${usage.cardsGenerated}/${limit} used)`);
-
-        if (tier === 'premium' && this.premiumContentBackend) {
+        // Use appropriate content backend based on user tier
+        if (this.isPremium() && this.premiumContentBackend) {
             // Premium users get 100 cards from premium backend
-            const cards = this.premiumContentBackend.getTodaysCards();
-            this.updateCardUsage(cards.length);
-            return cards;
-        } else {
-            // Basic users get 40 cards from daily backend
-            const cards = this.dailyContentBackend.getTodaysCards();
-            this.updateCardUsage(cards.length);
-            return cards;
-        }
-    }
-
-    // Update card usage tracking
-    updateCardUsage(cardsCount) {
-        const usage = this.getTodayUsage();
-        usage.cardsGenerated = cardsCount;
-        this.saveUserTierData();
-    }
-
-    // Mark card as viewed
-    markCardAsViewed(cardId) {
-        const usage = this.getTodayUsage();
-        usage.cardsViewed++;
-        
-        // Also mark in appropriate backend
-        const tier = this.getCurrentTier();
-        if (tier === 'premium' && this.premiumContentBackend) {
-            this.premiumContentBackend.markCardAsViewed(cardId);
+            console.log('🌟 Loading premium cards for premium user');
+            return this.premiumContentBackend.getTodaysPremiumCards();
         } else if (this.dailyContentBackend) {
-            this.dailyContentBackend.markCardAsViewed(cardId);
-        }
-        
-        this.saveUserTierData();
-    }
-
-    // Upgrade user to premium
-    upgradeToPremium(subscriptionData) {
-        this.userTierData.tier = 'premium';
-        this.userTierData.subscriptionStatus = 'active';
-        this.userTierData.subscriptionStartDate = subscriptionData.startDate || new Date().toISOString();
-        this.userTierData.subscriptionEndDate = subscriptionData.endDate;
-        
-        // Add payment record
-        this.userTierData.paymentHistory.push({
-            date: new Date().toISOString(),
-            amount: subscriptionData.amount,
-            type: 'subscription',
-            status: 'completed',
-            transactionId: subscriptionData.transactionId
-        });
-
-        this.saveUserTierData();
-        
-        // Initialize premium backend
-        this.initializeContentBackends();
-        
-        console.log('🌟 User upgraded to premium tier');
-        return true;
-    }
-
-    // Downgrade user to basic
-    downgradeTier() {
-        this.userTierData.tier = 'basic';
-        this.userTierData.subscriptionStatus = 'inactive';
-        this.userTierData.subscriptionEndDate = null;
-        
-        // Clear premium backend
-        this.premiumContentBackend = null;
-        
-        this.saveUserTierData();
-        
-        console.log('📉 User downgraded to basic tier');
-        return true;
-    }
-
-    // Start free trial (if not used)
-    startFreeTrial(trialDays = 7) {
-        if (this.userTierData.trialUsed) {
-            return { success: false, message: 'Free trial already used' };
-        }
-
-        const startDate = new Date();
-        const endDate = new Date();
-        endDate.setDate(startDate.getDate() + trialDays);
-
-        this.userTierData.tier = 'premium';
-        this.userTierData.subscriptionStatus = 'trial';
-        this.userTierData.subscriptionStartDate = startDate.toISOString();
-        this.userTierData.subscriptionEndDate = endDate.toISOString();
-        this.userTierData.trialUsed = true;
-
-        this.saveUserTierData();
-        this.initializeContentBackends();
-
-        console.log(`🎁 Free trial started for ${trialDays} days`);
-        return { 
-            success: true, 
-            message: `Free trial activated for ${trialDays} days`,
-            endDate: endDate.toISOString()
-        };
-    }
-
-    // Get user statistics
-    getUserStats() {
-        const tier = this.getCurrentTier();
-        const usage = this.getTodayUsage();
-        const limit = this.getDailyCardLimit();
-        
-        return {
-            userId: this.userId,
-            tier: tier,
-            subscriptionStatus: this.userTierData.subscriptionStatus,
-            joinDate: this.userTierData.joinDate,
-            dailyLimit: limit,
-            todayUsage: usage,
-            remainingCards: this.getRemainingCards(),
-            subscriptionEndDate: this.userTierData.subscriptionEndDate,
-            trialUsed: this.userTierData.trialUsed,
-            paymentHistory: this.userTierData.paymentHistory,
-            features: this.getTierFeatures(),
-            totalCardsGenerated: this.getTotalCardsGenerated(),
-            daysActive: Object.keys(this.userTierData.dailyUsage).length
-        };
-    }
-
-    // Get features for current tier
-    getTierFeatures() {
-        const tier = this.getCurrentTier();
-        
-        if (tier === 'premium') {
-            return {
-                dailyCards: 100,
-                newContentRatio: '90%',
-                games: 'All premium games (Sudoku, Tetris, Pac-Man, Chess, etc.)',
-                categories: 'All categories including premium exclusive',
-                audioFeatures: 'Premium voice synthesis',
-                support: 'Priority support'
-            };
+            // Basic users get 40 cards from daily backend
+            console.log('📋 Loading daily cards for basic user');
+            return this.dailyContentBackend.getTodaysCards();
         } else {
-            return {
-                dailyCards: 40,
-                newContentRatio: '80%',
-                games: 'Basic games (Tic-Tac-Toe, Connect 4, Chess puzzles)',
-                categories: 'Standard categories',
-                audioFeatures: 'Basic text-to-speech',
-                support: 'Community support'
-            };
-        }
-    }
-
-    // Simulate payment processing (for testing)
-    simulatePayment(amount, plan = 'monthly') {
-        const transactionId = 'sim_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-        
-        // Calculate subscription end date
-        const startDate = new Date();
-        const endDate = new Date();
-        
-        if (plan === 'monthly') {
-            endDate.setMonth(startDate.getMonth() + 1);
-        } else if (plan === 'yearly') {
-            endDate.setFullYear(startDate.getFullYear() + 1);
-        }
-
-        const subscriptionData = {
-            startDate: startDate.toISOString(),
-            endDate: endDate.toISOString(),
-            amount: amount,
-            transactionId: transactionId
-        };
-
-        return this.upgradeToPremium(subscriptionData);
-    }
-
-    // Reset daily usage (called at midnight)
-    resetDailyUsage() {
-        const today = this.getTodayString();
-        if (this.userTierData.dailyUsage[today]) {
-            this.userTierData.dailyUsage[today] = {
-                cardsGenerated: 0,
-                cardsViewed: 0,
-                gamesPlayed: 0,
-                lastReset: today
-            };
-            this.saveUserTierData();
-            console.log('🔄 Daily usage reset for', today);
-        }
-    }
-
-    // Check and handle subscription expiration
-    checkSubscriptionStatus() {
-        if (this.userTierData.subscriptionEndDate) {
-            const endDate = new Date(this.userTierData.subscriptionEndDate);
-            const today = new Date();
+            // Fallback to sample cards if backends not available
+            console.warn('⚠️ Content backends not available, using fallback cards');
+            const cards = [];
+            const cardCount = this.dailyCardLimit;
             
-            if (today > endDate && this.userTierData.tier === 'premium') {
-                console.log('⏰ Subscription expired, downgrading user');
-                this.downgradeTier();
-                return { expired: true, tier: 'basic' };
+            for (let i = 0; i < cardCount; i++) {
+                cards.push({
+                    id: `card_${i + 1}`,
+                    type: this.isPremium() ? 'premium' : 'basic',
+                    content: `Sample card ${i + 1} for ${this.currentTier} tier`,
+                    category: 'general',
+                    difficulty: this.isPremium() ? 'advanced' : 'basic'
+                });
             }
+            
+            return cards;
         }
-        
-        return { expired: false, tier: this.getCurrentTier() };
     }
 
-    // Get subscription info
-    getSubscriptionInfo() {
-        if (this.userTierData.tier === 'basic') {
+    canAccessPremiumContent() {
+        return this.isPremium();
+    }
+
+    getRemainingCards() {
+        return Math.max(0, this.dailyCardLimit - this.cardsUsedToday);
+    }
+
+    getSubscriptionStatus() {
+        if (!this.isPremium()) {
             return {
-                tier: 'basic',
-                status: 'inactive',
-                message: 'Upgrade to Premium for 100 daily cards and exclusive games!'
+                status: 'basic',
+                message: 'Basic tier - 40 cards per day'
             };
         }
-
-        const endDate = this.userTierData.subscriptionEndDate ? new Date(this.userTierData.subscriptionEndDate) : null;
-        const today = new Date();
         
-        if (endDate) {
-            const daysRemaining = Math.ceil((endDate - today) / (1000 * 60 * 60 * 24));
-            
+        const daysRemaining = Math.ceil(
+            (new Date(this.premiumEndDate) - new Date()) / (1000 * 60 * 60 * 24)
+        );
+        
+        return {
+            status: 'premium',
+            message: `Premium tier - ${daysRemaining} days remaining`,
+            expiresAt: this.premiumEndDate
+        };
+    }
+
+    checkSubscriptionStatus() {
+        if (!this.premiumEndDate) {
             return {
-                tier: 'premium',
-                status: this.userTierData.subscriptionStatus,
-                endDate: this.userTierData.subscriptionEndDate,
-                daysRemaining: Math.max(0, daysRemaining),
-                message: daysRemaining > 0 ? 
-                    `Premium active - ${daysRemaining} days remaining` : 
-                    'Subscription expired'
+                expired: false,
+                status: 'basic',
+                tier: 'basic'
             };
         }
-
+        
+        const now = new Date();
+        const endDate = new Date(this.premiumEndDate);
+        const expired = now > endDate;
+        
+        if (expired && this.currentTier === 'premium') {
+            // Auto-downgrade if expired
+            this.downgradeTier();
+        }
+        
         return {
-            tier: 'premium',
-            status: 'active',
-            message: 'Premium subscription active'
+            expired: expired,
+            status: expired ? 'expired' : 'active',
+            tier: this.currentTier,
+            expiresAt: this.premiumEndDate,
+            daysRemaining: expired ? 0 : Math.ceil((endDate - now) / (1000 * 60 * 60 * 24))
         };
     }
 }
 
-// Export for use in other modules
+// Make UserTierManager globally available
+if (typeof window !== 'undefined') {
+    window.UserTierManager = UserTierManager;
+}
+
+// Export for Node.js environments
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = UserTierManager;
 }

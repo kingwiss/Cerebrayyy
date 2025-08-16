@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cerebray Premium - Payment</title>
+    <link rel="stylesheet" href="stripe-payment.css">
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+    <div class="payment-container">
+        <div class="payment-card">
+            <div class="header">
+                <div class="crown-icon">👑</div>
+                <h1>Cerebray Premium</h1>
+                <p class="subtitle">Complete your upgrade to unlock unlimited brain training</p>
+            </div>
+            
+            <div class="order-summary">
+                <h3>Order Summary</h3>
+                <div class="summary-item">
+                    <span>Cerebray Premium (Monthly)</span>
+                    <span class="price">$4.99</span>
+                </div>
+                <div class="summary-total">
+                    <span><strong>Total</strong></span>
+                    <span class="total-price"><strong>$4.99</strong></span>
+                </div>
+            </div>
+
+            <form id="payment-form">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="your@email.com" required>
+                </div>
+
+                <div class="payment-section">
+                    <h3>Payment Information</h3>
+                    
+                    <!-- Card Number -->
+                    <div class="form-group">
+                        <label for="card-number">Card Number</label>
+                        <div id="card-number" class="stripe-element"></div>
+                        <div id="card-number-errors" class="error-message"></div>
+                    </div>
+
+                    <div class="form-row">
+                        <!-- Expiry Date -->
+                        <div class="form-group half-width">
+                            <label for="card-expiry">Expiry Date</label>
+                            <div id="card-expiry" class="stripe-element"></div>
+                            <div id="card-expiry-errors" class="error-message"></div>
+                        </div>
+
+                        <!-- CVC -->
+                        <div class="form-group half-width">
+                            <label for="card-cvc">CVC</label>
+                            <div id="card-cvc" class="stripe-element"></div>
+                            <div id="card-cvc-errors" class="error-message"></div>
+                        </div>
+                    </div>
+
+                    <!-- Postal Code -->
+                    <div class="form-group">
+                        <label for="postal-code">Postal Code</label>
+                        <input type="text" id="postal-code" name="postal-code" placeholder="12345" required>
+                    </div>
+                </div>
+
+                <div id="payment-errors" class="error-message"></div>
+                <div id="payment-success" class="success-message"></div>
+
+                <button type="submit" id="submit-button" class="pay-button">
+                    <span class="lock-icon">🔒</span>
+                    PAY $4.99 SECURELY
+                </button>
+
+                <div class="security-info">
+                    <span class="security-badge">🔒 256-bit SSL encryption</span>
+                    <span class="powered-by">💳 Powered by Stripe</span>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <script src="stripe-payment.js"></script>
+
+</body>
+</html>

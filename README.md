@@ -11,7 +11,7 @@ A comprehensive web application featuring brain training games, educational cont
 - **Premium Games**: Advanced games and exclusive content for premium subscribers
 
 ### 🔐 User Management
-- **Authentication**: Secure login/signup with Appwrite backend
+- **Anonymous Usage**: No authentication required - all users are anonymous
 - **Password Reset**: Branded email templates for password recovery
 - **Email Verification**: Professional onboarding email system
 - **User Profiles**: Personalized experience and progress tracking
@@ -40,7 +40,7 @@ A comprehensive web application featuring brain training games, educational cont
 - Git installed on your system
 - Node.js (v14 or higher)
 - GitHub account
-- Appwrite account and project
+- No external dependencies required
 - Stripe account for payments
 
 ### 🔧 GitHub Setup (First Time)
@@ -88,7 +88,7 @@ A comprehensive web application featuring brain training games, educational cont
    ```
 
 4. **Configure Services**
-   - **Appwrite**: Follow instructions in `APPWRITE_EMAIL_SETUP.md`
+   - **No Setup Required**: Application works without any external services
    - **Stripe**: Follow instructions in `STRIPE_PAYMENT_README.md`
 
 5. **Start development server**
@@ -115,7 +115,7 @@ cerebray/
 ├── index.html                 # Main application entry point
 ├── script.js                  # Core application logic
 ├── styles.css                 # Main stylesheet
-├── auth-modal.js              # Authentication functionality
+├── auth-modal.js              # [REMOVED] Authentication functionality
 ├── premium-games.js           # Premium game implementations
 ├── user-tier-manager.js       # User subscription management
 ├── stripe-payment.js          # Payment processing
@@ -127,7 +127,7 @@ cerebray/
 ├── privacy-policy.html        # Privacy policy page
 ├── terms-of-service.html      # Terms of service page
 └── docs/                      # Documentation
-    ├── APPWRITE_EMAIL_SETUP.md
+    ├── APPWRITE_EMAIL_SETUP.md    # [REMOVED] No longer needed
     ├── STRIPE_PAYMENT_README.md
     └── CEREBRAY_EMAIL_BRANDING_GUIDE.md
 ```
@@ -135,7 +135,7 @@ cerebray/
 ## 🔧 Configuration
 
 ### Environment Setup
-1. **Appwrite Configuration**
+1. **No Configuration Required**
    - Project ID
    - API Endpoint
    - Database ID
@@ -153,7 +153,7 @@ cerebray/
 
 ### Key Files
 - `script.js` - Main application logic and game implementations
-- `auth-modal.js` - User authentication and session management
+- `auth-modal.js` - [REMOVED] Authentication system removed
 - `premium-games.js` - Premium content and game logic
 - `stripe-payment.js` - Payment processing and subscription handling
 - `user-tier-manager.js` - User tier and subscription management
@@ -182,13 +182,13 @@ cerebray/
 
 ### User Experience
 - Seamless premium upgrades
-- Persistent login sessions
+- Anonymous usage only
 - Progress tracking
 - Responsive design
 
 ### Security
 - Server-side payment validation
-- Secure authentication
+- No authentication required
 - Protected premium content
 - Transaction logging
 
@@ -217,7 +217,7 @@ All templates feature:
 ### Customizing Email Templates
 1. Edit templates in `email-templates/` directory
 2. Follow branding guidelines in `CEREBRAY_EMAIL_BRANDING_GUIDE.md`
-3. Test templates in Appwrite console
+3. No external setup required
 4. Update subject lines and content as needed
 
 ### Payment Integration
@@ -228,7 +228,7 @@ All templates feature:
 
 ## 📚 Documentation
 
-- **[Email Setup Guide](APPWRITE_EMAIL_SETUP.md)** - Complete Appwrite email configuration
+- **No Email Setup Required** - Authentication system removed
 - **[Payment Setup Guide](STRIPE_PAYMENT_README.md)** - Stripe integration instructions
 - **[Email Branding Guide](CEREBRAY_EMAIL_BRANDING_GUIDE.md)** - Email template customization
 
@@ -248,7 +248,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 For support and questions:
 - Check the documentation in the `docs/` folder
-- Review setup guides for Appwrite and Stripe
+- Review setup guide for Stripe (authentication removed)
 - Open an issue for bugs or feature requests
 
 ## 🎯 Roadmap

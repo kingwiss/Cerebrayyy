@@ -13,6 +13,18 @@ class PremiumGames {
         this.touchEndY = 0;
     }
     
+    // Add haptic feedback for touch interactions
+    addHapticFeedback(intensity = 'medium') {
+        if ('vibrate' in navigator) {
+            const patterns = {
+                'light': 10,
+                'medium': 25,
+                'heavy': 50
+            };
+            navigator.vibrate(patterns[intensity] || patterns.medium);
+        }
+    }
+    
     initGame(gameType, container) {
         this.gameContainer = container;
         this.currentGame = gameType;
@@ -69,15 +81,39 @@ class PremiumGames {
                     </div>
                 </div>
                 <div class="sudoku-grid" id="sudokuGrid"></div>
-                <div class="number-pad">
-                    ${[1,2,3,4,5,6,7,8,9].map(n => `<button class="number-btn" onclick="premiumGames.selectNumber(${n})">${n}</button>`).join('')}
-                    <button class="number-btn erase" onclick="premiumGames.selectNumber(0)">✖</button>
+                <div class="number-pad" id="numberPad">
+                    ${[1,2,3,4,5,6,7,8,9].map(n => `<button class="number-btn" data-number="${n}">${n}</button>`).join('')}
+                    <button class="number-btn erase" data-number="0">✖</button>
                 </div>
             </div>
         `;
         
         this.gameContainer.innerHTML = sudokuHTML;
+        this.setupSudokuEventListeners();
         this.generateSudoku();
+    }
+    
+    setupSudokuEventListeners() {
+        const numberPad = document.getElementById('numberPad');
+        const numberButtons = numberPad.querySelectorAll('.number-btn');
+        
+        numberButtons.forEach(button => {
+            const number = parseInt(button.dataset.number);
+            
+            // Click event
+            button.addEventListener('click', () => {
+                this.addHapticFeedback('light');
+                this.selectNumber(number);
+            });
+            
+            // Touch event
+            button.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.addHapticFeedback('light');
+                this.selectNumber(number);
+            }, { passive: false });
+        });
     }
     
     generateSudoku() {
@@ -578,11 +614,15 @@ class PremiumGames {
             cardElement.dataset.index = index;
             cardElement.innerHTML = '<div class="card-back">?</div><div class="card-front">' + card + '</div>';
             // Mouse events
-            cardElement.addEventListener('click', () => this.flipMemoryCard(index));
+            cardElement.addEventListener('click', () => {
+                this.addHapticFeedback('light');
+                this.flipMemoryCard(index);
+            });
             
             // Touch events for mobile
             cardElement.addEventListener('touchend', (e) => {
                 e.preventDefault();
+                this.addHapticFeedback('light');
                 this.flipMemoryCard(index);
             }, { passive: false });
             grid.appendChild(cardElement);
@@ -627,6 +667,7 @@ class PremiumGames {
     
     // Utility methods for game controls
     startTetris() {
+        this.addHapticFeedback('medium');
         if (!this.tetrisGameRunning) {
             this.tetrisGameRunning = true;
             this.spawnTetrisPiece();
@@ -635,10 +676,12 @@ class PremiumGames {
     }
     
     pauseTetris() {
+        this.addHapticFeedback('light');
         this.tetrisGameRunning = false;
     }
     
     moveTetris(direction) {
+        this.addHapticFeedback('light');
         if (!this.currentPiece) return;
         
         const newPiece = { ...this.currentPiece };
@@ -664,6 +707,7 @@ class PremiumGames {
     }
     
     rotateTetris() {
+        this.addHapticFeedback('light');
         if (!this.currentPiece) return;
         
         const rotatedShape = this.rotateMatrix(this.currentPiece.shape);
@@ -776,6 +820,7 @@ class PremiumGames {
     }
     
     startSnake() {
+        this.addHapticFeedback('medium');
         if (!this.snakeGameRunning) {
             this.snakeGameRunning = true;
             this.snakeGameLoop();
@@ -783,6 +828,7 @@ class PremiumGames {
     }
     
     moveSnake(direction) {
+        this.addHapticFeedback('light');
         switch(direction) {
             case 'up':
                 this.snakeDirection = { x: 0, y: -20 };
@@ -842,6 +888,7 @@ class PremiumGames {
     }
     
     startPacman() {
+        this.addHapticFeedback('medium');
         if (!this.pacmanGameRunning) {
             this.pacmanGameRunning = true;
             this.pacmanGameLoop();
@@ -942,6 +989,7 @@ class PremiumGames {
     }
     
     movePacman(direction) {
+        this.addHapticFeedback('light');
         const newPos = { ...this.pacman };
         
         switch(direction) {
@@ -975,19 +1023,23 @@ class PremiumGames {
     }
     
     newMemoryGame() {
+        this.addHapticFeedback('medium');
         this.setupMemory();
     }
     
     newSudoku() {
+        this.addHapticFeedback('medium');
         this.generateSudoku();
     }
     
     solveSudoku() {
+        this.addHapticFeedback('light');
         // Simple solve (show solution)
         alert('Sudoku solver feature coming soon!');
     }
     
     checkSudoku() {
+        this.addHapticFeedback('light');
         // Simple validation
         alert('Sudoku checker feature coming soon!');
     }
@@ -1484,9 +1536,13 @@ class PremiumGames {
                     }
                     
                     // Enhanced touch and click handling
-                    cell.addEventListener('click', (e) => this.selectCell(e.target));
+                    cell.addEventListener('click', (e) => {
+                        this.addHapticFeedback('light');
+                        this.selectCell(e.target);
+                    });
                     cell.addEventListener('touchstart', (e) => {
                         e.preventDefault();
+                        this.addHapticFeedback('light');
                         this.selectCell(e.target);
                     });
                     cell.addEventListener('touchend', (e) => {
@@ -1540,9 +1596,13 @@ class PremiumGames {
             const clueDiv = document.createElement('div');
             clueDiv.className = 'clue-item';
             clueDiv.innerHTML = `<strong>${this.getWordNumber(word.row, word.col)}.</strong> ${word.clue}`;
-            clueDiv.addEventListener('click', () => this.selectWord(word));
+            clueDiv.addEventListener('click', () => {
+                this.addHapticFeedback('light');
+                this.selectWord(word);
+            });
                 clueDiv.addEventListener('touchstart', (e) => {
                     e.preventDefault();
+                    this.addHapticFeedback('light');
                     this.selectWord(word);
                 });
                 clueDiv.addEventListener('touchend', (e) => {
@@ -1563,9 +1623,13 @@ class PremiumGames {
             const clueDiv = document.createElement('div');
             clueDiv.className = 'clue-item';
             clueDiv.innerHTML = `<strong>${this.getWordNumber(word.row, word.col)}.</strong> ${word.clue}`;
-            clueDiv.addEventListener('click', () => this.selectWord(word));
+            clueDiv.addEventListener('click', () => {
+                this.addHapticFeedback('light');
+                this.selectWord(word);
+            });
             clueDiv.addEventListener('touchstart', (e) => {
                 e.preventDefault();
+                this.addHapticFeedback('light');
                 this.selectWord(word);
             });
             clueDiv.addEventListener('touchend', (e) => {
@@ -1835,6 +1899,7 @@ class PremiumGames {
     }
     
     showMobileKeyboard() {
+        this.addHapticFeedback('light');
         const keyboard = document.getElementById('mobileKeyboard');
         if (keyboard) {
             keyboard.style.display = 'block';
@@ -1842,6 +1907,7 @@ class PremiumGames {
     }
     
     hideMobileKeyboard() {
+        this.addHapticFeedback('light');
         const keyboard = document.getElementById('mobileKeyboard');
         if (keyboard) {
             keyboard.style.display = 'none';
@@ -1849,6 +1915,7 @@ class PremiumGames {
     }
     
     insertLetter(letter) {
+        this.addHapticFeedback('light');
         if (this.selectedCell && this.selectedCell.classList.contains('active-cell')) {
             this.selectedCell.textContent = letter;
             this.updateStats();
@@ -1859,6 +1926,7 @@ class PremiumGames {
     }
     
     deleteLetter() {
+        this.addHapticFeedback('light');
         if (this.selectedCell && this.selectedCell.classList.contains('active-cell')) {
             if (this.selectedCell.textContent === '') {
                 // If current cell is empty, move to previous cell and delete
@@ -2016,6 +2084,7 @@ class PremiumGames {
     }
     
     startGalaga() {
+        this.addHapticFeedback('medium');
         if (!this.galagaGameRunning) {
             this.galagaGameRunning = true;
             this.galagaGameLoop();
@@ -2023,10 +2092,12 @@ class PremiumGames {
     }
     
     pauseGalaga() {
+        this.addHapticFeedback('light');
         this.galagaGameRunning = false;
     }
     
     moveShip(direction) {
+        this.addHapticFeedback('light');
         if (direction === 'left' && this.ship.x > 0) {
             this.ship.x -= this.ship.speed;
         } else if (direction === 'right' && this.ship.x < this.galagaCanvas.width - this.ship.width) {
@@ -2036,6 +2107,7 @@ class PremiumGames {
     }
     
     shoot() {
+        this.addHapticFeedback('light');
         this.bullets.push({
             x: this.ship.x + this.ship.width / 2,
             y: this.ship.y,
@@ -2290,6 +2362,7 @@ class PremiumGames {
     }
     
     startBreakout() {
+        this.addHapticFeedback('medium');
         if (!this.breakoutGameRunning) {
             this.breakoutGameRunning = true;
             this.breakoutGameLoop();
@@ -2297,10 +2370,12 @@ class PremiumGames {
     }
     
     pauseBreakout() {
+        this.addHapticFeedback('light');
         this.breakoutGameRunning = false;
     }
     
     movePaddle(direction) {
+        this.addHapticFeedback('light');
         if (direction === 'left' && this.paddle.x > 0) {
             this.paddle.x -= this.paddle.speed;
         } else if (direction === 'right' && this.paddle.x < this.breakoutCanvas.width - this.paddle.width) {
@@ -2606,13 +2681,17 @@ class PremiumGames {
                 cell.dataset.col = j;
                 
                 // Mouse events
-                cell.addEventListener('mousedown', (e) => this.startWordSelection(e));
+                cell.addEventListener('mousedown', (e) => {
+                    this.addHapticFeedback('light');
+                    this.startWordSelection(e);
+                });
                 cell.addEventListener('mouseover', (e) => this.continueWordSelection(e));
                 cell.addEventListener('mouseup', (e) => this.endWordSelection(e));
                 
                 // Touch events for mobile
                 cell.addEventListener('touchstart', (e) => {
                     e.preventDefault(); // Prevent scrolling
+                    this.addHapticFeedback('light');
                     this.startWordSelection(e);
                 }, { passive: false });
                 
@@ -2752,6 +2831,7 @@ class PremiumGames {
     }
     
     newWordSearch() {
+        this.addHapticFeedback('medium');
         // Clear any existing timer
         clearInterval(this.wordSearchInterval);
         
@@ -3231,9 +3311,13 @@ class PremiumGames {
         // Add click handler for stock pile
         const stockPile = document.getElementById('stockPile');
         if (stockPile) {
-            stockPile.addEventListener('click', () => this.drawCard());
+            stockPile.addEventListener('click', () => {
+                this.addHapticFeedback('light');
+                this.drawCard();
+            });
             stockPile.addEventListener('touchend', (e) => {
                 e.preventDefault();
+                this.addHapticFeedback('light');
                 this.drawCard();
             });
         }
@@ -3299,6 +3383,7 @@ class PremiumGames {
     }
     
     showHint() {
+        this.addHapticFeedback('light');
         // Check for possible moves to foundations
         for (let col = 0; col < 7; col++) {
             if (this.solitaire.tableau[col].length > 0) {
@@ -3352,6 +3437,7 @@ class PremiumGames {
 
     
     autoMove() {
+        this.addHapticFeedback('medium');
         let movesMade = 0;
         let maxMoves = 10; // Prevent infinite loops
         
@@ -3543,6 +3629,8 @@ class PremiumGames {
             return;
         }
         
+        this.addHapticFeedback('light');
+        
         if (!this.mineStartTime) {
             this.mineStartTime = Date.now();
             this.startMineTimer();
@@ -3594,6 +3682,8 @@ class PremiumGames {
         if (this.mineRevealed[row][col] || this.mineGameOver) {
             return;
         }
+        
+        this.addHapticFeedback('light');
         
         this.mineFlagged[row][col] = !this.mineFlagged[row][col];
         const cell = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
@@ -3656,6 +3746,7 @@ class PremiumGames {
     }
     
     newMinesweeperGame() {
+        this.addHapticFeedback('medium');
         clearInterval(this.mineTimer);
         this.mineStartTime = null;
         document.getElementById('mineTime').textContent = '0';
@@ -3665,6 +3756,7 @@ class PremiumGames {
     }
     
     toggleMineMode() {
+        this.addHapticFeedback('light');
         this.mineFlagMode = !this.mineFlagMode;
         document.getElementById('flagMode').textContent = this.mineFlagMode ? 'ON' : 'OFF';
     }

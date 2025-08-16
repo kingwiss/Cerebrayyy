@@ -112,6 +112,12 @@ class BoredomBusterApp {
             // Initialize the tier manager
             this.userTierManager = new UserTierManager();
             
+            // Set up event listener for premium activation from payment system
+            window.addEventListener('premiumActivated', (event) => {
+                console.log('🎉 Premium activated event received:', event.detail);
+                this.handlePremiumActivation(event.detail);
+            });
+            
             // Check subscription status and handle expiration
             const subscriptionStatus = this.userTierManager.checkSubscriptionStatus();
             if (subscriptionStatus.expired) {
@@ -173,6 +179,91 @@ class BoredomBusterApp {
             // Fallback to basic initialization
             await this.initializeDailyContentSystem();
             this.init();
+        }
+    }
+
+    // Handle premium activation from payment system
+    async handlePremiumActivation(premiumData) {
+        try {
+            console.log('🎉 Processing premium activation:', premiumData);
+            
+            // Update UserTierManager with subscription data
+            const subscriptionData = {
+                startDate: premiumData.startDate,
+                endDate: premiumData.endDate,
+                subscriptionId: premiumData.subscriptionId,
+                status: premiumData.status
+            };
+            
+            const result = await this.userTierManager.upgradeToPremium(subscriptionData);
+            
+            if (result.success) {
+                // Update app state
+                this.isPremiumMode = true;
+                
+                // Refresh content to show premium features
+                await this.refreshPremiumContent();
+                
+                // Update UI to reflect premium status
+                this.updatePremiumUI();
+                
+                // Show success message
+                this.showMessage('🎉 Welcome to Premium! You now have unlimited access to all features.', 'success');
+                
+                console.log('✅ Premium activation completed successfully');
+            } else {
+                console.error('❌ Failed to upgrade to premium:', result.error);
+                this.showMessage('❌ There was an issue activating your premium subscription. Please contact support.', 'error');
+            }
+            
+        } catch (error) {
+            console.error('❌ Error handling premium activation:', error);
+            this.showMessage('❌ There was an issue activating your premium subscription. Please contact support.', 'error');
+        }
+    }
+
+    // Refresh premium content after activation
+    async refreshPremiumContent() {
+        try {
+            // Get new premium cards
+            const todaysCards = await this.userTierManager.getTodaysCards();
+            this.premiumCards = todaysCards;
+            
+            // Refresh current cards display
+            await this.refreshCards();
+            
+            console.log('✅ Premium content refreshed');
+        } catch (error) {
+            console.error('❌ Error refreshing premium content:', error);
+        }
+    }
+
+    // Update UI to show premium status
+    updatePremiumUI() {
+        try {
+            // Update premium button if it exists
+            const premiumBtn = document.getElementById('premiumBtn');
+            if (premiumBtn) {
+                premiumBtn.innerHTML = '<i class="fas fa-crown"></i> Premium Active';
+                premiumBtn.classList.add('premium-active');
+            }
+            
+            // Update any premium indicators
+            const premiumIndicators = document.querySelectorAll('.premium-indicator');
+            premiumIndicators.forEach(indicator => {
+                indicator.style.display = 'block';
+            });
+            
+            // Update tier display if it exists
+            const tierDisplay = document.querySelector('.user-tier');
+            if (tierDisplay) {
+                tierDisplay.textContent = 'Premium';
+                tierDisplay.classList.add('premium-tier');
+            }
+            
+            console.log('✅ Premium UI updated');
+        } catch (error) {
+            console.error('❌ Error updating premium UI:', error);
         }
     }
 
@@ -431,7 +522,7 @@ class BoredomBusterApp {
     createSVGEntranceAnimation(img, container) {
         // Set initial state
         img.style.cssText += `
-            transform: scale(0.3) rotate(-10deg);
+            transform: rotate(-10deg) translateY(20px);
             opacity: 0;
             filter: blur(8px);
             transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -446,7 +537,7 @@ class BoredomBusterApp {
         // Trigger animation after a brief delay
         setTimeout(() => {
             img.style.cssText += `
-                transform: scale(1) rotate(0deg);
+                transform: rotate(0deg) translateY(0px);
                 opacity: 1;
                 filter: blur(0px);
             `;
@@ -455,9 +546,9 @@ class BoredomBusterApp {
             
             // Add a subtle bounce effect
             setTimeout(() => {
-                img.style.transform = 'scale(1.05) rotate(0deg)';
+                img.style.transform = 'rotate(0deg) translateY(-2px)';
                 setTimeout(() => {
-                    img.style.transform = 'scale(1) rotate(0deg)';
+                    img.style.transform = 'rotate(0deg) translateY(0px)';
                 }, 150);
             }, 400);
             
@@ -471,7 +562,7 @@ class BoredomBusterApp {
     createImageEntranceAnimation(img, container) {
         // Set initial state
         img.style.cssText += `
-            transform: scale(0.8) translateY(10px);
+            transform: translateY(10px);
             opacity: 0;
             transition: all 0.6s ease-out;
         `;
@@ -484,7 +575,7 @@ class BoredomBusterApp {
         // Trigger animation
         setTimeout(() => {
             img.style.cssText += `
-                transform: scale(1) translateY(0px);
+                transform: translateY(0px);
                 opacity: 1;
             `;
             
@@ -504,16 +595,16 @@ class BoredomBusterApp {
             style.textContent = `
                 @keyframes svgFloat {
                     0%, 100% { 
-                        transform: translateY(0px) scale(1) rotate(0deg); 
+                        transform: translateY(0px) rotate(0deg); 
                     }
                     25% { 
-                        transform: translateY(-3px) scale(1.02) rotate(0.5deg); 
+                        transform: translateY(-3px) rotate(0.5deg); 
                     }
                     50% { 
-                        transform: translateY(-1px) scale(1.01) rotate(0deg); 
+                        transform: translateY(-1px) rotate(0deg); 
                     }
                     75% { 
-                        transform: translateY(-2px) scale(1.015) rotate(-0.5deg); 
+                        transform: translateY(-2px) rotate(-0.5deg); 
                     }
                 }
                 
@@ -532,8 +623,8 @@ class BoredomBusterApp {
                 
                 .svg-floating:hover {
                     animation-duration: 2s, 3s;
-                    transform: scale(1.05) !important;
-                    transition: transform 0.3s ease-out;
+                    filter: brightness(1.1) !important;
+                    transition: filter 0.3s ease-out;
                 }
             `;
             document.head.appendChild(style);
@@ -4693,7 +4784,7 @@ class BoredomBusterApp {
 
     buildActionButton(activity) {
         if (activity.action === 'play') {
-            return `<button class="play-btn" onclick="app.openGame('${activity.gameType}', '${activity.title}')">
+            return `<button class="play-btn game-play-btn" data-game-type="${activity.gameType}" data-game-title="${activity.title}">
                 <i class="fas fa-play"></i> Play Game
             </button>`;
         } else if (activity.action === 'solve' || activity.action === 'Show Answer' || activity.action === 'Show Solution') {
@@ -4775,8 +4866,19 @@ class BoredomBusterApp {
         const cardBackBtn = card.querySelector('.card-back-btn');
         const cardSaveBtn = card.querySelector('.card-save-btn');
 
+        // Helper function to add both click and touch events
+        const addTouchOptimizedListener = (element, handler) => {
+            if (!element) return;
+            
+            // Add click event for desktop and touch devices
+            element.addEventListener('click', handler);
+            
+            // Touch feedback is now handled by the clean touch system
+            // No need for additional touch event handling here
+        };
+
         if (showAnswerBtn) {
-            showAnswerBtn.addEventListener('click', (e) => {
+            addTouchOptimizedListener(showAnswerBtn, (e) => {
                 e.stopPropagation();
                 this.userHasInteracted = true;
                 const answer = activity.answer || activity.solution || '';
@@ -4797,7 +4899,7 @@ class BoredomBusterApp {
                 soundToggle.title = this.soundEnabled ? 'Click to disable sound' : 'Click to enable sound';
             }
             
-            soundToggle.addEventListener('click', (e) => {
+            addTouchOptimizedListener(soundToggle, (e) => {
                 e.stopPropagation();
                 this.userHasInteracted = true;
                 this.toggleSound(card);
@@ -4805,7 +4907,7 @@ class BoredomBusterApp {
         }
 
         if (cardBackBtn) {
-            cardBackBtn.addEventListener('click', (e) => {
+            addTouchOptimizedListener(cardBackBtn, (e) => {
                 e.stopPropagation();
                 this.userHasInteracted = true;
                 this.bringBackLastCard();
@@ -4818,10 +4920,22 @@ class BoredomBusterApp {
             this.updateSaveButtonAppearance(cardSaveBtn, isSaved);
             card.dataset.cardId = cardId;
             
-            cardSaveBtn.addEventListener('click', (e) => {
+            addTouchOptimizedListener(cardSaveBtn, (e) => {
                 e.stopPropagation();
                 this.userHasInteracted = true;
                 this.toggleSaveCard(activity);
+            });
+        }
+
+        // Add touch-optimized listener for game play buttons
+        const gamePlayBtn = card.querySelector('.game-play-btn');
+        if (gamePlayBtn) {
+            addTouchOptimizedListener(gamePlayBtn, (e) => {
+                e.stopPropagation();
+                this.userHasInteracted = true;
+                const gameType = gamePlayBtn.getAttribute('data-game-type');
+                const gameTitle = gamePlayBtn.getAttribute('data-game-title');
+                this.openGame(gameType, gameTitle);
             });
         }
 
@@ -4853,7 +4967,7 @@ class BoredomBusterApp {
         
         let actionButton = '';
         if (activity.action === 'play') {
-            actionButton = `<button class="play-btn" onclick="app.openGame('${activity.gameType}', '${activity.title}')">
+            actionButton = `<button class="play-btn game-play-btn" data-game-type="${activity.gameType}" data-game-title="${activity.title}">
                 <i class="fas fa-play"></i> Play Game
             </button>`;
         } else if (activity.action === 'solve' || activity.action === 'Show Answer' || activity.action === 'Show Solution') {
@@ -5099,11 +5213,11 @@ class BoredomBusterApp {
         let scrollStartTime = 0;
         let animationFrame = null;
         
-        // Performance optimization: Use transform3d for hardware acceleration
-        const setCardTransform = (x, y, rotation, scale, opacity) => {
+        // Performance optimization: Use transform3d for hardware acceleration without scale to prevent blurriness
+        const setCardTransform = (x, y, rotation, opacity) => {
             // Use transform3d for hardware acceleration and batch DOM updates
             // Cache the transform string to reduce string concatenation overhead
-            const transform = `translate3d(${x}px, ${y}px, 0) rotate(${rotation}deg) scale(${scale})`;
+            const transform = `translate3d(${x}px, ${y}px, 0) rotate(${rotation}deg)`;
             card.style.transform = transform;
             card.style.opacity = opacity;
         };
@@ -5113,13 +5227,12 @@ class BoredomBusterApp {
             if (animationFrame) return; // Skip if animation frame is already queued
             
             animationFrame = requestAnimationFrame(() => {
-                // Optimized calculations with reduced complexity
+                // Optimized calculations with reduced complexity - no scale to prevent blurriness
                 const rotation = deltaX * 0.1; // Reduced rotation factor for smoother feel
-                const scale = Math.max(0.98, 1 - Math.abs(deltaX) * 0.0003); // Less aggressive scaling
                 const verticalOffset = Math.abs(deltaX) * 0.05; // Reduced vertical movement
-                const opacity = Math.max(0.5, 1 - Math.abs(deltaX) * 0.001); // Less aggressive opacity change
+                const opacity = Math.max(0.7, 1 - Math.abs(deltaX) * 0.001); // Less aggressive opacity change
                 
-                setCardTransform(deltaX, -verticalOffset, rotation, scale, opacity);
+                setCardTransform(deltaX, -verticalOffset, rotation, opacity);
                 animationFrame = null;
             });
         };
@@ -5130,8 +5243,17 @@ class BoredomBusterApp {
                 return;
             }
             
-            // Check if the touch started on a scrollable area
+            // Check if the touch started on a button or interactive element
             const target = e.target;
+            const isButton = target.matches('button, .btn, .card-back-btn, .card-save-btn, .play-btn, .sound-toggle, .show-answer-btn') || 
+                           target.closest('button, .btn, .card-back-btn, .card-save-btn, .play-btn, .sound-toggle, .show-answer-btn');
+            
+            // Don't handle swipe if touching a button
+            if (isButton) {
+                return;
+            }
+            
+            // Check if the touch started on a scrollable area
             const cardContent = card.querySelector('.card-content');
             const isOnScrollableContent = cardContent && cardContent.contains(target);
             
@@ -5155,9 +5277,8 @@ class BoredomBusterApp {
                 animationFrame = null;
             }
             
-            // For touch events, prevent default to avoid scroll conflicts
-            if (e.type === 'touchstart') {
-                // Always prevent default on touchstart to avoid scroll conflicts
+            // For touch events, only prevent default if not on scrollable content
+            if (e.type === 'touchstart' && !isOnScrollableContent) {
                 e.preventDefault();
                 card.style.transition = 'none';
                 card.style.cursor = 'grabbing';
@@ -5302,9 +5423,9 @@ class BoredomBusterApp {
                 const finalX = direction * (window.innerWidth + 150);
                 const finalRotation = direction * 25 + (velocity * 30); // Reduced rotation for smoother feel
                 
-                // Use faster, more optimized transition
+                // Use faster, more optimized transition without scale to prevent blurriness
                 card.style.transition = 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease-out';
-                card.style.transform = `translate3d(${finalX}px, -80px, 0) rotate(${finalRotation}deg) scale(0.85)`;
+                card.style.transform = `translate3d(${finalX}px, -80px, 0) rotate(${finalRotation}deg)`;
                 card.style.opacity = '0';
                 
                 // Add swipe class for additional styling
@@ -5331,9 +5452,9 @@ class BoredomBusterApp {
                     }, 200); // Reduced delay for faster audio response
                 }, 600); // Reduced from 800ms for faster card replacement
             } else {
-                // Optimized snap back animation
+                // Optimized snap back animation without scale to prevent blurriness
                 card.style.transition = 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease-out';
-                card.style.transform = 'translate3d(0, 0, 0) rotate(0deg) scale(1)';
+                card.style.transform = 'translate3d(0, 0, 0) rotate(0deg)';
                 card.style.opacity = '1';
                 card.style.zIndex = '';
                 
@@ -5392,7 +5513,7 @@ class BoredomBusterApp {
         
         // Position it at the back
         newCard.style.zIndex = '1';
-        newCard.style.transform = 'translateX(-60px) translateY(30px) rotate(-15deg) translateY(100px)';
+        newCard.style.transform = 'translateX(-60px) translateY(30px) rotate(0deg) translateY(100px)';
         newCard.style.opacity = '0';
         
         this.cardsContainer.appendChild(newCard);
@@ -5400,7 +5521,7 @@ class BoredomBusterApp {
         // Animate in
         setTimeout(() => {
             newCard.style.opacity = '1';
-            newCard.style.transform = 'translateX(-60px) translateY(30px) rotate(-15deg)';
+            newCard.style.transform = 'translateX(-60px) translateY(30px) rotate(0deg)';
             
             // Play swoosh sound as new card animates in
             this.playSwooshSound();
@@ -5959,12 +6080,12 @@ class BoredomBusterApp {
                     const targetCell = board.children[index];
                     targetCell.style.backgroundColor = player === 'red' ? '#ff6b6b' : '#4ecdc4';
                     targetCell.style.borderRadius = '50%';
-                    targetCell.style.transform = 'scale(0)';
+                    targetCell.style.opacity = '0';
                     
                     // Animate piece drop
                     setTimeout(() => {
-                        targetCell.style.transform = 'scale(1)';
-                        targetCell.style.transition = 'transform 0.3s ease-out';
+                        targetCell.style.opacity = '1';
+                        targetCell.style.transition = 'opacity 0.3s ease-out';
                     }, 50);
                     
                     return index;
@@ -8420,6 +8541,63 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Initialize user tier manager and check premium status
         initializePremiumStatus();
+        
+        // Setup touch screen optimizations
+        // Clean Touch System Implementation
+        function setupCleanTouchSystem() {
+            // Simple touch feedback without conflicts
+            const addSimpleTouchFeedback = (element) => {
+                if (!element || element.hasAttribute('data-touch-enabled')) return;
+                
+                element.setAttribute('data-touch-enabled', 'true');
+                
+                element.addEventListener('touchstart', function(e) {
+                    this.style.opacity = '0.7';
+                    this.style.transform = 'scale(0.98)';
+                }, { passive: true });
+                
+                element.addEventListener('touchend', function(e) {
+                    this.style.opacity = '';
+                    this.style.transform = '';
+                }, { passive: true });
+                
+                element.addEventListener('touchcancel', function(e) {
+                    this.style.opacity = '';
+                    this.style.transform = '';
+                }, { passive: true });
+            };
+            
+            // Apply to card buttons only
+            const cardButtons = document.querySelectorAll('.card-back-btn, .card-save-btn, .play-btn, .sound-toggle, .show-answer-btn');
+            cardButtons.forEach(addSimpleTouchFeedback);
+            
+            // Observer for new card buttons
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    mutation.addedNodes.forEach((node) => {
+                        if (node.nodeType === Node.ELEMENT_NODE) {
+                            if (node.matches && node.matches('.card-back-btn, .card-save-btn, .play-btn, .sound-toggle, .show-answer-btn')) {
+                                addSimpleTouchFeedback(node);
+                            }
+                            const newButtons = node.querySelectorAll && node.querySelectorAll('.card-back-btn, .card-save-btn, .play-btn, .sound-toggle, .show-answer-btn');
+                            if (newButtons) {
+                                newButtons.forEach(addSimpleTouchFeedback);
+                            }
+                        }
+                    });
+                });
+            });
+            
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        }
+        
+        // Initialize clean touch system for touch devices
+        if ('ontouchstart' in window) {
+            setupCleanTouchSystem();
+        }
         
 
         

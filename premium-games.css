@@ -34,13 +34,23 @@
     background: linear-gradient(45deg, #ff6b6b, #ee5a24);
     color: white;
     border: none;
-    padding: 8px 16px;
+    padding: 12px 16px;
     border-radius: 20px;
     cursor: pointer;
     font-weight: bold;
     transition: all 0.3s ease;
     touch-action: manipulation;
-    min-height: 44px; /* Touch-friendly minimum */
+    min-height: 52px;
+    min-width: 52px;
+    margin: 8px;
+    font-size: 16px;
+    /* Enhanced touch feedback */
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    position: relative;
+    overflow: hidden;
 }
 
 .game-btn:hover {
@@ -76,8 +86,14 @@
     font-weight: bold;
     cursor: pointer;
     transition: all 0.2s ease;
-    min-height: 35px;
+    min-height: 40px;
     border-radius: 3px;
+    /* Touch optimizations */
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
 }
 
 .sudoku-cell:hover {
@@ -112,8 +128,16 @@
     font-weight: bold;
     cursor: pointer;
     transition: all 0.2s ease;
-    min-height: 50px;
+    min-height: 52px;
+    min-width: 52px;
     touch-action: manipulation;
+    /* Enhanced touch feedback */
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    position: relative;
+    overflow: hidden;
 }
 
 .number-btn:hover {
@@ -165,9 +189,16 @@
     font-size: 1.5em;
     cursor: pointer;
     transition: all 0.2s ease;
-    min-width: 50px;
-    min-height: 50px;
+    min-width: 52px;
+    min-height: 52px;
     touch-action: manipulation;
+    /* Enhanced touch feedback */
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    position: relative;
+    overflow: hidden;
 }
 
 .control-btn:hover {
@@ -241,6 +272,11 @@
     transform-style: preserve-3d;
     min-height: 80px;
     touch-action: manipulation;
+    /* Enhanced touch feedback */
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
 }
 
 .memory-card:hover {
@@ -294,8 +330,8 @@
 }
 
 .word-search-cell {
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
     background: white;
     color: #333;
     display: flex;
@@ -307,6 +343,11 @@
     cursor: pointer;
     transition: all 0.2s ease;
     user-select: none;
+    /* Enhanced touch feedback */
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
 }
 
 .word-search-cell:hover {
@@ -343,6 +384,199 @@
     margin-bottom: 8px;
     font-weight: bold;
     transition: all 0.2s ease;
+}
+
+/* Touch-specific feedback for all game elements */
+@media (hover: none) and (pointer: coarse) {
+    .game-btn:active {
+        transform: scale(0.95);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+    
+    .game-btn::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.3s ease, height 0.3s ease;
+        pointer-events: none;
+    }
+    
+    .game-btn:active::before {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .number-btn:active {
+        transform: scale(0.95);
+    }
+    
+    .number-btn::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.3s ease, height 0.3s ease;
+        pointer-events: none;
+    }
+    
+    .number-btn:active::before {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .control-btn:active {
+        transform: scale(0.9);
+    }
+    
+    .control-btn::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.3s ease, height 0.3s ease;
+        pointer-events: none;
+    }
+    
+    .control-btn:active::before {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .sudoku-cell:active {
+        transform: scale(0.95);
+        background: rgba(33, 150, 243, 0.2);
+    }
+    
+    .word-search-cell:active {
+        transform: scale(0.95);
+        background: rgba(33, 150, 243, 0.2);
+    }
+    
+    .memory-card:active {
+        transform: scale(0.95);
+    }
+}
+
+/* Mobile-specific layouts */
+@media (max-width: 768px) {
+    .premium-game-container {
+        padding: 15px;
+        margin: 5px 0;
+    }
+    
+    .game-header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .game-controls, .game-stats {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .game-btn {
+        min-height: 56px;
+        min-width: 56px;
+        font-size: 18px;
+        padding: 16px 20px;
+    }
+    
+    .sudoku-grid {
+        max-width: 320px;
+        gap: 1px;
+    }
+    
+    .sudoku-cell {
+        min-height: 35px;
+        font-size: 1.1em;
+    }
+    
+    .number-pad {
+        max-width: 280px;
+        gap: 8px;
+    }
+    
+    .number-btn {
+        min-height: 56px;
+        min-width: 56px;
+        font-size: 1.3em;
+        padding: 18px;
+    }
+    
+    .control-btn {
+        min-height: 56px;
+        min-width: 56px;
+        font-size: 1.6em;
+        padding: 18px;
+    }
+    
+    .memory-grid {
+        max-width: 320px;
+        gap: 8px;
+    }
+    
+    .memory-card {
+        min-height: 70px;
+    }
+    
+    .word-search-grid {
+        max-width: 320px;
+        gap: 1px;
+    }
+    
+    .word-search-cell {
+        width: 28px;
+        height: 28px;
+        font-size: 0.9em;
+    }
+    
+    .word-list {
+        min-width: 100%;
+        margin-top: 20px;
+    }
+    
+    .tetris-container,
+    .pacman-container,
+    .snake-container,
+    .word-search-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .tetris-controls,
+    .pacman-controls,
+    .snake-controls {
+        margin-top: 20px;
+        min-width: 100%;
+    }
+    
+    .control-row {
+        gap: 15px;
+    }
+    
+    #tetrisCanvas,
+    #pacmanCanvas,
+    #snakeCanvas {
+        max-width: 100%;
+        height: auto;
+    }
 }
 
 .word-item.found {
@@ -1272,8 +1506,18 @@
     }
     
     #tetrisCanvas, #pacmanCanvas, #snakeCanvas {
+        max-width: 100%;
         width: 280px;
         height: 280px;
+        margin: 0 auto;
+        display: block;
+    }
+    
+    /* Ensure canvas games fit on very small screens */
+    .tetris-container, .pacman-container, .snake-container {
+        max-width: 100%;
+        overflow-x: auto;
+        padding: 0 5px;
     }
     
     .memory-grid {
@@ -1311,13 +1555,44 @@
 /* Touch-specific optimizations */
 @media (hover: none) and (pointer: coarse) {
     .control-btn, .game-btn, .number-btn, .memory-card, .sudoku-cell, .word-search-cell, .mine-cell {
-        min-height: 44px;
-        min-width: 44px;
+        min-height: 52px;
+        min-width: 52px;
+        padding: 12px 16px;
+        margin: 10px 6px;
+        font-size: 18px;
         -webkit-tap-highlight-color: rgba(0,0,0,0);
         touch-action: manipulation;
+        transition: all 0.15s ease;
         user-select: none;
         -webkit-user-select: none;
         -webkit-touch-callout: none;
+        /* Enhanced touch feedback */
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .game-btn:active {
+        transform: scale(0.95);
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .game-btn::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.3s ease, height 0.3s ease;
+        pointer-events: none;
+    }
+    
+    .game-btn:active::before {
+        width: 100px;
+        height: 100px;
     }
     
     .control-btn:hover, .game-btn:hover, .number-btn:hover {
@@ -1461,6 +1736,45 @@
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+/* Extra small screens for canvas games */
+@media (max-width: 360px) {
+    #tetrisCanvas, #pacmanCanvas, #snakeCanvas {
+        width: 240px !important;
+        height: 240px !important;
+        max-width: 95% !important;
+    }
+    
+    .tetris-container, .pacman-container, .snake-container {
+        padding: 0 2px;
+    }
+    
+    .game-controls {
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+    
+    .control-btn {
+        padding: 8px;
+        font-size: 0.85em;
+        min-width: 60px;
+    }
+}
+
+/* Ultra small screens for canvas games */
+@media (max-width: 300px) {
+    #tetrisCanvas, #pacmanCanvas, #snakeCanvas {
+        width: 200px !important;
+        height: 200px !important;
+        max-width: 90% !important;
+    }
+    
+    .control-btn {
+        padding: 6px;
+        font-size: 0.8em;
+        min-width: 50px;
     }
 }
 

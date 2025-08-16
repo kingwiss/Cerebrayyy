@@ -1,0 +1,17 @@
+[
+  {
+    "id": "1755325232102",
+    "email": "fred@me.com",
+    "username": "fred",
+    "password": "$2b$10$oILC1bvz8DQohP9TYwSnHeQ8LJXt9Qae8mJ0kvq2yPvOnPDhU7TWq",
+    "createdAt": "2025-08-16T06:20:32.103Z"
+  },
+  {
+    "id": "1755332985161",
+    "email": "fredwisseh@gmail.com",
+    "username": "fred",
+    "password": "$2b$10$F3kSzW97N6KMe2xefKlTEuyTrErvbCYaKfPPzCh6vppIBBqs07mDu",
+    "tier": "basic",
+    "createdAt": "2025-08-16T08:29:45.185Z"
+  }
+]

@@ -1,38 +1,4 @@
-// Blog page functionality with completely rebuilt commenting system
-
-// Global variables for blog functionality
-let blogAppwrite = {
-    client: null,
-    account: null,
-    currentUser: null,
-    isSignedIn: false
-};
-
-// Initialize Appwrite for blog page
-function initializeBlogAppwrite() {
-    try {
-        blogAppwrite.client = new Appwrite.Client()
-            .setEndpoint('https://nyc.cloud.appwrite.io/v1')
-            .setProject('68930d9a002e313013dc');
-        
-        blogAppwrite.account = new Appwrite.Account(blogAppwrite.client);
-        
-        console.log('Blog Appwrite initialized successfully');
-        
-        // Check for existing authentication
-        checkBlogAuth();
-        
-        // Start periodic auth sync
-        startAuthStateSync();
-        
-        // Setup localStorage listener for cross-page auth sync
-        setupStorageListener();
-        
-    } catch (error) {
-        console.error('Error initializing Blog Appwrite:', error);
-        setupOfflineMode();
-    }
-}
+// Blog page functionality with commenting system
 
 // ===== COMPLETELY REBUILT COMMENTING SYSTEM =====
 
@@ -86,78 +52,13 @@ const commentStorage = {
     }
 };
 
-// Authentication helper functions
-const authHelper = {
-    // Get current user info with proper priority
-    getCurrentUser: async function() {
-        console.log('Getting current user info...');
-        
-        // First, try to get fresh session from Appwrite
-        try {
-            const user = await blogAppwrite.account.get();
-            console.log('Found active Appwrite session:', user);
-            
-            // Update global state
-            blogAppwrite.currentUser = {
-                id: user.$id,
-                name: user.name,
-                email: user.email,
-                imageUrl: user.prefs?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=4ecdc4&color=fff`
-            };
-            blogAppwrite.isSignedIn = true;
-            
-            // Save to localStorage for consistency
-            const authState = {
-                currentUser: blogAppwrite.currentUser,
-                isSignedIn: true,
-                timestamp: Date.now()
-            };
-            localStorage.setItem('appwrite_auth_state', JSON.stringify(authState));
-            
-            return {
-                isAuthenticated: true,
-                user: blogAppwrite.currentUser
-            };
-            
-        } catch (error) {
-            console.log('No active Appwrite session, checking localStorage...');
-            
-            // Fallback to localStorage
-            try {
-                const storedAuth = localStorage.getItem('appwrite_auth_state');
-                if (storedAuth) {
-                    const authData = JSON.parse(storedAuth);
-                    if (authData.isSignedIn && authData.currentUser) {
-                        console.log('Using stored auth data:', authData.currentUser);
-                        
-                        // Update global state
-                        blogAppwrite.currentUser = authData.currentUser;
-                        blogAppwrite.isSignedIn = true;
-                        
-                        return {
-                            isAuthenticated: true,
-                            user: authData.currentUser
-                        };
-                    }
-                }
-            } catch (storageError) {
-                console.error('Error reading stored auth:', storageError);
-                localStorage.removeItem('appwrite_auth_state');
-            }
-        }
-        
-        // No authentication found
-        console.log('No authentication found');
-        blogAppwrite.currentUser = null;
-        blogAppwrite.isSignedIn = false;
-        
-        return {
-            isAuthenticated: false,
-            user: null
-        };
-    },
-    
-
+// Comment helper functions
+const commentHelper = {
+    // Check if user can delete a comment (simplified - no auth required)
+    canDeleteComment: function(comment) {
+        // For now, allow deletion of any comment since auth is removed
+        return true;
+    }
 };
 
 // Comment UI functions
@@ -387,22 +288,12 @@ const commentUI = {
     
     // Check if current user can delete a comment
     canDeleteComment: function(comment) {
-        if (!blogAppwrite.isSignedIn || !blogAppwrite.currentUser) {
-            return false;
-        }
-        return comment.userId === blogAppwrite.currentUser.id;
+        // Allow deletion of any comment since auth is removed
+        return true;
     },
     
-    // Add a new comment (requires authentication)
+    // Add a new comment (no authentication required)
     addComment: async function(postId) {
-        // Check if user is authenticated
-        const authInfo = await authHelper.getCurrentUser();
-        
-        if (!authInfo.isAuthenticated) {
-            this.showNotification('Please sign in to post a comment.', 'error');
-            return;
-        }
-        
         const textarea = document.getElementById(`comment-input-${postId}`);
         const content = textarea.value.trim();
         
@@ -411,11 +302,25 @@ const commentUI = {
             return;
         }
         
+        // Get current user from auth system
+        let author = 'Anonymous';
+        let userId = 'anonymous_' + Date.now();
+        let isAuthenticated = false;
+        
+        if (window.authSystem && window.authSystem.isAuthenticated()) {
+            const user = window.authSystem.getCurrentUser();
+            if (user) {
+                author = user.username;
+                userId = user.id;
+                isAuthenticated = true;
+            }
+        }
+        
         const commentData = {
             content: content,
-            author: authInfo.user.name,
-            userId: authInfo.user.id,
-            isAuthenticated: true
+            author: author,
+            userId: userId,
+            isAuthenticated: isAuthenticated
         };
         
         console.log('Adding comment with data:', commentData);
@@ -515,243 +420,16 @@ function addComment(postId) {
 
 
 
-// ===== AUTHENTICATION FUNCTIONS =====
+// ===== REMOVED AUTHENTICATION FUNCTIONS =====
+// Authentication system has been completely removed
 
-async function checkBlogAuth() {
-    console.log('Checking blog authentication...');
-    
-    try {
-        // First check localStorage for shared auth state
-        const authState = localStorage.getItem('appwrite_auth_state');
-        console.log('Auth state from localStorage:', authState);
-        
-        if (authState) {
-            const { currentUser, isSignedIn, timestamp } = JSON.parse(authState);
-            
-            // Check if the stored state is not too old (24 hours)
-            if (Date.now() - timestamp < 24 * 60 * 60 * 1000) {
-                console.log('Using cached auth state:', { currentUser, isSignedIn });
-                blogAppwrite.currentUser = currentUser;
-                blogAppwrite.isSignedIn = isSignedIn;
-                updateBlogUI();
-                return;
-            } else {
-                console.log('Cached auth state is too old, clearing...');
-                localStorage.removeItem('appwrite_auth_state');
-            }
-        }
-        
-        // If no valid localStorage state, check with Appwrite
-        console.log('Checking with Appwrite server...');
-        const user = await blogAppwrite.account.get();
-        console.log('Appwrite user data:', user);
-        
-        blogAppwrite.currentUser = {
-            id: user.$id,
-            name: user.name,
-            email: user.email,
-            imageUrl: user.prefs?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=4ecdc4&color=fff`
-        };
-        blogAppwrite.isSignedIn = true;
-        
-        // Update localStorage with fresh data
-        localStorage.setItem('appwrite_auth_state', JSON.stringify({
-            currentUser: blogAppwrite.currentUser,
-            isSignedIn: blogAppwrite.isSignedIn,
-            timestamp: Date.now()
-        }));
-        
-        console.log('Blog user authenticated:', blogAppwrite.currentUser);
-    } catch (error) {
-        console.log('Blog user not authenticated:', error.message);
-        blogAppwrite.currentUser = null;
-        blogAppwrite.isSignedIn = false;
-        
-        // Clear any stale localStorage data
-        localStorage.removeItem('appwrite_auth_state');
-        // NOTE: No longer calling setupBlogSignInButton() since buttons use openAuthModal()
-    }
-    
-    console.log('Final auth state:', {
-        isSignedIn: blogAppwrite.isSignedIn,
-        currentUser: blogAppwrite.currentUser
-    });
-    
-    updateBlogUI();
-}
+// UI update function removed - no authentication UI to manage
 
-function handleBlogSignInSuccess(user) {
-    blogAppwrite.currentUser = {
-        id: user.$id || user.id,
-        name: user.name,
-        email: user.email,
-        imageUrl: user.prefs?.avatar || user.imageUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=4ecdc4&color=fff`
-    };
-    blogAppwrite.isSignedIn = true;
-    
-    // Save authentication state to localStorage for sharing with main page
-    localStorage.setItem('appwrite_auth_state', JSON.stringify({
-        currentUser: blogAppwrite.currentUser,
-        isSignedIn: blogAppwrite.isSignedIn,
-        timestamp: Date.now()
-    }));
-    
-    console.log('✅ User signed in to blog:', blogAppwrite.currentUser);
-    updateBlogUI();
-}
+// Authentication setup functions removed
 
-async function signOutBlog() {
-    try {
-        await blogAppwrite.account.deleteSession('current');
-        blogAppwrite.currentUser = null;
-        blogAppwrite.isSignedIn = false;
-        
-        // Clear authentication state from localStorage
-        localStorage.removeItem('appwrite_auth_state');
-        
-        console.log('✅ User signed out successfully');
-        updateBlogUI();
-    } catch (error) {
-        console.error('❌ Error signing out:', error);
-        
-        // Even if server sign-out fails, clear local state
-        blogAppwrite.currentUser = null;
-        blogAppwrite.isSignedIn = false;
-        localStorage.removeItem('appwrite_auth_state');
-        updateBlogUI();
-    }
-}
+// Auth synchronization functions removed
 
-function updateBlogUI() {
-    // Handle different page types with different element IDs
-    const signInBtnContainer = document.getElementById('mainSignInBtn'); // blog.html, index.html
-    const appwriteSignInBtn = document.getElementById('appwriteSignInBtn'); // blog.html, index.html
-    const postSignInBtn = document.getElementById('signInBtn'); // post-*.html
-    const userProfile = document.getElementById('userProfile');
-    const userAvatar = document.getElementById('userAvatar');
-    const userName = document.getElementById('userName');
-    
-    // Comment form elements
-    const authRequired = document.getElementById('authRequired');
-    const commentForm = document.getElementById('commentForm');
-
-    console.log('🔄 Updating blog UI:', {
-        isSignedIn: blogAppwrite.isSignedIn,
-        currentUser: blogAppwrite.currentUser,
-        signInBtnContainer: !!signInBtnContainer,
-        appwriteSignInBtn: !!appwriteSignInBtn,
-        postSignInBtn: !!postSignInBtn,
-        userProfile: !!userProfile,
-        authRequired: !!authRequired,
-        commentForm: !!commentForm
-    });
-
-    if (blogAppwrite.isSignedIn && blogAppwrite.currentUser) {
-        console.log('✅ User is signed in, showing profile');
-        
-        // Hide all sign-in buttons
-        if (signInBtnContainer) signInBtnContainer.style.display = 'none';
-        if (appwriteSignInBtn) appwriteSignInBtn.style.display = 'none';
-        if (postSignInBtn) postSignInBtn.style.display = 'none';
-        
-        // Show user profile
-        if (userProfile) {
-            userProfile.style.display = 'flex';
-            if (userAvatar) userAvatar.src = blogAppwrite.currentUser.imageUrl;
-            if (userName) userName.textContent = blogAppwrite.currentUser.name;
-        }
-        
-        // Show comment form, hide auth required message
-        if (commentForm) commentForm.style.display = 'block';
-        if (authRequired) authRequired.style.display = 'none';
-    } else {
-        console.log('❌ User not signed in, showing sign-in buttons');
-        
-        // Show appropriate sign-in buttons based on page type
-        if (signInBtnContainer) signInBtnContainer.style.display = 'flex';
-        if (appwriteSignInBtn) appwriteSignInBtn.style.display = 'flex';
-        if (postSignInBtn) postSignInBtn.style.display = 'flex';
-        
-        // Hide user profile
-        if (userProfile) userProfile.style.display = 'none';
-        
-        // Hide comment form, show auth required message
-        if (commentForm) commentForm.style.display = 'none';
-        if (authRequired) authRequired.style.display = 'block';
-    }
-}
-
-function setupBlogSignInButton() {
-    // Handle different page types
-    const googleSignInBtn = document.getElementById('mainSignInBtn'); // blog.html, index.html
-    const appwriteSignInBtn = document.getElementById('appwriteSignInBtn'); // blog.html, index.html
-    const postSignInBtn = document.getElementById('signInBtn'); // post-*.html
-    const signOutBtn = document.getElementById('signOutBtn');
-    
-    console.log('🔧 Setting up sign-in buttons:', {
-        mainSignInBtn: !!googleSignInBtn,
-        appwriteSignInBtn: !!appwriteSignInBtn,
-        postSignInBtn: !!postSignInBtn,
-        signOutBtn: !!signOutBtn
-    });
-    
-    // NOTE: Sign-in buttons now use openAuthModal() instead of direct Google sign-in
-    // The onclick handlers are set directly in HTML: onclick="openAuthModal('login')"
-    // This allows the authentication modal to handle all sign-in methods
-    
-    // Sign out button (available on all pages)
-    if (signOutBtn) {
-        signOutBtn.addEventListener('click', signOutBlog);
-        console.log('✅ Sign-out button event listener added');
-    }
-    
-    console.log('✅ Sign-in buttons configured to use authentication modal');
-}
-
-// Note: Google sign-in is now handled through the auth modal popup system
-// The signInWithGoogleBlog function has been removed to prevent conflicts
-
-function setupOfflineMode() {
-    console.log('Setting up offline mode');
-    blogAppwrite.isSignedIn = false;
-    blogAppwrite.currentUser = null;
-}
-
-// Auth state synchronization
-function startAuthStateSync() {
-    setInterval(async () => {
-        if (!blogAppwrite.isSignedIn) {
-            await authHelper.getCurrentUser();
-        }
-    }, 5000);
-}
-
-function setupStorageListener() {
-    window.addEventListener('storage', function(e) {
-        if (e.key === 'appwrite_auth_state') {
-            console.log('🔄 Auth state changed in localStorage from another tab/page');
-            
-            if (e.newValue) {
-                try {
-                    const authData = JSON.parse(e.newValue);
-                    if (authData.isSignedIn && authData.currentUser) {
-                        console.log('✅ Syncing new auth state:', authData.currentUser);
-                        blogAppwrite.currentUser = authData.currentUser;
-                        blogAppwrite.isSignedIn = true;
-                        updateBlogUI();
-                    }
-                } catch (error) {
-                    console.error('❌ Error parsing auth sync data:', error);
-                }
-            } else {
-                console.log('❌ User signed out in another tab/page');
-                blogAppwrite.currentUser = null;
-                blogAppwrite.isSignedIn = false;
-                updateBlogUI();
-            }
-        }
-    });
-}
+// Authentication listener functions removed
 
 // ===== OTHER BLOG FUNCTIONALITY =====
 
@@ -818,46 +496,22 @@ function setupBlogContactForm() {
 document.addEventListener('DOMContentLoaded', async function() {
     console.log('🚀 Blog page DOM loaded, initializing...');
     
-    // Initialize Appwrite
-    await initializeBlogAppwrite();
-    
     // Setup contact form
     setupBlogContactForm();
-    
-    // Setup storage listener for cross-tab auth sync
-    setupStorageListener();
-    
-    // Check authentication status immediately
-    await checkBlogAuth();
     
     // Initialize comment system
     commentUI.init();
     
-    // FORCE IMMEDIATE COMMENT DISPLAY - Add this as backup
+    // Force immediate comment display
     setTimeout(() => {
-        console.log('🔧 FORCE LOADING COMMENTS...');
+        console.log('🔧 Loading comments for all posts...');
         const commentsLists = document.querySelectorAll('[id^="comments-list-"]');
         commentsLists.forEach(commentsList => {
             const postId = commentsList.id.replace('comments-list-', '');
-            console.log(`🔄 Force loading comments for post ${postId}`);
+            console.log(`🔄 Loading comments for post ${postId}`);
             commentUI.loadComments(postId);
         });
     }, 500);
-    
-    // Handle OAuth callback
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('success') || window.location.hash.includes('success')) {
-        console.log('🔄 OAuth callback detected');
-        setTimeout(async () => {
-            try {
-                const user = await blogAppwrite.account.get();
-                handleBlogSignInSuccess(user);
-                window.history.replaceState({}, document.title, window.location.pathname);
-            } catch (error) {
-                console.log('❌ No active session found after OAuth callback');
-            }
-        }, 1000);
-    }
     
     console.log('✅ Blog initialization complete');
     

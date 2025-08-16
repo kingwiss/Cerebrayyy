@@ -311,7 +311,8 @@ class WebVitalsTracker {
         document.body.appendChild(display);
         
         // Add event listeners
-        document.getElementById('toggle-vitals').addEventListener('click', () => {
+        const toggleVitalsBtn = document.getElementById('toggle-vitals');
+        const toggleVitalsHandler = () => {
             const display = document.getElementById('web-vitals-display');
             const button = document.getElementById('toggle-vitals');
             
@@ -322,7 +323,14 @@ class WebVitalsTracker {
                 display.style.display = 'none';
                 button.textContent = 'Show';
             }
-        });
+        };
+        
+        toggleVitalsBtn.addEventListener('click', toggleVitalsHandler);
+        toggleVitalsBtn.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleVitalsHandler();
+        }, { passive: false });
         
         // Show/hide with Ctrl+Shift+V
         document.addEventListener('keydown', (e) => {

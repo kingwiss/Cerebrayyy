@@ -122,15 +122,31 @@ class PerformanceMonitor {
         };
     }
     
-    // Touch Latency Monitoring
+    // Touch Latency Monitoring - Optimized
     setupTouchLatencyMonitoring() {
         let touchStartTime = 0;
+        let touchCount = 0;
         
-        document.addEventListener('touchstart', (e) => {
+        // Use requestAnimationFrame for better performance
+        const optimizedTouchHandler = (callback) => {
+            let ticking = false;
+            return (e) => {
+                if (!ticking) {
+                    requestAnimationFrame(() => {
+                        callback(e);
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            };
+        };
+        
+        document.addEventListener('touchstart', optimizedTouchHandler((e) => {
             touchStartTime = performance.now();
-        }, { passive: true });
+            touchCount++;
+        }), { passive: true });
         
-        document.addEventListener('touchend', (e) => {
+        document.addEventListener('touchend', optimizedTouchHandler((e) => {
             if (touchStartTime) {
                 const latency = performance.now() - touchStartTime;
                 this.metrics.touchLatency.push(latency);
@@ -139,11 +155,12 @@ class PerformanceMonitor {
                     this.metrics.touchLatency.shift();
                 }
                 
-                if (latency > this.thresholds.maxTouchLatency) {
+                // Reduced threshold for better responsiveness
+                if (latency > 30) {
                     this.alertPerformanceIssue('High Touch Latency', `Touch latency: ${latency.toFixed(1)}ms`);
                 }
             }
-        }, { passive: true });
+        }), { passive: true });
     }
     
     // DOM Query Monitoring
@@ -367,7 +384,10 @@ class PerformanceMonitor {
         document.body.appendChild(panel);
         
         // Add event listeners
-        document.getElementById('toggle-monitoring').addEventListener('click', () => {
+        const toggleMonitoringBtn = document.getElementById('toggle-monitoring');
+        const clearMetricsBtn = document.getElementById('clear-metrics');
+        
+        const toggleMonitoringHandler = () => {
             if (this.isMonitoring) {
                 this.stopFPSMonitoring();
                 document.getElementById('toggle-monitoring').textContent = 'Start';
@@ -375,11 +395,25 @@ class PerformanceMonitor {
                 this.startFPSMonitoring();
                 document.getElementById('toggle-monitoring').textContent = 'Stop';
             }
-        });
+        };
         
-        document.getElementById('clear-metrics').addEventListener('click', () => {
+        const clearMetricsHandler = () => {
             this.clearMetrics();
-        });
+        };
+        
+        toggleMonitoringBtn.addEventListener('click', toggleMonitoringHandler);
+        toggleMonitoringBtn.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleMonitoringHandler();
+        }, { passive: false });
+        
+        clearMetricsBtn.addEventListener('click', clearMetricsHandler);
+        clearMetricsBtn.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            clearMetricsHandler();
+        }, { passive: false });
         
         // Update display every second
         setInterval(() => {

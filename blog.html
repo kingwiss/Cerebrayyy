@@ -102,8 +102,12 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     
-    <!-- Appwrite SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.1"></script>
+    <!-- Authentication Modal CSS -->
+    <!-- Auth modal CSS removed - using new auth system -->
+    
+
+    
+
     
     <style>
         * {
@@ -170,6 +174,56 @@
         .nav a.active {
             color: #667eea;
             font-weight: 600;
+        }
+
+
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* User Profile Styles */
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .user-name {
+            color: white;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .sign-out-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .sign-out-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
         }
 
         /* Main Content */
@@ -451,6 +505,8 @@
                 <a href="/">Home</a>
                 <a href="/blog.html" class="active">Blog</a>
                 <a href="/contact">Contact</a>
+                
+
             </nav>
         </div>
     </header>
@@ -629,5 +685,8 @@
             <p>&copy; 2025 Cerebray. All rights reserved. | Making every moment count.</p>
         </div>
     </footer>
+
+    <script src="auth-system.js"></script>
+    <script src="blog.js"></script>
 </body>
 </html>

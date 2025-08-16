@@ -21,14 +21,30 @@ class ArticleCommentSystem {
     }
 
     setupAuthStateListener() {
+        // Listen for new authentication system changes
+        document.addEventListener('authStateChange', (e) => {
+            console.log('New auth system state changed, updating user display');
+            this.currentUser = this.getCurrentUser();
+            this.updateUserDisplay();
+            this.renderComments(); // Re-render to update comment ownership
+        });
+        
         // Listen for authentication state changes from other tabs/pages
         window.addEventListener('storage', (e) => {
-            if (e.key === 'appwrite_auth_state') {
+            if (e.key === 'google_auth_state' || e.key === 'cerebray_auth_state' || e.key === 'cerebray_user_session') {
                 console.log('Auth state changed, updating user display');
                 this.currentUser = this.getCurrentUser();
                 this.updateUserDisplay();
                 this.renderComments(); // Re-render to update comment ownership
             }
+        });
+        
+        // Also listen for main app auth changes
+        window.addEventListener('authStateChanged', () => {
+            console.log('Main app auth state changed, updating user display');
+            this.currentUser = this.getCurrentUser();
+            this.updateUserDisplay();
+            this.renderComments();
         });
     }
 
@@ -55,20 +71,11 @@ class ArticleCommentSystem {
     }
 
     getCurrentUser() {
-        // Check if user is authenticated via Appwrite
-        const authData = localStorage.getItem('appwrite_auth_state');
-        if (authData) {
-            try {
-                const auth = JSON.parse(authData);
-                if (auth.isSignedIn && auth.currentUser && auth.currentUser.name) {
-                    return auth.currentUser.name;
-                }
-            } catch (e) {
-                console.log('Error parsing auth data:', e);
-            }
+        // Check if auth system is available and user is logged in
+        if (window.authSystem && window.authSystem.isAuthenticated()) {
+            const user = window.authSystem.getCurrentUser();
+            return user ? user.username : 'Anonymous';
         }
-        
-        // If not authenticated, always return Anonymous
         return 'Anonymous';
     }
 
@@ -94,11 +101,7 @@ class ArticleCommentSystem {
             changeNameBtn.style.display = 'none';
         }
         
-        // Show/hide sign-in button based on auth status
-        const signInBtn = document.getElementById('signInBtn');
-        if (signInBtn) {
-            signInBtn.style.display = isAuthenticated ? 'none' : 'inline-block';
-        }
+        // Sign-in button removed from article pages - users can sign in from the blogs tab
         
         // Update the user info text to be clearer
         if (userInfo) {
@@ -114,16 +117,8 @@ class ArticleCommentSystem {
     }
 
     isUserAuthenticated() {
-        const authState = localStorage.getItem('appwrite_auth_state');
-        if (authState) {
-            try {
-                const authData = JSON.parse(authState);
-                return authData.isSignedIn && authData.currentUser;
-            } catch (error) {
-                console.error('Error parsing auth state:', error);
-            }
-        }
-        return false;
+        // Check if auth system is available and user is logged in
+        return window.authSystem && window.authSystem.isAuthenticated();
     }
 
     addComment(content, parentId = null) {
@@ -132,15 +127,19 @@ class ArticleCommentSystem {
             return;
         }
 
+        // Get current user dynamically to ensure we have the latest auth state
+        const currentUser = this.getCurrentUser();
+        const isAuthenticated = this.isUserAuthenticated();
+        
         const comment = {
             id: Date.now().toString(),
             content: content.trim(),
-            author: this.currentUser,
-            userId: this.isUserAuthenticated() ? 'authenticated_user' : 'anonymous_user',
+            author: currentUser,
+            userId: isAuthenticated ? 'authenticated_user' : 'anonymous_user',
             timestamp: new Date().toISOString(),
             parentId: parentId,
             replies: [],
-            isAuthenticated: this.isUserAuthenticated()
+            isAuthenticated: isAuthenticated
         };
 
         if (parentId) {
@@ -230,8 +229,8 @@ class ArticleCommentSystem {
                             <i class="fas fa-reply"></i> Reply
                         </button>
                     ` : `
-                        <button onclick="openAuthModal('login')" class="reply-btn auth-required">
-                            <i class="fas fa-sign-in-alt"></i> Sign in to Reply
+                        <button onclick="commentSystem.showLoginPrompt()" class="reply-btn auth-required">
+                            <i class="fas fa-reply"></i> Reply (Login Required)
                         </button>
                     `}
                 </div>
@@ -355,6 +354,14 @@ class ArticleCommentSystem {
                 }
             }, 300);
         }, 3000);
+    }
+
+    showLoginPrompt() {
+        if (window.authSystem) {
+            window.authSystem.openAuthModal('login');
+        } else {
+            this.showNotification('Please log in to reply to comments', 'info');
+        }
     }
 
     initContactModal() {

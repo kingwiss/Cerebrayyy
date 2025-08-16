@@ -82,6 +82,15 @@ class EnhancedCommentSystem {
     }
 
     getCurrentUser() {
+        // Check if auth system is available and user is logged in
+        if (window.authSystem && window.authSystem.isAuthenticated()) {
+            const user = window.authSystem.getCurrentUser();
+            if (user) {
+                return user.username;
+            }
+        }
+        
+        // Fallback to localStorage or Anonymous
         let user = localStorage.getItem('comment_user');
         if (!user) {
             user = 'Anonymous User';
@@ -124,10 +133,13 @@ class EnhancedCommentSystem {
             this.comments[postId] = [];
         }
 
+        // Get current user dynamically to ensure we have the latest auth state
+        const currentUser = this.getCurrentUser();
+        
         const comment = {
             id: Date.now(),
             content: content.trim(),
-            author: this.currentUser,
+            author: currentUser,
             timestamp: new Date().toISOString(),
             parentId: parentId,
             replies: []

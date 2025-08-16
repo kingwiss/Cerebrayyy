@@ -244,29 +244,13 @@ class PremiumPopup {
             // Track payment initiation
             this.trackEvent('premium_payment_initiated');
             
-            // Show payment processing
-            const paymentProcessing = document.getElementById('paymentProcessing');
-            if (paymentProcessing) {
-                paymentProcessing.classList.add('active');
-            }
-
-            // Simulate payment processing (replace with real payment gateway)
-            const paymentResult = await this.paymentProcessor.processPayment({
-                amount: 4.99,
-                currency: 'USD',
-                plan: 'premium_monthly'
-            });
-
-            if (paymentResult.success) {
-                // Payment successful
-                await this.handleSuccessfulPayment(paymentResult);
-            } else {
-                // Payment failed
-                this.handleFailedPayment(paymentResult.error);
-            }
+            // Redirect to real Stripe payment page
+            console.log('🚀 Redirecting to Stripe payment page...');
+            window.location.href = 'payment.html';
+            
         } catch (error) {
-            console.error('Payment error:', error);
-            this.handleFailedPayment(error.message);
+            console.error('Payment redirect error:', error);
+            this.handleFailedPayment('Failed to redirect to payment page');
         }
     }
 
