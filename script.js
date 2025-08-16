@@ -109,8 +109,22 @@ class BoredomBusterApp {
         try {
             console.log('🚀 Initializing User Tier Management System...');
             
-            // Initialize the tier manager
-            this.userTierManager = new UserTierManager();
+            // Wait for the global UserTierManager instance to be available
+            let attempts = 0;
+            while (!window.userTierManager && attempts < 50) {
+                await new Promise(resolve => setTimeout(resolve, 100));
+                attempts++;
+            }
+            
+            if (!window.userTierManager) {
+                throw new Error('UserTierManager not available after waiting');
+            }
+            
+            // Use the global instance
+            this.userTierManager = window.userTierManager;
+            
+            // Wait for auth to initialize
+            await this.userTierManager.waitForAuth();
             
             // Set up event listener for premium activation from payment system
             window.addEventListener('premiumActivated', (event) => {
@@ -8472,32 +8486,58 @@ window.addEventListener('load', async () => {
 });
 
 // Premium status initialization
-function initializePremiumStatus() {
+async function initializePremiumStatus() {
     try {
-        // Initialize user tier manager
-        if (!window.userTierManager) {
-            window.userTierManager = new UserTierManager();
+        // Wait for UserTierManager to be available from module
+        let attempts = 0;
+        while (!window.userTierManager && attempts < 50) {
+            await new Promise(resolve => setTimeout(resolve, 100));
+            attempts++;
         }
         
-        // Check premium status from localStorage and user tier manager
-        const premiumStatus = localStorage.getItem('cerebray_premium_status');
+        if (!window.userTierManager) {
+            console.error('UserTierManager not available after waiting');
+            return;
+        }
+        
+        console.log('✅ UserTierManager available, checking premium status...');
+        
+        // Wait for auth to initialize
+        await window.userTierManager.waitForAuth();
+        
+        // Check premium status from user tier manager
         const userTier = window.userTierManager.getCurrentTier();
+        const isPremium = window.userTierManager.isPremiumUser();
         
-        console.log('🌟 Checking premium status:', { premiumStatus, userTier });
+        console.log('🌟 Checking premium status:', { userTier, isPremium });
         
-        if (premiumStatus === 'active' || userTier === 'premium') {
+        if (isPremium) {
             // User has premium access
+            window.app.isPremiumMode = true;
             activatePremiumUI();
             console.log('🌟 Premium features activated!');
         } else {
             // User has basic access
+            window.app.isPremiumMode = false;
             console.log('📱 Basic tier active');
         }
         
-        // Listen for premium upgrade events
-        window.addEventListener('premiumUpgraded', (event) => {
-            console.log('🌟 Premium upgrade event received:', event.detail);
+        // Listen for premium activation events
+        window.addEventListener('premiumActivated', (event) => {
+            console.log('🌟 Premium activated:', event.detail);
+            window.app.isPremiumMode = true;
             activatePremiumUI();
+        });
+        
+        // Listen for tier changes
+        window.addEventListener('tierChanged', (event) => {
+            console.log('🔄 Tier changed:', event.detail);
+            if (event.detail.isPremium) {
+                window.app.isPremiumMode = true;
+                activatePremiumUI();
+            } else {
+                window.app.isPremiumMode = false;
+            }
         });
         
     } catch (error) {
@@ -8536,11 +8576,13 @@ console.log('Script loaded!');
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM loaded, initializing app...');
     try {
-        app = new BoredomBusterApp();
+        window.app = new BoredomBusterApp();
         console.log('App initialized successfully!');
         
         // Initialize user tier manager and check premium status
-        initializePremiumStatus();
+        initializePremiumStatus().catch(error => {
+            console.error('Failed to initialize premium status:', error);
+        });
         
         // Setup touch screen optimizations
         // Clean Touch System Implementation

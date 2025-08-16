@@ -4,9 +4,12 @@
  * and content access control for the Cerebray platform.
  */
 
+import { auth } from './firebase-config.js';
+import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
 class UserTierManager {
     constructor() {
-        this.userId = this.generateUserId();
+        this.userId = null;
         this.currentTier = 'basic';
         this.dailyCardLimit = 40; // Basic tier limit
         this.cardsUsedToday = 0;
@@ -17,24 +20,56 @@ class UserTierManager {
         this.subscriptionId = null;
         this.subscriptionStatus = null;
         this.lastResetDate = new Date().toDateString();
+        this.authInitialized = false;
         
-        // Load existing data from localStorage
-        this.loadUserData();
-        
-        // Check if daily reset is needed
-        this.checkDailyReset();
-        
-        // Check premium status from localStorage
-        this.checkPremiumStatus();
+        // Initialize Firebase auth listener
+        this.initializeAuth();
+    }
+    
+    async initializeAuth() {
+        return new Promise((resolve) => {
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    // User is signed in
+                    this.userId = user.uid;
+                    this.loadUserData();
+                    this.checkDailyReset();
+                    this.checkPremiumStatus();
+                } else {
+                    // User is signed out - use anonymous session
+                    this.userId = this.generateAnonymousId();
+                    this.currentTier = 'basic';
+                    this.loadUserData();
+                    this.checkDailyReset();
+                    this.checkPremiumStatus();
+                }
+                this.authInitialized = true;
+                resolve();
+            });
+        });
     }
 
-    generateUserId() {
-        return 'user_' + Math.random().toString(36).substr(2, 9);
+    generateAnonymousId() {
+        let anonymousId = localStorage.getItem('anonymousUserId');
+        if (!anonymousId) {
+            anonymousId = 'anon_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('anonymousUserId', anonymousId);
+        }
+        return anonymousId;
+    }
+    
+    async waitForAuth() {
+        while (!this.authInitialized) {
+            await new Promise(resolve => setTimeout(resolve, 100));
+        }
     }
 
     loadUserData() {
+        if (!this.userId) return;
+        
         try {
-            const savedData = localStorage.getItem('cerebray_user_tier_data');
+            const userKey = `cerebray_user_tier_data_${this.userId}`;
+            const savedData = localStorage.getItem(userKey);
             if (savedData) {
                 const data = JSON.parse(savedData);
                 this.userId = data.userId || this.userId;
@@ -57,7 +92,10 @@ class UserTierManager {
     }
 
     saveUserData() {
+        if (!this.userId) return;
+        
         try {
+            const userKey = `cerebray_user_tier_data_${this.userId}`;
             const data = {
                 userId: this.userId,
                 currentTier: this.currentTier,
@@ -70,7 +108,7 @@ class UserTierManager {
                 subscriptionStatus: this.subscriptionStatus,
                 lastResetDate: this.lastResetDate
             };
-            localStorage.setItem('cerebray_user_tier_data', JSON.stringify(data));
+            localStorage.setItem(userKey, JSON.stringify(data));
         } catch (error) {
             console.error('Error saving user data:', error);
         }
@@ -184,6 +222,15 @@ class UserTierManager {
 
     async upgradeToPremium(subscriptionData = null) {
         try {
+            // Ensure auth is initialized
+            await this.waitForAuth();
+            
+            // Only allow premium upgrade for authenticated users
+            if (!auth.currentUser) {
+                console.error('Cannot upgrade to premium: User not authenticated');
+                throw new Error('User must be authenticated to upgrade to premium');
+            }
+            
             this.currentTier = 'premium';
             
             if (subscriptionData) {
@@ -204,6 +251,18 @@ class UserTierManager {
             
             this.updateDailyCardLimit();
             this.saveUserData();
+            
+            // Dispatch event for UI updates
+            window.dispatchEvent(new CustomEvent('tierChanged', {
+                detail: {
+                    tier: 'premium',
+                    limit: this.dailyCardLimit,
+                    isPremium: true,
+                    userId: this.userId
+                }
+            }));
+            
+            console.log(`User ${this.userId} upgraded to premium tier`);
             
             return {
                 success: true,
@@ -345,6 +404,16 @@ class UserTierManager {
     }
 }
 
+// Initialize the user tier manager when the page loads
+document.addEventListener('DOMContentLoaded', async () => {
+    window.userTierManager = new UserTierManager();
+    
+    // Wait for Firebase auth to initialize
+    await window.userTierManager.waitForAuth();
+    
+    console.log('User Tier Manager initialized with Firebase auth');
+});
+
 // Make UserTierManager globally available
 if (typeof window !== 'undefined') {
     window.UserTierManager = UserTierManager;
@@ -354,3 +423,6 @@ if (typeof window !== 'undefined') {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = UserTierManager;
 }
+
+// Export for module usage
+export default UserTierManager;

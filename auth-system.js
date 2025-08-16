@@ -1,10 +1,36 @@
 // Authentication System Frontend
+import { auth } from './firebase-config.js';
+import { 
+    createUserWithEmailAndPassword, 
+    signInWithEmailAndPassword, 
+    signOut, 
+    onAuthStateChanged 
+} from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
 class AuthSystem {
     constructor() {
-        this.apiUrl = 'http://localhost:8000/api';
         this.token = localStorage.getItem('authToken');
         this.user = null;
         this.init();
+        this.initializeAuthListener();
+    }
+
+    // Initialize Firebase auth state listener
+    initializeAuthListener() {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                this.user = {
+                    uid: user.uid,
+                    email: user.email,
+                    username: user.displayName || user.email.split('@')[0]
+                };
+                console.log('User signed in:', user.email);
+            } else {
+                this.user = null;
+                console.log('User signed out');
+            }
+            this.updateAuthUI();
+        });
     }
 
     async init() {
@@ -177,31 +203,36 @@ class AuthSystem {
         this.showLoading();
         
         try {
-            const response = await fetch(`${this.apiUrl}/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email, password })
-            });
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
             
-            const data = await response.json();
-            
-            if (response.ok) {
-                this.token = data.token;
-                this.user = data.user;
-                localStorage.setItem('authToken', this.token);
-                this.showSuccess('Sign in successful!');
-                setTimeout(() => {
-                    this.hideModal();
-                    this.updateAuthUI();
-                }, 1500);
-            } else {
-                this.showError(data.error || 'Sign in failed');
-            }
+            this.showSuccess('Sign in successful!');
+            setTimeout(() => {
+                this.hideModal();
+            }, 1500);
         } catch (error) {
             console.error('Sign in error:', error);
-            this.showError('Network error. Please try again.');
+            let errorMessage = 'Sign in failed';
+            
+            // Provide user-friendly error messages
+            switch (error.code) {
+                case 'auth/user-not-found':
+                    errorMessage = 'No account found with this email';
+                    break;
+                case 'auth/wrong-password':
+                    errorMessage = 'Incorrect password';
+                    break;
+                case 'auth/invalid-email':
+                    errorMessage = 'Invalid email address';
+                    break;
+                case 'auth/too-many-requests':
+                    errorMessage = 'Too many failed attempts. Please try again later';
+                    break;
+                default:
+                    errorMessage = error.message;
+            }
+            
+            this.showError(errorMessage);
         } finally {
             this.hideLoading();
         }
@@ -221,82 +252,57 @@ class AuthSystem {
         this.showLoading();
         
         try {
-            const response = await fetch(`${this.apiUrl}/register`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ username, email, password })
-            });
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
             
-            const data = await response.json();
+            // Note: Firebase doesn't store username by default
+            // You can update the user profile if needed
+            // await updateProfile(user, { displayName: username });
             
-            if (response.ok) {
-                this.token = data.token;
-                this.user = data.user;
-                localStorage.setItem('authToken', this.token);
-                this.showSuccess('Account created successfully!');
-                setTimeout(() => {
-                    this.hideModal();
-                    this.updateAuthUI();
-                }, 1500);
-            } else {
-                this.showError(data.error || 'Sign up failed');
-            }
+            this.showSuccess('Account created successfully!');
+            setTimeout(() => {
+                this.hideModal();
+            }, 1500);
         } catch (error) {
             console.error('Sign up error:', error);
-            this.showError('Network error. Please try again.');
+            let errorMessage = 'Sign up failed';
+            
+            // Provide user-friendly error messages
+            switch (error.code) {
+                case 'auth/email-already-in-use':
+                    errorMessage = 'An account with this email already exists';
+                    break;
+                case 'auth/weak-password':
+                    errorMessage = 'Password should be at least 6 characters';
+                    break;
+                case 'auth/invalid-email':
+                    errorMessage = 'Invalid email address';
+                    break;
+                default:
+                    errorMessage = error.message;
+            }
+            
+            this.showError(errorMessage);
         } finally {
             this.hideLoading();
         }
     }
 
     async checkAuthState() {
-        if (!this.token) {
-            this.updateAuthUI();
-            return;
-        }
-        
-        try {
-            const response = await fetch(`${this.apiUrl}/verify-token`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${this.token}`
-                }
-            });
-            
-            if (response.ok) {
-                const data = await response.json();
-                this.user = data.user;
-            } else {
-                this.logout();
-            }
-        } catch (error) {
-            console.error('Token verification error:', error);
-            this.logout();
-        }
-        
+        // Firebase handles auth state automatically through onAuthStateChanged
+        // This method is kept for compatibility but Firebase manages the state
         this.updateAuthUI();
     }
 
     async logout() {
         try {
-            if (this.token) {
-                await fetch(`${this.apiUrl}/logout`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${this.token}`
-                    }
-                });
-            }
+            await signOut(auth);
+            // The auth state listener will automatically update user state
+            this.token = null;
+            localStorage.removeItem('authToken');
         } catch (error) {
             console.error('Logout error:', error);
         }
-        
-        this.token = null;
-        this.user = null;
-        localStorage.removeItem('authToken');
-        this.updateAuthUI();
     }
 
     showForgotPasswordForm() {

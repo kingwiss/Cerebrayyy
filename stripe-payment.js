@@ -353,8 +353,15 @@ class StripePaymentProcessor {
         }
     }
     
-    upgradeUserToPremium(email, subscriptionId, subscriptionData) {
+    async upgradeUserToPremium(email, subscriptionId, subscriptionData) {
         try {
+            // Check if user is authenticated with Firebase
+            const { auth } = await import('./firebase-config.js');
+            
+            if (!auth.currentUser) {
+                throw new Error('User must be authenticated to upgrade to premium');
+            }
+            
             const premiumData = {
                 status: 'active',
                 email: email,
@@ -363,12 +370,24 @@ class StripePaymentProcessor {
                 endDate: new Date(subscriptionData.current_period_end * 1000).toISOString(),
                 plan: 'monthly',
                 amount: 4.99,
-                recurring: true
+                recurring: true,
+                userId: auth.currentUser.uid // Link to Firebase user
             };
             
-            // Store in localStorage
+            // Store premium data with user-specific key
+            const userKey = `premiumData_${auth.currentUser.uid}`;
             localStorage.setItem('premiumMode', 'true');
-            localStorage.setItem('premiumData', JSON.stringify(premiumData));
+            localStorage.setItem(userKey, JSON.stringify(premiumData));
+            
+            // Upgrade user tier through UserTierManager
+            if (window.userTierManager) {
+                await window.userTierManager.upgradeToPremium({
+                    id: subscriptionId,
+                    status: subscriptionData.status,
+                    current_period_end: subscriptionData.current_period_end,
+                    plan: 'monthly'
+                });
+            }
             
             // Dispatch custom event
             window.dispatchEvent(new CustomEvent('premiumActivated', {
@@ -379,6 +398,7 @@ class StripePaymentProcessor {
             
         } catch (error) {
             console.error('❌ Error upgrading user to premium:', error);
+            throw error;
         }
     }
     
