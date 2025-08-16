@@ -592,6 +592,11 @@ async function generateResponsiveVoiceTTS(text, voiceId) {
     }
 }
 
+// Logout endpoint (JWT is stateless, so we just return success)
+app.post('/api/logout', authenticateToken, (req, res) => {
+    res.json({ message: 'Logged out successfully' });
+});
+
 const PORT = process.env.PORT || 8000;
 server.listen(PORT, async () => {
     await initializeUsersFile();

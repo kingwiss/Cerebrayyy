@@ -21,5 +21,21 @@
     "password": "$2b$10$zj0VYDUyD1P253tPzb9bZ.dWUCwYdI6JPgJJekt6A5LSjoyTakJAm",
     "tier": "basic",
     "createdAt": "2025-08-16T16:26:11.136Z"
+  },
+  {
+    "id": "1755365066948",
+    "email": "be@me.com",
+    "username": "fred",
+    "password": "$2b$10$1Iw6Mri9zJMIl7sFVLUV9OvR7mBQJHYubPP7eFXI8Gzujo4NdJaOS",
+    "tier": "basic",
+    "createdAt": "2025-08-16T17:24:26.960Z"
+  },
+  {
+    "id": "1755367966316",
+    "email": "be12@me.com",
+    "username": "fred",
+    "password": "$2b$10$.iUDhyT9q1IfhfAaC..nCe69ZrQNzTtQndV41rU10dD3m1VxKssYi",
+    "tier": "basic",
+    "createdAt": "2025-08-16T18:12:46.323Z"
   }
 ]

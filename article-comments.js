@@ -101,7 +101,7 @@ class ArticleCommentSystem {
             changeNameBtn.style.display = 'none';
         }
         
-        // Sign-in button removed from article pages - users can sign in from the blogs tab
+        // All users can comment and reply without authentication
         
         // Update the user info text to be clearer
         if (userInfo) {
@@ -224,15 +224,9 @@ class ArticleCommentSystem {
                 </div>
                 
                 <div class="comment-actions">
-                    ${this.isUserAuthenticated() ? `
-                        <button onclick="commentSystem.showReplyForm(${comment.id})" class="reply-btn">
-                            <i class="fas fa-reply"></i> Reply
-                        </button>
-                    ` : `
-                        <button onclick="commentSystem.showLoginPrompt()" class="reply-btn auth-required">
-                            <i class="fas fa-reply"></i> Reply (Login Required)
-                        </button>
-                    `}
+                    <button onclick="commentSystem.showReplyForm(${comment.id})" class="reply-btn">
+                        <i class="fas fa-reply"></i> Reply
+                    </button>
                 </div>
                 
                 <div id="reply-form-${comment.id}" class="reply-form" style="display: none;">
@@ -356,13 +350,7 @@ class ArticleCommentSystem {
         }, 3000);
     }
 
-    showLoginPrompt() {
-        if (window.authSystem) {
-            window.authSystem.openAuthModal('login');
-        } else {
-            this.showNotification('Please log in to reply to comments', 'info');
-        }
-    }
+
 
     initContactModal() {
         const contactBtn = document.getElementById('contactBtn');
