@@ -241,6 +241,13 @@ class PremiumPopup {
 
     async startPayment() {
         try {
+            // Check if user is authenticated first
+            if (!this.isUserAuthenticated()) {
+                console.log('User not authenticated, showing login modal');
+                this.showAuthModal();
+                return;
+            }
+            
             // Track payment initiation
             this.trackEvent('premium_payment_initiated');
             
@@ -251,6 +258,24 @@ class PremiumPopup {
         } catch (error) {
             console.error('Payment redirect error:', error);
             this.handleFailedPayment('Failed to redirect to payment page');
+        }
+    }
+    
+    isUserAuthenticated() {
+        // Check if the auth system is available and user is logged in
+        return window.authSystem && window.authSystem.isAuthenticated();
+    }
+    
+    showAuthModal() {
+        // Close the premium popup first to avoid blocking the auth modal
+        this.close();
+        
+        // Show the authentication modal
+        if (window.authSystem) {
+            window.authSystem.showModal();
+        } else {
+            console.error('Auth system not available');
+            alert('Please refresh the page and try again.');
         }
     }
 

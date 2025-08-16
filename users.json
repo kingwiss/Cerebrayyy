@@ -13,5 +13,13 @@
     "password": "$2b$10$F3kSzW97N6KMe2xefKlTEuyTrErvbCYaKfPPzCh6vppIBBqs07mDu",
     "tier": "basic",
     "createdAt": "2025-08-16T08:29:45.185Z"
+  },
+  {
+    "id": "1755361571131",
+    "email": "Me@me.com",
+    "username": "fred",
+    "password": "$2b$10$zj0VYDUyD1P253tPzb9bZ.dWUCwYdI6JPgJJekt6A5LSjoyTakJAm",
+    "tier": "basic",
+    "createdAt": "2025-08-16T16:26:11.136Z"
   }
 ]
