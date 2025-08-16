@@ -1945,6 +1945,46 @@ button:active::before, .btn:active::before, .control-btn:active::before, .refres
     /* Allow touch actions on squares for piece dropping */
     touch-action: auto;
     user-select: none;
+    position: relative;
+}
+
+/* Touch drag highlights for chess */
+#chessBoard .square-55d63.highlight-source {
+    background-color: rgba(0, 150, 255, 0.4) !important;
+    box-shadow: inset 0 0 0 3px rgba(0, 150, 255, 0.6);
+}
+
+#chessBoard .square-55d63.highlight-target {
+    background-color: rgba(0, 255, 0, 0.3) !important;
+    box-shadow: inset 0 0 0 2px rgba(0, 255, 0, 0.6);
+}
+
+/* Enhanced touch support for chess pieces on mobile */
+@media (hover: none) and (pointer: coarse) {
+    #chessBoard .piece-417db {
+        /* Larger touch targets on mobile */
+        min-width: 44px;
+        min-height: 44px;
+        /* Disable text selection */
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        /* Prevent callout on touch and hold */
+        -webkit-touch-callout: none;
+        /* Prevent tap highlight */
+        -webkit-tap-highlight-color: transparent;
+    }
+    
+    #chessBoard {
+        /* Prevent scrolling when dragging */
+        touch-action: none;
+        /* Disable text selection */
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
 }
 
 /* Additional mobile touch optimizations */

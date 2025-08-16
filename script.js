@@ -4884,11 +4884,84 @@ class BoredomBusterApp {
         const addTouchOptimizedListener = (element, handler) => {
             if (!element) return;
             
-            // Add click event for desktop and touch devices
-            element.addEventListener('click', handler);
+            let touchStarted = false;
+            let touchMoved = false;
             
-            // Touch feedback is now handled by the clean touch system
-            // No need for additional touch event handling here
+            // Add click event for desktop
+            element.addEventListener('click', (e) => {
+                // Prevent duplicate events from touch devices
+                if (touchStarted) {
+                    touchStarted = false;
+                    return;
+                }
+                handler(e);
+            });
+            
+            // Enhanced touch event handling for mobile devices
+            element.addEventListener('touchstart', (e) => {
+                touchStarted = true;
+                touchMoved = false;
+                
+                // Add visual feedback
+                element.classList.add('touch-active');
+                
+                // Always prevent default and stop propagation for button touches
+                // This ensures the button gets priority over swipe detection
+                if (element.classList.contains('game-play-btn') || 
+                    element.classList.contains('play-btn') ||
+                    element.classList.contains('show-answer-btn') ||
+                    element.classList.contains('card-back-btn') ||
+                    element.classList.contains('card-save-btn')) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            }, { passive: false });
+            
+            element.addEventListener('touchmove', (e) => {
+                touchMoved = true;
+                // Remove visual feedback if finger moves away
+                const touch = e.touches[0];
+                const rect = element.getBoundingClientRect();
+                const isInside = touch.clientX >= rect.left && 
+                               touch.clientX <= rect.right && 
+                               touch.clientY >= rect.top && 
+                               touch.clientY <= rect.bottom;
+                
+                if (!isInside) {
+                    element.classList.remove('touch-active');
+                }
+            });
+            
+            element.addEventListener('touchend', (e) => {
+                element.classList.remove('touch-active');
+                
+                // Only trigger if touch didn't move significantly
+                if (!touchMoved) {
+                    // Always prevent default and stop propagation for button touches
+                    // This ensures the button gets priority over swipe detection
+                    if (element.classList.contains('game-play-btn') || 
+                        element.classList.contains('play-btn') ||
+                        element.classList.contains('show-answer-btn') ||
+                        element.classList.contains('card-back-btn') ||
+                        element.classList.contains('card-save-btn')) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                    handler(e);
+                }
+                
+                // Reset flags after a delay to prevent click event
+                setTimeout(() => {
+                    touchStarted = false;
+                    touchMoved = false;
+                }, 100);
+            });
+            
+            element.addEventListener('touchcancel', (e) => {
+                element.classList.remove('touch-active');
+                touchStarted = false;
+                touchMoved = false;
+            });
         };
 
         if (showAnswerBtn) {
@@ -4963,6 +5036,9 @@ class BoredomBusterApp {
                 this.cardObserver.observe(card);
             }
             this.monitorCardImage(card);
+            
+            // Reinforce button touch events to ensure they always respond
+            this.reinforceButtonTouchEvents(card);
         }, 100);
     }
 
@@ -5259,8 +5335,8 @@ class BoredomBusterApp {
             
             // Check if the touch started on a button or interactive element
             const target = e.target;
-            const isButton = target.matches('button, .btn, .card-back-btn, .card-save-btn, .play-btn, .sound-toggle, .show-answer-btn') || 
-                           target.closest('button, .btn, .card-back-btn, .card-save-btn, .play-btn, .sound-toggle, .show-answer-btn');
+            const isButton = target.matches('button, .btn, .card-back-btn, .card-save-btn, .play-btn, .game-play-btn, .sound-toggle, .show-answer-btn') || 
+                           target.closest('button, .btn, .card-back-btn, .card-save-btn, .play-btn, .game-play-btn, .sound-toggle, .show-answer-btn');
             
             // Don't handle swipe if touching a button
             if (isButton) {
@@ -5697,6 +5773,9 @@ class BoredomBusterApp {
                     this.speakCardContent(restoredCard);
                 }
             }, 100); // Very quick trigger
+            
+            // Ensure all button touch events are properly attached after restoration
+            this.reinforceButtonTouchEvents(restoredCard);
         }, 100);
         
         // Update back button visibility on all cards
@@ -5720,6 +5799,48 @@ class BoredomBusterApp {
                 btn.style.display = 'none';
             }
         });
+    }
+
+    // Reinforce button touch events to ensure they always respond
+    reinforceButtonTouchEvents(card) {
+        // Find all buttons in the card
+        const buttons = card.querySelectorAll('.game-play-btn, .play-btn, .show-answer-btn, .card-back-btn, .card-save-btn');
+        
+        buttons.forEach(button => {
+            // Add a high-priority touch event listener that ensures the button responds
+            const reinforcedTouchHandler = (e) => {
+                // Immediately stop any interference from swipe detection
+                e.stopImmediatePropagation();
+                e.preventDefault();
+                
+                // Add visual feedback
+                button.classList.add('touch-active');
+                
+                // Remove visual feedback after a short delay
+                setTimeout(() => {
+                    button.classList.remove('touch-active');
+                }, 150);
+                
+                // Trigger the button's click event
+                setTimeout(() => {
+                    button.click();
+                }, 50);
+            };
+            
+            // Add the reinforced touch handler with high priority (capture phase)
+            button.addEventListener('touchstart', reinforcedTouchHandler, { 
+                passive: false, 
+                capture: true // Use capture phase for higher priority
+            });
+            
+            // Also ensure the button has proper styling for touch feedback
+            button.style.touchAction = 'manipulation';
+            button.style.userSelect = 'none';
+            button.style.webkitUserSelect = 'none';
+            button.style.webkitTouchCallout = 'none';
+        });
+        
+        console.log(`Reinforced touch events for ${buttons.length} buttons in restored card`);
     }
 
     // Play a subtle restoration sound effect
@@ -6435,10 +6556,10 @@ class BoredomBusterApp {
             <div class="game-status" id="chessStatus">${this.currentChessPuzzle.description}</div>
             <div id="chessBoard" style="width: 400px; margin: 20px auto;"></div>
             <div style="margin-top: 15px; text-align: center;">
-                <button class="play-btn" onclick="app.resetChessPuzzle()">🔄 New Puzzle</button>
-                <button class="play-btn" onclick="app.showChessSolution()" style="margin-left: 10px;">💡 Show Solution</button>
-                <button class="play-btn" onclick="app.showPuzzleStats()" style="margin-left: 10px;">📊 Stats</button>
-                <button class="play-btn" onclick="app.testChessDragDrop()" style="margin-left: 10px;">🧪 Test Drag</button>
+                <button class="play-btn chess-new-puzzle-btn" data-action="new-puzzle">🔄 New Puzzle</button>
+                <button class="play-btn chess-show-solution-btn" data-action="show-solution" style="margin-left: 10px;">💡 Show Solution</button>
+                <button class="play-btn chess-show-stats-btn" data-action="show-stats" style="margin-left: 10px;">📊 Stats</button>
+                <button class="play-btn chess-test-drag-btn" data-action="test-drag" style="margin-left: 10px;">🧪 Test Drag</button>
             </div>
             <div id="chessDebugInfo" style="margin-top: 10px; padding: 10px; background: #f0f0f0; border-radius: 5px; font-family: monospace; font-size: 12px; display: none;">
                 <strong>Debug Info:</strong><br>
@@ -6666,6 +6787,9 @@ class BoredomBusterApp {
                 
                 // Add touch support for mobile
                 this.addChessTouchSupport();
+                
+                // Add touch-optimized event listeners for chess puzzle buttons
+                this.addChessPuzzleButtonListeners();
             }, 100);
             
             // Update status
@@ -6898,99 +7022,297 @@ class BoredomBusterApp {
 
     addChessTouchSupport() {
         const chessBoard = document.getElementById('chessBoard');
-        if (!chessBoard) return;
+        if (!chessBoard) {
+            console.log('Chess board not found, retrying in 500ms...');
+            setTimeout(() => this.addChessTouchSupport(), 500);
+            return;
+        }
         
-        console.log('Adding chess touch support for mobile devices');
+        console.log('Adding enhanced chess touch support for mobile devices');
         
         let isDragging = false;
         let draggedPiece = null;
+        let dragStartSquare = null;
         let touchOffset = { x: 0, y: 0 };
+        let touchStartTime = 0;
         
-        // Convert touch events to mouse events for chess pieces
-        const convertTouchToMouse = (touchEvent, mouseEventType) => {
-            const touch = touchEvent.touches[0] || touchEvent.changedTouches[0];
-            const mouseEvent = new MouseEvent(mouseEventType, {
-                bubbles: true,
-                cancelable: true,
-                clientX: touch.clientX,
-                clientY: touch.clientY,
-                button: 0,
-                buttons: 1
-            });
-            return mouseEvent;
-        };
-        
-        // Handle touch start on chess pieces
-        chessBoard.addEventListener('touchstart', (e) => {
+        // Enhanced touch handling with better piece detection
+        const handleTouchStart = (e) => {
             const target = e.target;
-            if (target.classList.contains('piece-417db')) {
+            const piece = target.closest('.piece-417db');
+            
+            if (piece) {
                 e.preventDefault();
+                e.stopPropagation();
+                
                 isDragging = true;
-                draggedPiece = target;
+                draggedPiece = piece;
+                touchStartTime = Date.now();
+                
+                // Find the source square
+                const square = piece.closest('[data-square]');
+                if (square) {
+                    dragStartSquare = square.getAttribute('data-square');
+                } else {
+                    // Fallback: try to find square from piece position
+                    const squares = chessBoard.querySelectorAll('[data-square]');
+                    for (const sq of squares) {
+                        if (sq.contains(piece)) {
+                            dragStartSquare = sq.getAttribute('data-square');
+                            break;
+                        }
+                    }
+                }
                 
                 // Calculate touch offset relative to piece
-                const rect = target.getBoundingClientRect();
+                const rect = piece.getBoundingClientRect();
                 const touch = e.touches[0];
                 touchOffset.x = touch.clientX - rect.left;
                 touchOffset.y = touch.clientY - rect.top;
                 
-                // Simulate mousedown
-                const mouseEvent = convertTouchToMouse(e, 'mousedown');
-                target.dispatchEvent(mouseEvent);
+                // Add visual feedback
+                piece.style.opacity = '0.8';
+                piece.style.transform = 'scale(1.1)';
+                piece.style.zIndex = '1000';
+                piece.style.pointerEvents = 'none';
                 
-                console.log('Chess piece touch started:', target.getAttribute('data-piece'));
+                // Highlight source square
+                if (square) {
+                    square.classList.add('highlight-source');
+                }
+                
+                console.log('Chess piece touch started:', {
+                    piece: piece.getAttribute('data-piece') || piece.className,
+                    square: dragStartSquare
+                });
             }
-        }, { passive: false });
+        };
         
-        // Handle touch move
-        chessBoard.addEventListener('touchmove', (e) => {
+        const handleTouchMove = (e) => {
             if (isDragging && draggedPiece) {
                 e.preventDefault();
+                e.stopPropagation();
                 
-                // Simulate mousemove
-                const mouseEvent = convertTouchToMouse(e, 'mousemove');
-                draggedPiece.dispatchEvent(mouseEvent);
-                
-                // Also dispatch on the element under the touch point
                 const touch = e.touches[0];
+                
+                // Move the piece visually
+                const newX = touch.clientX - touchOffset.x;
+                const newY = touch.clientY - touchOffset.y;
+                
+                draggedPiece.style.position = 'fixed';
+                draggedPiece.style.left = newX + 'px';
+                draggedPiece.style.top = newY + 'px';
+                draggedPiece.style.transform = 'scale(1.1)';
+                
+                // Highlight potential drop squares
                 const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
-                if (elementBelow && elementBelow !== draggedPiece) {
-                    elementBelow.dispatchEvent(mouseEvent);
+                const targetSquare = elementBelow ? elementBelow.closest('[data-square]') : null;
+                
+                // Remove previous highlights
+                chessBoard.querySelectorAll('.highlight-target').forEach(sq => {
+                    sq.classList.remove('highlight-target');
+                });
+                
+                // Add highlight to current target
+                if (targetSquare && targetSquare.getAttribute('data-square') !== dragStartSquare) {
+                    targetSquare.classList.add('highlight-target');
                 }
             }
-        }, { passive: false });
+        };
         
-        // Handle touch end
-        chessBoard.addEventListener('touchend', (e) => {
+        const handleTouchEnd = (e) => {
             if (isDragging && draggedPiece) {
                 e.preventDefault();
+                e.stopPropagation();
                 
-                // Find the element under the touch point for drop
+                const touchEndTime = Date.now();
+                const touchDuration = touchEndTime - touchStartTime;
+                
+                // Find the target square
                 const touch = e.changedTouches[0];
                 const elementBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+                const targetSquare = elementBelow ? elementBelow.closest('[data-square]') : null;
+                const targetSquareName = targetSquare ? targetSquare.getAttribute('data-square') : null;
                 
-                // Simulate mouseup on the target element
-                const mouseEvent = convertTouchToMouse(e, 'mouseup');
-                if (elementBelow) {
-                    elementBelow.dispatchEvent(mouseEvent);
+                console.log('Chess piece touch ended:', {
+                    from: dragStartSquare,
+                    to: targetSquareName,
+                    duration: touchDuration
+                });
+                
+                // Reset piece visual state
+                draggedPiece.style.opacity = '';
+                draggedPiece.style.transform = '';
+                draggedPiece.style.zIndex = '';
+                draggedPiece.style.position = '';
+                draggedPiece.style.left = '';
+                draggedPiece.style.top = '';
+                draggedPiece.style.pointerEvents = '';
+                
+                // Remove all highlights
+                chessBoard.querySelectorAll('.highlight-source, .highlight-target').forEach(sq => {
+                    sq.classList.remove('highlight-source', 'highlight-target');
+                });
+                
+                // Attempt the move if we have valid squares
+                if (dragStartSquare && targetSquareName && dragStartSquare !== targetSquareName) {
+                    console.log(`Attempting chess move: ${dragStartSquare} -> ${targetSquareName}`);
+                    
+                    // Try to make the move using the chess game instance
+                    if (this.chessGame && this.board) {
+                        try {
+                            // Try with promotion to queen first
+                            let move = null;
+                            try {
+                                move = this.chessGame.move({
+                                    from: dragStartSquare,
+                                    to: targetSquareName,
+                                    promotion: 'q'
+                                });
+                            } catch (e) {
+                                // If that fails, try without promotion
+                                move = this.chessGame.move({
+                                    from: dragStartSquare,
+                                    to: targetSquareName
+                                });
+                            }
+                            
+                            if (move) {
+                                console.log('✅ Move successful:', move.san);
+                                // Update the board position
+                                this.board.position(this.chessGame.fen());
+                                // Check if puzzle is solved
+                                this.checkPuzzleSolution(move);
+                            } else {
+                                console.log('❌ Invalid move');
+                                // Reset board position
+                                this.board.position(this.chessGame.fen());
+                            }
+                        } catch (error) {
+                            console.log('❌ Move error:', error.message);
+                            // Reset board position
+                            if (this.board) {
+                                this.board.position(this.chessGame.fen());
+                            }
+                        }
+                    }
                 } else {
-                    draggedPiece.dispatchEvent(mouseEvent);
+                    console.log('Touch ended without valid move');
+                    // Reset board position
+                    if (this.board) {
+                        this.board.position(this.chessGame.fen());
+                    }
                 }
                 
+                // Reset drag state
                 isDragging = false;
                 draggedPiece = null;
+                dragStartSquare = null;
                 touchOffset = { x: 0, y: 0 };
-                
-                console.log('Chess piece touch ended');
+                touchStartTime = 0;
             }
-        }, { passive: false });
+        };
+        
+        const handleTouchCancel = (e) => {
+            if (isDragging && draggedPiece) {
+                // Reset piece visual state
+                draggedPiece.style.opacity = '';
+                draggedPiece.style.transform = '';
+                draggedPiece.style.zIndex = '';
+                draggedPiece.style.position = '';
+                draggedPiece.style.left = '';
+                draggedPiece.style.top = '';
+                draggedPiece.style.pointerEvents = '';
+                
+                // Remove all highlights
+                chessBoard.querySelectorAll('.highlight-source, .highlight-target').forEach(sq => {
+                    sq.classList.remove('highlight-source', 'highlight-target');
+                });
+                
+                // Reset board position
+                if (this.board) {
+                    this.board.position(this.chessGame.fen());
+                }
+            }
+            
+            // Reset drag state
+            isDragging = false;
+            draggedPiece = null;
+            dragStartSquare = null;
+            touchOffset = { x: 0, y: 0 };
+            touchStartTime = 0;
+        };
+        
+        // Remove existing listeners to prevent duplicates
+        chessBoard.removeEventListener('touchstart', handleTouchStart);
+        chessBoard.removeEventListener('touchmove', handleTouchMove);
+        chessBoard.removeEventListener('touchend', handleTouchEnd);
+        chessBoard.removeEventListener('touchcancel', handleTouchCancel);
+        
+        // Add enhanced touch event listeners
+        chessBoard.addEventListener('touchstart', handleTouchStart, { passive: false });
+        chessBoard.addEventListener('touchmove', handleTouchMove, { passive: false });
+        chessBoard.addEventListener('touchend', handleTouchEnd, { passive: false });
+        chessBoard.addEventListener('touchcancel', handleTouchCancel, { passive: false });
         
         // Prevent context menu on long press
         chessBoard.addEventListener('contextmenu', (e) => {
             e.preventDefault();
         });
         
-        console.log('Chess touch support added successfully');
+        console.log('Enhanced chess touch support added successfully');
+    }
+
+    addChessPuzzleButtonListeners() {
+        console.log('Adding touch-optimized event listeners for chess puzzle buttons');
+        
+        // Find all chess puzzle buttons by their classes
+        const newPuzzleBtn = document.querySelector('.chess-new-puzzle-btn');
+        const showSolutionBtn = document.querySelector('.chess-show-solution-btn');
+        const showStatsBtn = document.querySelector('.chess-show-stats-btn');
+        const testDragBtn = document.querySelector('.chess-test-drag-btn');
+        
+        // Add touch-optimized listeners for New Puzzle button
+        if (newPuzzleBtn) {
+            this.addTouchOptimizedListener(newPuzzleBtn, () => {
+                const action = newPuzzleBtn.getAttribute('data-action');
+                if (action === 'resetChessPuzzle') {
+                    this.resetChessPuzzle();
+                }
+            });
+        }
+        
+        // Add touch-optimized listeners for Show Solution button
+        if (showSolutionBtn) {
+            this.addTouchOptimizedListener(showSolutionBtn, () => {
+                const action = showSolutionBtn.getAttribute('data-action');
+                if (action === 'showChessSolution') {
+                    this.showChessSolution();
+                }
+            });
+        }
+        
+        // Add touch-optimized listeners for Stats button
+        if (showStatsBtn) {
+            this.addTouchOptimizedListener(showStatsBtn, () => {
+                const action = showStatsBtn.getAttribute('data-action');
+                if (action === 'showPuzzleStats') {
+                    this.showPuzzleStats();
+                }
+            });
+        }
+        
+        // Add touch-optimized listeners for Test Drag button
+        if (testDragBtn) {
+            this.addTouchOptimizedListener(testDragBtn, () => {
+                const action = testDragBtn.getAttribute('data-action');
+                if (action === 'testChessDragDrop') {
+                    this.testChessDragDrop();
+                }
+            });
+        }
+        
+        console.log('Chess puzzle button listeners added successfully');
     }
 
     resetChessPuzzle() {
