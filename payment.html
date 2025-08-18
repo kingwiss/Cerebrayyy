@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cerebray Premium - Payment</title>
-    <script src="https://js.stripe.com/v3/"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=AU0wG24em8WTPFJPe2uchMR_zbyjPf9EykqV_IKUpESVdmPQbAUe8cZAwvZ82mcCzUG8DdiukyHFjULz&vault=true&intent=subscription"></script>
     <style>
         * {
             margin: 0;
@@ -91,8 +91,16 @@
             font-size: 1.2em;
         }
 
-        #payment-form {
+        .payment-section {
             padding: 0 30px 30px 30px;
+        }
+
+        .payment-section h3 {
+            color: #333;
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
         }
 
         .form-group {
@@ -123,40 +131,9 @@
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
-        .payment-section {
-            margin: 30px 0;
-        }
-
-        .payment-section h3 {
-            color: #333;
-            font-size: 1.1em;
-            font-weight: 600;
-            margin-bottom: 20px;
-        }
-
-        .form-row {
-            display: flex;
-            gap: 15px;
-        }
-
-        .half-width {
-            flex: 1;
-        }
-
-        .stripe-element {
-            padding: 14px 16px;
-            border: 2px solid #e1e5e9;
-            border-radius: 8px;
-            background: white;
-            transition: all 0.3s ease;
-            min-height: 48px;
-            display: flex;
-            align-items: center;
-        }
-
-        .stripe-element:focus-within {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        .paypal-button-container {
+            margin: 20px 0;
+            min-height: 55px;
         }
 
         .error-message {
@@ -164,6 +141,7 @@
             font-size: 13px;
             margin-top: 5px;
             min-height: 18px;
+            text-align: center;
         }
 
         .success-message {
@@ -175,42 +153,11 @@
             border: 1px solid #c3e6cb;
             border-radius: 6px;
             display: none;
+            text-align: center;
         }
 
         .success-message.show {
             display: block;
-        }
-
-        .pay-button {
-            width: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 18px 30px;
-            border-radius: 50px;
-            font-size: 1.1em;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
-            margin: 20px 0;
-        }
-
-        .pay-button:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-        }
-
-        .pay-button:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-            transform: none;
         }
 
         .security-info {
@@ -225,17 +172,67 @@
             font-size: 13px;
         }
 
-        .debug-info {
+        .features-list {
+            background: #f8f9fa;
+            margin: 20px 30px;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .features-list h4 {
+            color: #333;
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .feature-item::before {
+            content: "✅";
+            margin-right: 10px;
+        }
+
+        .loading-overlay {
             position: fixed;
-            top: 10px;
-            right: 10px;
-            background: #333;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 12px;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
             z-index: 1000;
-            max-width: 300px;
+        }
+
+        .loading-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         @media (max-width: 768px) {
@@ -249,20 +246,14 @@
             
             .order-summary {
                 margin: 20px;
-                padding: 15px;
             }
             
-            #payment-form {
+            .payment-section {
                 padding: 0 20px 20px 20px;
             }
             
-            .form-row {
-                flex-direction: column;
-                gap: 0;
-            }
-            
-            .half-width {
-                margin-bottom: 20px;
+            .features-list {
+                margin: 20px;
             }
         }
     </style>
@@ -272,276 +263,273 @@
         <div class="header">
             <div class="crown-icon">👑</div>
             <h1>Cerebray Premium</h1>
-            <p class="subtitle">Complete your upgrade to unlock unlimited brain training</p>
+            <p class="subtitle">Unlock unlimited access to premium features</p>
         </div>
-        
+
         <div class="order-summary">
             <h3>Order Summary</h3>
             <div class="summary-item">
-                <span>Cerebray Premium (Monthly)</span>
-                <span class="price">$4.99</span>
+                <span>Cerebray Premium Monthly</span>
+                <span>$4.99</span>
+            </div>
+            <div class="summary-item">
+                <span>Billing Cycle</span>
+                <span>Monthly</span>
             </div>
             <div class="summary-total">
-                <span><strong>Total</strong></span>
-                <span class="total-price"><strong>$4.99</strong></span>
+                <strong>Total Today</strong>
+                <strong class="total-price">$4.99/month</strong>
             </div>
         </div>
 
-        <form id="payment-form">
+        <div class="features-list">
+            <h4>What's Included:</h4>
+            <div class="feature-item">Unlimited premium games and activities</div>
+            <div class="feature-item">Advanced AI-powered learning tools</div>
+            <div class="feature-item">Priority customer support</div>
+            <div class="feature-item">Ad-free experience</div>
+            <div class="feature-item">Exclusive premium content</div>
+            <div class="feature-item">Cancel anytime</div>
+        </div>
+
+        <div class="payment-section">
+            <h3>Complete Your Subscription</h3>
+            
             <div class="form-group">
                 <label for="email">Email Address</label>
-                <input type="email" id="email" name="email" placeholder="your@email.com" required>
+                <input type="email" id="email" placeholder="Enter your email address" required>
+                <div class="error-message" id="email-error"></div>
             </div>
 
-            <div class="payment-section">
-                <h3>Payment Information</h3>
-                
-                <div class="form-group">
-                    <label for="card-number">Card Number</label>
-                    <div id="card-number" class="stripe-element"></div>
-                    <div id="card-number-errors" class="error-message"></div>
-                </div>
+            <div class="success-message" id="payment-success"></div>
+            <div class="error-message" id="payment-errors"></div>
 
-                <div class="form-row">
-                    <div class="form-group half-width">
-                        <label for="card-expiry">Expiry Date</label>
-                        <div id="card-expiry" class="stripe-element"></div>
-                        <div id="card-expiry-errors" class="error-message"></div>
-                    </div>
-
-                    <div class="form-group half-width">
-                        <label for="card-cvc">CVC</label>
-                        <div id="card-cvc" class="stripe-element"></div>
-                        <div id="card-cvc-errors" class="error-message"></div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="postal-code">Postal Code</label>
-                    <input type="text" id="postal-code" name="postal-code" placeholder="12345" required>
-                </div>
-            </div>
-
-            <div id="payment-errors" class="error-message"></div>
-            <div id="payment-success" class="success-message"></div>
-
-            <button type="submit" id="submit-button" class="pay-button">
-                <span>🔒</span>
-                PAY $4.99 SECURELY
-            </button>
+            <div id="paypal-button-container" class="paypal-button-container"></div>
 
             <div class="security-info">
-                <span>🔒 256-bit SSL encryption</span>
-                <span>💳 Powered by Stripe</span>
+                <span>🔒 Secure Payment</span>
+                <span>💳 Powered by PayPal</span>
+                <span>🛡️ Cancel Anytime</span>
             </div>
-        </form>
+        </div>
+    </div>
+
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p>Processing your subscription...</p>
+        </div>
     </div>
 
     <script>
-        class SimpleStripePayment {
+        class PayPalPaymentProcessor {
             constructor() {
-                this.stripe = null;
-                this.elements = null;
-                this.cardNumber = null;
-                this.cardExpiry = null;
-                this.cardCvc = null;
+                this.email = '';
+                this.isProcessing = false;
                 this.init();
             }
 
-            async init() {
-                try {
-                    console.log('🔄 Initializing Stripe...');
-                    
-                    // Get Stripe config from server
-                    const response = await fetch('/api/stripe-config');
-                    const config = await response.json();
-                    console.log('✅ Stripe config loaded:', config.publishableKey);
-                    
-                    this.stripe = Stripe(config.publishableKey);
-                    console.log('✅ Stripe initialized');
-                    
-                    this.setupElements();
-                    this.setupForm();
-                    
-                } catch (error) {
-                    console.error('❌ Error initializing Stripe:', error);
-                    this.showError('Failed to initialize payment system. Please refresh the page.');
-                }
+            init() {
+                console.log('🚀 Initializing PayPal payment system...');
+                this.setupEmailValidation();
+                this.renderPayPalButton();
             }
 
-            setupElements() {
-                console.log('🔧 Setting up Stripe Elements...');
+            setupEmailValidation() {
+                const emailInput = document.getElementById('email');
+                emailInput.addEventListener('blur', () => {
+                    this.validateEmail();
+                });
+                emailInput.addEventListener('input', () => {
+                    this.clearError('email-error');
+                });
+            }
+
+            validateEmail() {
+                const emailInput = document.getElementById('email');
+                const email = emailInput.value.trim();
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+                if (!email) {
+                    this.showError('email-error', 'Email address is required');
+                    return false;
+                }
+
+                if (!emailRegex.test(email)) {
+                    this.showError('email-error', 'Please enter a valid email address');
+                    return false;
+                }
+
+                this.email = email;
+                this.clearError('email-error');
+                return true;
+            }
+
+            renderPayPalButton() {
+                console.log('🔧 Rendering PayPal subscription button...');
                 
-                this.elements = this.stripe.elements({
-                    appearance: {
-                        theme: 'stripe',
-                        variables: {
-                            colorPrimary: '#667eea',
-                            colorBackground: '#ffffff',
-                            colorText: '#333333',
-                            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-                            borderRadius: '8px'
+                paypal.Buttons({
+                    style: {
+                        shape: 'rect',
+                        color: 'blue',
+                        layout: 'vertical',
+                        label: 'subscribe',
+                        height: 55
+                    },
+                    
+                    createSubscription: (data, actions) => {
+                        console.log('🔄 Creating PayPal subscription...');
+                        
+                        if (!this.validateEmail()) {
+                            this.showError('payment-errors', 'Please enter a valid email address first');
+                            return Promise.reject(new Error('Invalid email'));
                         }
-                    }
-                });
 
-                // Create elements
-                this.cardNumber = this.elements.create('cardNumber', {
-                    placeholder: '1234 1234 1234 1234'
-                });
-                
-                this.cardExpiry = this.elements.create('cardExpiry', {
-                    placeholder: 'MM / YY'
-                });
-                
-                this.cardCvc = this.elements.create('cardCvc', {
-                    placeholder: '123'
-                });
+                        this.showLoading();
 
-                // Mount elements
-                this.cardNumber.mount('#card-number');
-                this.cardExpiry.mount('#card-expiry');
-                this.cardCvc.mount('#card-cvc');
-
-                console.log('✅ Stripe Elements mounted');
-
-                // Add event listeners
-                this.cardNumber.on('change', (event) => {
-                    this.handleElementChange(event, 'card-number-errors');
-                });
-                
-                this.cardExpiry.on('change', (event) => {
-                    this.handleElementChange(event, 'card-expiry-errors');
-                });
-                
-                this.cardCvc.on('change', (event) => {
-                    this.handleElementChange(event, 'card-cvc-errors');
-                });
-
-                // Add debug info
-                this.addDebugInfo();
-            }
-
-            handleElementChange(event, errorElementId) {
-                const errorElement = document.getElementById(errorElementId);
-                if (event.error) {
-                    errorElement.textContent = event.error.message;
-                } else {
-                    errorElement.textContent = '';
-                }
-            }
-
-            setupForm() {
-                const form = document.getElementById('payment-form');
-                form.addEventListener('submit', async (event) => {
-                    event.preventDefault();
-                    await this.processPayment();
-                });
-            }
-
-            async processPayment() {
-                const submitButton = document.getElementById('submit-button');
-                const email = document.getElementById('email').value;
-                const postalCode = document.getElementById('postal-code').value;
-
-                if (!email || !postalCode) {
-                    this.showError('Please fill in all required fields.');
-                    return;
-                }
-
-                submitButton.disabled = true;
-                submitButton.textContent = 'Processing...';
-
-                try {
-                    // Create payment method
-                    const {error, paymentMethod} = await this.stripe.createPaymentMethod({
-                        type: 'card',
-                        card: this.cardNumber,
-                        billing_details: {
-                            email: email,
-                            address: {
-                                postal_code: postalCode
+                        return actions.subscription.create({
+                            'plan_id': 'P-2BW31317971447626NCRS6WI', // Your PayPal plan ID
+                            'subscriber': {
+                                'email_address': this.email
+                            },
+                            'application_context': {
+                                'brand_name': 'Cerebray Premium',
+                                'locale': 'en-US',
+                                'shipping_preference': 'NO_SHIPPING',
+                                'user_action': 'SUBSCRIBE_NOW',
+                                'payment_method': {
+                                    'payer_selected': 'PAYPAL',
+                                    'payee_preferred': 'IMMEDIATE_PAYMENT_REQUIRED'
+                                },
+                                'return_url': window.location.origin + '/payment-success.html',
+                                'cancel_url': window.location.origin + '/payment.html'
                             }
+                        });
+                    },
+
+                    onApprove: async (data, actions) => {
+                        console.log('✅ PayPal subscription approved:', data.subscriptionID);
+                        
+                        try {
+                            // Call our backend to handle the subscription
+                            const response = await fetch('/api/paypal-subscription-success', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    subscriptionId: data.subscriptionID,
+                                    email: this.email,
+                                    planId: 'P-2BW31317971447626NCRS6WI'
+                                })
+                            });
+
+                            const result = await response.json();
+
+                            if (result.success) {
+                                // Upgrade user through UserTierManager if available
+                                if (window.userTierManager) {
+                                    try {
+                                        const premiumData = {
+                                            subscriptionId: data.subscriptionID,
+                                            startDate: new Date().toISOString(),
+                                            endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 days
+                                            status: 'active'
+                                        };
+                                        await window.userTierManager.upgradeToPremium(premiumData);
+                                        console.log('User tier upgraded successfully via UserTierManager');
+                                    } catch (error) {
+                                        console.error('Error upgrading user tier:', error);
+                                    }
+                                }
+                                
+                                this.handleSubscriptionSuccess(data.subscriptionID);
+                            } else {
+                                throw new Error(result.error || 'Subscription processing failed');
+                            }
+
+                        } catch (error) {
+                            console.error('❌ Error processing subscription:', error);
+                            this.showError('payment-errors', 'Subscription processing failed. Please contact support.');
+                        } finally {
+                            this.hideLoading();
                         }
-                    });
+                    },
 
-                    if (error) {
-                        console.error('Payment method creation failed:', error);
-                        this.showError(error.message);
-                        return;
+                    onError: (err) => {
+                        console.error('❌ PayPal error:', err);
+                        this.hideLoading();
+                        this.showError('payment-errors', 'Payment failed. Please try again.');
+                    },
+
+                    onCancel: (data) => {
+                        console.log('⚠️ PayPal payment cancelled:', data);
+                        this.hideLoading();
+                        this.showError('payment-errors', 'Payment was cancelled. You can try again anytime.');
                     }
 
-                    console.log('✅ Payment method created:', paymentMethod.id);
+                }).render('#paypal-button-container');
 
-                    // Create subscription
-                    const subscriptionResponse = await fetch('/api/create-subscription', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            email: email,
-                            paymentMethodId: paymentMethod.id
-                        })
-                    });
-
-                    const subscriptionResult = await subscriptionResponse.json();
-
-                    if (subscriptionResult.error) {
-                        this.showError(subscriptionResult.error);
-                        return;
-                    }
-
-                    // Handle successful payment
-                    this.showSuccess();
-                    console.log('✅ Payment successful!');
-
-                } catch (error) {
-                    console.error('Payment processing error:', error);
-                    this.showError('Payment failed. Please try again.');
-                } finally {
-                    submitButton.disabled = false;
-                    submitButton.innerHTML = '<span>🔒</span> PAY $4.99 SECURELY';
-                }
+                console.log('✅ PayPal button rendered successfully');
             }
 
-            showError(message) {
-                const errorElement = document.getElementById('payment-errors');
+            handleSubscriptionSuccess(subscriptionId) {
+                console.log('🎉 Subscription successful:', subscriptionId);
+                
+                // Store premium access in localStorage
+                const premiumData = {
+                    isPremium: true,
+                    subscriptionId: subscriptionId,
+                    email: this.email,
+                    activatedAt: new Date().toISOString(),
+                    provider: 'paypal',
+                    planId: 'P-2BW31317971447626NCRS6WI'
+                };
+
+                localStorage.setItem('cerebrayPremium', JSON.stringify(premiumData));
+                localStorage.setItem('userEmail', this.email);
+
+                // Show success message
+                this.showSuccess();
+
+                // Redirect after delay
+                setTimeout(() => {
+                    window.location.href = '/?premium=activated';
+                }, 3000);
+            }
+
+            showLoading() {
+                document.getElementById('loading-overlay').style.display = 'flex';
+            }
+
+            hideLoading() {
+                document.getElementById('loading-overlay').style.display = 'none';
+            }
+
+            showError(elementId, message) {
+                const errorElement = document.getElementById(elementId);
                 errorElement.textContent = message;
                 setTimeout(() => {
                     errorElement.textContent = '';
                 }, 5000);
             }
 
-            showSuccess() {
-                const successElement = document.getElementById('payment-success');
-                successElement.textContent = '✅ Payment successful! Redirecting...';
-                successElement.classList.add('show');
-                
-                setTimeout(() => {
-                    window.location.href = '/dashboard.html?premium=true';
-                }, 2000);
+            clearError(elementId) {
+                const errorElement = document.getElementById(elementId);
+                errorElement.textContent = '';
             }
 
-            addDebugInfo() {
-                const debugDiv = document.createElement('div');
-                debugDiv.className = 'debug-info';
-                debugDiv.innerHTML = `
-                    <strong>Stripe Status:</strong><br>
-                    Stripe: ${!!this.stripe ? '✅' : '❌'}<br>
-                    Elements: ${!!this.elements ? '✅' : '❌'}<br>
-                    Card Number: ${!!this.cardNumber ? '✅' : '❌'}<br>
-                    Card Expiry: ${!!this.cardExpiry ? '✅' : '❌'}<br>
-                    Card CVC: ${!!this.cardCvc ? '✅' : '❌'}
-                `;
-                document.body.appendChild(debugDiv);
+            showSuccess() {
+                const successElement = document.getElementById('payment-success');
+                successElement.textContent = '🎉 Subscription successful! Welcome to Cerebray Premium! Redirecting...';
+                successElement.classList.add('show');
             }
         }
 
         // Initialize when DOM is ready
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('🚀 DOM loaded, initializing payment system...');
-            new SimpleStripePayment();
+            console.log('🚀 DOM loaded, initializing PayPal payment system...');
+            new PayPalPaymentProcessor();
         });
     </script>
 </body>

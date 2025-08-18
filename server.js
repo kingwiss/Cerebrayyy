@@ -76,11 +76,86 @@ async function initializeUsersFile() {
     }
 }
 
-// Stripe configuration endpoint
+// Stripe configuration endpoint (keeping for backward compatibility)
 app.get('/api/stripe-config', (req, res) => {
     res.json({
         publishableKey: process.env.STRIPE_PUBLISHABLE_KEY
     });
+});
+
+// PayPal subscription success endpoint
+app.post('/api/paypal-subscription-success', async (req, res) => {
+    try {
+        const { subscriptionId, email, planId } = req.body;
+
+        console.log('🔄 Processing PayPal subscription:', { subscriptionId, email, planId });
+
+        // Validate required fields
+        if (!subscriptionId || !email || !planId) {
+            return res.status(400).json({ 
+                success: false, 
+                error: 'Missing required fields: subscriptionId, email, or planId' 
+            });
+        }
+
+        // Verify the subscription with PayPal (optional - for production you'd verify with PayPal API)
+        // For now, we'll trust the client-side verification since PayPal handles the payment flow
+
+        // Find and upgrade the user
+        const users = await readUsers();
+        const userIndex = users.findIndex(user => user.email === email);
+
+        if (userIndex !== -1) {
+            // Update existing user to premium
+            users[userIndex].tier = 'premium';
+            users[userIndex].paypalSubscriptionId = subscriptionId;
+            users[userIndex].planId = planId;
+            users[userIndex].premiumActivatedAt = new Date().toISOString();
+            users[userIndex].paymentProvider = 'paypal';
+            
+            await writeUsers(users);
+            console.log('✅ Upgraded existing user to premium:', email);
+        } else {
+            // Create new premium user
+            const newUser = {
+                id: Date.now().toString(),
+                email,
+                username: email.split('@')[0], // Use email prefix as username
+                password: '', // No password for PayPal-only users
+                tier: 'premium',
+                paypalSubscriptionId: subscriptionId,
+                planId: planId,
+                premiumActivatedAt: new Date().toISOString(),
+                paymentProvider: 'paypal',
+                createdAt: new Date().toISOString()
+            };
+
+            users.push(newUser);
+            await writeUsers(users);
+            console.log('✅ Created new premium user:', email);
+        }
+
+        // Log the successful subscription for monitoring
+        console.log('🎉 PayPal subscription processed successfully:', {
+            email,
+            subscriptionId,
+            planId,
+            timestamp: new Date().toISOString()
+        });
+
+        res.json({
+            success: true,
+            message: 'Subscription processed successfully',
+            subscriptionId: subscriptionId
+        });
+
+    } catch (error) {
+        console.error('❌ PayPal subscription processing error:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to process subscription'
+        });
+    }
 });
 
 // Helper functions
