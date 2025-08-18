@@ -15,6 +15,24 @@ class BoredomBusterApp {
             closeModal: !!this.closeModal
         });
         
+        if (!this.cardsContainer) {
+            console.error('❌ cardsContainer not found! This will prevent cards from showing.');
+            console.error('❌ Available elements with ID cardsContainer:', document.querySelectorAll('#cardsContainer'));
+            console.error('❌ Available elements with class cards-container:', document.querySelectorAll('.cards-container'));
+        }
+        
+        // Additional debug logging for modal elements
+        if (!this.gameModal) {
+            console.error('❌ gameModal not found! Checking document...');
+            console.error('❌ gameModal by ID:', document.getElementById('gameModal'));
+            console.error('❌ gameModal by querySelector:', document.querySelector('#gameModal'));
+        }
+        if (!this.gameContent) {
+            console.error('❌ gameContent not found! Checking document...');
+            console.error('❌ gameContent by ID:', document.getElementById('gameContent'));
+            console.error('❌ gameContent by querySelector:', document.querySelector('#gameContent'));
+        }
+        
         this.currentCards = [];
         this.swipedCardsHistory = []; // Track swiped cards for back button functionality
         
@@ -681,10 +699,10 @@ class BoredomBusterApp {
         this.updateSwipeThresholds();
     }
 
-    // Update swipe thresholds based on viewport
+    // Update swipe thresholds based on viewport - optimized for better touch responsiveness
     updateSwipeThresholds() {
-        this.swipeThreshold = Math.min(this.viewportWidth * 0.3, 150);
-        this.swipeVelocityThreshold = 0.5;
+        this.swipeThreshold = Math.min(this.viewportWidth * 0.15, 50); // Further reduced for ultra-light touch
+        this.swipeVelocityThreshold = 0.2; // Further reduced for minimal effort swiping
     }
 
     setupIntersectionObserver() {
@@ -4027,10 +4045,13 @@ class BoredomBusterApp {
         this.currentCards = [];
         
         // Debug logging (reduced for performance)
-        console.log('🔍 generateCards() called - tier:', this.tierManager?.getCurrentTier(), 'premium:', this.isPremiumMode);
+        console.log('🔍 generateCards() called - tier:', this.userTierManager?.getCurrentTier(), 'premium:', this.isPremiumMode);
+        console.log('🔍 cardsContainer element:', this.cardsContainer);
+        console.log('🔍 cardsContainer display style:', window.getComputedStyle(this.cardsContainer).display);
+        console.log('🔍 cardsContainer visibility:', window.getComputedStyle(this.cardsContainer).visibility);
         
         // Check if user has reached daily card limit
-        if (this.tierManager && this.tierManager.hasReachedDailyLimit()) {
+        if (this.userTierManager && this.userTierManager.hasReachedDailyLimit()) {
             console.log('⚠️ User has reached daily card limit');
             this.showDailyLimitReachedMessage();
             return;
@@ -4050,8 +4071,8 @@ class BoredomBusterApp {
         }
         
         // Track card usage with tier manager
-        if (this.tierManager) {
-            this.tierManager.trackCardUsage(selectedActivities.length);
+        if (this.userTierManager) {
+            this.userTierManager.trackCardUsage(selectedActivities.length);
         }
         
         // Performance optimization: Use document fragment for batch DOM operations
@@ -4059,12 +4080,15 @@ class BoredomBusterApp {
         
         selectedActivities.forEach((activity, index) => {
             const card = this.createCardOptimized(activity, index);
+            console.log('🔍 Created card:', card, 'for activity:', activity.title);
             fragment.appendChild(card);
             this.currentCards.push(card);
         });
         
         // Single DOM operation to add all cards
         this.cardsContainer.appendChild(fragment);
+        console.log('🔍 Added', selectedActivities.length, 'cards to container');
+        console.log('🔍 cardsContainer children count:', this.cardsContainer.children.length);
         
         // Optimized animation with requestAnimationFrame
         this.animateCardsIn();
@@ -4209,6 +4233,7 @@ class BoredomBusterApp {
             image: improvedImage,
             action: dailyCard.action,
             category: dailyCard.category,
+            gameType: dailyCard.gameType, // Preserve gameType for games
             answer: dailyCard.answer || null,
             solution: dailyCard.solution || null,
             isNew: dailyCard.isNew || false
@@ -4374,7 +4399,7 @@ class BoredomBusterApp {
         console.log('🌟 Premium button clicked - showing comparison popup');
         
         // Check if user is already premium
-        const currentTier = this.tierManager ? this.tierManager.getCurrentTier() : 'basic';
+        const currentTier = this.userTierManager ? this.userTierManager.getCurrentTier() : 'basic';
         
         if (currentTier === 'premium') {
             // User is already premium, show premium dashboard or settings
@@ -4636,11 +4661,11 @@ class BoredomBusterApp {
 
     // Show daily limit reached message
     showDailyLimitReachedMessage() {
-        if (!this.tierManager) return;
-
-        const currentTier = this.tierManager.getCurrentTier();
-        const dailyLimit = this.tierManager.getDailyCardLimit();
-        const cardsUsed = this.tierManager.getCardsUsedToday();
+        if (!this.userTierManager) return;
+        
+        const currentTier = this.userTierManager.getCurrentTier();
+        const dailyLimit = this.userTierManager.getDailyCardLimit();
+        const cardsUsed = this.userTierManager.getCardsUsedToday();
 
         // Clear existing cards
         this.cardsContainer.innerHTML = '';
@@ -5373,15 +5398,15 @@ class BoredomBusterApp {
             card.style.opacity = opacity;
         };
         
-        // Throttled move handler using requestAnimationFrame
+        // Throttled move handler using requestAnimationFrame - optimized for responsiveness
         const throttledMove = (deltaX, deltaY) => {
             if (animationFrame) return; // Skip if animation frame is already queued
             
             animationFrame = requestAnimationFrame(() => {
-                // Optimized calculations with reduced complexity - no scale to prevent blurriness
-                const rotation = deltaX * 0.1; // Reduced rotation factor for smoother feel
-                const verticalOffset = Math.abs(deltaX) * 0.05; // Reduced vertical movement
-                const opacity = Math.max(0.7, 1 - Math.abs(deltaX) * 0.001); // Less aggressive opacity change
+                // Ultra-responsive calculations with immediate visual feedback
+                const rotation = deltaX * 0.15; // Increased rotation for better touch feedback
+                const verticalOffset = Math.abs(deltaX) * 0.02; // Minimal vertical movement for smoother feel
+                const opacity = Math.max(0.85, 1 - Math.abs(deltaX) * 0.0006); // Even more gradual opacity change
                 
                 setCardTransform(deltaX, -verticalOffset, rotation, opacity);
                 animationFrame = null;
@@ -5579,20 +5604,20 @@ class BoredomBusterApp {
             if (!isDragging && !isScrolling) {
                 const timeSinceStart = Date.now() - scrollStartTime;
                 
-                // Require significant movement before considering any gesture
-                const minMovementThreshold = 25; // Increased from 5px to 25px
-                const strongHorizontalThreshold = 40; // Strong horizontal movement threshold
-                const strongVerticalThreshold = 30; // Strong vertical movement threshold
+                // Require minimal movement before considering any gesture - ultra responsive for touch
+                const minMovementThreshold = 5; // Further reduced to 5px for immediate response
+                const strongHorizontalThreshold = 12; // Further reduced to 12px for easier swiping
+                const strongVerticalThreshold = 20; // Reduced to 20px
                 
                 // Wait for more decisive movement before making any decisions
                 if (absDeltaX < minMovementThreshold && absDeltaY < minMovementThreshold) {
                     return; // Not enough movement to determine intent
                 }
                 
-                // For mouse events, require even more movement to prevent accidental drags
+                // For mouse events, require minimal movement for better responsiveness
                 if (e.type === 'mousemove') {
-                    if (absDeltaX < 35 && absDeltaY < 35) {
-                        return; // Not enough movement to start dragging
+                    if (absDeltaX < 12 && absDeltaY < 12) {
+                        return; // Reduced threshold for easier mouse dragging
                     }
                     
                     // Clear vertical scroll preference
@@ -5608,15 +5633,15 @@ class BoredomBusterApp {
                         card.style.zIndex = '100';
                         card.style.willChange = 'transform, opacity';
                     }
-                    else if (timeSinceStart < 200) {
-                        return; // Wait longer to determine intent
+                    else if (timeSinceStart < 80) {
+                        return; // Wait even shorter time for ultra-responsive touch
                     }
                 }
                 
-                // Enhanced gesture detection for touch events with higher thresholds
+                // Enhanced gesture detection for touch events with optimized thresholds
                 if (e.type === 'touchmove') {
-                    // Require strong horizontal movement before considering it a swipe
-                    if (absDeltaX > strongHorizontalThreshold && absDeltaX > absDeltaY * 1.8) {
+                    // Require minimal horizontal movement before considering it a swipe
+                    if (absDeltaX > strongHorizontalThreshold && absDeltaX > absDeltaY * 1.2) {
                         // This is clearly a horizontal swipe
                         isDragging = true;
                         e.preventDefault(); // Prevent vertical scrolling
@@ -5628,10 +5653,10 @@ class BoredomBusterApp {
                         // Clear vertical scroll, allow it
                         isScrolling = true;
                         return;
-                    } else if (timeSinceStart < 150) {
-                        // Wait longer to determine gesture direction
-                        return;
-                    }
+                    } else if (timeSinceStart < 60) {
+                         // Wait minimal time to determine gesture direction for ultra-responsiveness
+                         return;
+                     }
                 }
             }
             
@@ -5676,17 +5701,17 @@ class BoredomBusterApp {
             isDragging = false;
             
             const deltaX = currentX - startX;
-            const swipeThreshold = 200; // Increased threshold to prevent accidental swipes
-            const velocityThreshold = 1.2; // Much higher velocity threshold
-            const minimumSwipeDistance = 150; // Minimum distance regardless of velocity
+            const swipeThreshold = 50; // Further reduced for ultra-light touch
+            const velocityThreshold = 0.25; // Further reduced for minimal effort swiping
+            const minimumSwipeDistance = 40; // Further reduced for easier completion
             
             // Require both significant distance AND velocity for swipe detection
             const hasEnoughDistance = Math.abs(deltaX) > swipeThreshold;
             const hasEnoughVelocity = Math.abs(velocity) > velocityThreshold;
             const hasMinimumDistance = Math.abs(deltaX) > minimumSwipeDistance;
             
-            // Only swipe if we have both distance and velocity, or very strong distance
-            const shouldSwipe = (hasEnoughDistance && hasEnoughVelocity) || (Math.abs(deltaX) > 300);
+            // Ultra-lenient swipe detection - swipe with minimal effort
+            const shouldSwipe = hasEnoughDistance || hasEnoughVelocity || (Math.abs(deltaX) > 70);
             
             card.style.cursor = 'grab';
             card.style.willChange = 'auto'; // Reset will-change to save memory
@@ -6106,6 +6131,15 @@ class BoredomBusterApp {
         this.refreshBtn.addEventListener('click', () => {
             this.generateCards();
         });
+        
+        // Test game modal button
+        const testGameModalBtn = document.getElementById('testGameModalBtn');
+        if (testGameModalBtn) {
+            testGameModalBtn.addEventListener('click', () => {
+                console.log('🧪 Test game modal button clicked');
+                this.openGame('tictactoe', 'Test Tic Tac Toe Game');
+            });
+        }
 
         // Set up event delegation for dynamically generated play buttons
         this.setupPlayButtonDelegation();
@@ -6390,6 +6424,10 @@ class BoredomBusterApp {
         
         if (!this.gameModal || !this.gameContent) {
             console.error('❌ Game modal elements not found!');
+            console.error('❌ gameModal exists:', !!this.gameModal);
+            console.error('❌ gameContent exists:', !!this.gameContent);
+            console.error('❌ gameModal ID check:', document.getElementById('gameModal'));
+            console.error('❌ gameContent ID check:', document.getElementById('gameContent'));
             return;
         }
         
@@ -6466,6 +6504,17 @@ class BoredomBusterApp {
                 zIndex: window.getComputedStyle(this.gameModal).zIndex
             });
         }, 100);
+    }
+
+    closeModal() {
+        console.log('🎮 closeModal called');
+        if (this.gameModal) {
+            this.cleanupGames();
+            this.gameModal.style.display = 'none';
+            console.log('🎮 Modal closed successfully');
+        } else {
+            console.error('❌ Game modal element not found!');
+        }
     }
 
     createTicTacToe() {

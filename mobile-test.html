@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Card Test</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #f0f0f0;
+        }
+        
+        .cards-container {
+            position: relative;
+            min-height: 400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #e0e0e0;
+            border: 2px solid #ccc;
+        }
+        
+        .card {
+            position: absolute;
+            width: 300px;
+            height: 400px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            padding: 20px;
+            box-sizing: border-box;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .debug-info {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            z-index: 1000;
+        }
+        
+        @media (max-width: 768px) {
+            .card {
+                width: calc(100vw - 40px);
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-info" id="debugInfo">
+        Loading...
+    </div>
+    
+    <h1>Mobile Card Display Test</h1>
+    
+    <div class="cards-container" id="cardsContainer">
+        <div class="card">
+            <h2>Test Card</h2>
+            <p>This is a test card to check if cards are visible on mobile devices.</p>
+            <p>Screen width: <span id="screenWidth"></span></p>
+            <p>Viewport width: <span id="viewportWidth"></span></p>
+            <p>User agent: <span id="userAgent"></span></p>
+        </div>
+    </div>
+    
+    <script>
+        function updateDebugInfo() {
+            const debugInfo = document.getElementById('debugInfo');
+            const screenWidth = document.getElementById('screenWidth');
+            const viewportWidth = document.getElementById('viewportWidth');
+            const userAgent = document.getElementById('userAgent');
+            
+            const info = {
+                screenWidth: screen.width,
+                screenHeight: screen.height,
+                viewportWidth: window.innerWidth,
+                viewportHeight: window.innerHeight,
+                devicePixelRatio: window.devicePixelRatio,
+                isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
+                touchSupport: 'ontouchstart' in window
+            };
+            
+            debugInfo.innerHTML = `
+                Screen: ${info.screenWidth}x${info.screenHeight}<br>
+                Viewport: ${info.viewportWidth}x${info.viewportHeight}<br>
+                DPR: ${info.devicePixelRatio}<br>
+                Mobile: ${info.isMobile}<br>
+                Touch: ${info.touchSupport}
+            `;
+            
+            screenWidth.textContent = info.screenWidth;
+            viewportWidth.textContent = info.viewportWidth;
+            userAgent.textContent = navigator.userAgent.substring(0, 50) + '...';
+        }
+        
+        updateDebugInfo();
+        window.addEventListener('resize', updateDebugInfo);
+        
+        // Test if cards container is found
+        const container = document.getElementById('cardsContainer');
+        console.log('Cards container found:', !!container);
+        console.log('Cards container display:', window.getComputedStyle(container).display);
+        console.log('Cards container visibility:', window.getComputedStyle(container).visibility);
+    </script>
+</body>
+</html>

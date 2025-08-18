@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnostic Page - Cerebray</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        .diagnostic-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .test-result {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        .warning { background: #fff3cd; color: #856404; }
+        pre {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="diagnostic-container">
+        <h1>🔍 Cerebray Diagnostic Tool</h1>
+        <p>This page will help diagnose why the main application might appear blank.</p>
+        
+        <div id="results"></div>
+        
+        <h3>Manual Tests:</h3>
+        <button onclick="testMainPage()">Test Main Page Elements</button>
+        <button onclick="testCSS()">Test CSS Loading</button>
+        <button onclick="testServer()">Test Server API</button>
+        <button onclick="clearResults()">Clear Results</button>
+    </div>
+
+    <script>
+        const results = document.getElementById('results');
+        
+        function addResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.innerHTML = message;
+            results.appendChild(div);
+            console.log(`[${type.toUpperCase()}] ${message.replace(/<[^>]*>/g, '')}`);
+        }
+        
+        function clearResults() {
+            results.innerHTML = '';
+        }
+        
+        // Run automatic diagnostics on load
+        document.addEventListener('DOMContentLoaded', function() {
+            addResult('🚀 Diagnostic page loaded successfully', 'success');
+            
+            // Test 1: Basic browser capabilities
+            addResult('📱 User Agent: ' + navigator.userAgent, 'info');
+            addResult('🌐 Current URL: ' + window.location.href, 'info');
+            addResult('📏 Screen Size: ' + screen.width + 'x' + screen.height, 'info');
+            addResult('🖼️ Viewport Size: ' + window.innerWidth + 'x' + window.innerHeight, 'info');
+            
+            // Test 2: JavaScript capabilities
+            try {
+                const testObj = { test: 'value' };
+                const testJson = JSON.stringify(testObj);
+                addResult('✅ JSON support working', 'success');
+            } catch (e) {
+                addResult('❌ JSON support failed: ' + e.message, 'error');
+            }
+            
+            // Test 3: Local Storage
+            try {
+                localStorage.setItem('diagnostic-test', 'working');
+                const value = localStorage.getItem('diagnostic-test');
+                if (value === 'working') {
+                    addResult('✅ LocalStorage working', 'success');
+                    localStorage.removeItem('diagnostic-test');
+                } else {
+                    addResult('❌ LocalStorage not working properly', 'error');
+                }
+            } catch (e) {
+                addResult('❌ LocalStorage failed: ' + e.message, 'error');
+            }
+            
+            // Test 4: Fetch API
+            if (typeof fetch !== 'undefined') {
+                addResult('✅ Fetch API available', 'success');
+            } else {
+                addResult('❌ Fetch API not available', 'error');
+            }
+            
+            // Test 5: ES6 Features
+            try {
+                const arrow = () => 'working';
+                const [a, b] = [1, 2];
+                const {test} = {test: 'value'};
+                addResult('✅ ES6 features working', 'success');
+            } catch (e) {
+                addResult('❌ ES6 features failed: ' + e.message, 'error');
+            }
+            
+            // Auto-run server test
+            setTimeout(testServer, 1000);
+        });
+        
+        function testMainPage() {
+            addResult('🔍 Testing main page accessibility...', 'info');
+            
+            // Try to access the main page in an iframe
+            const iframe = document.createElement('iframe');
+            iframe.src = '/';
+            iframe.style.width = '1px';
+            iframe.style.height = '1px';
+            iframe.style.opacity = '0';
+            iframe.style.position = 'absolute';
+            iframe.style.left = '-9999px';
+            
+            iframe.onload = function() {
+                try {
+                    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    if (iframeDoc) {
+                        const title = iframeDoc.title;
+                        const bodyContent = iframeDoc.body ? iframeDoc.body.innerHTML.length : 0;
+                        addResult(`✅ Main page loaded - Title: "${title}", Body content: ${bodyContent} characters`, 'success');
+                        
+                        // Check for specific elements
+                        const appContainer = iframeDoc.querySelector('.app-container');
+                        const cardsContainer = iframeDoc.querySelector('.cards-container');
+                        const header = iframeDoc.querySelector('.app-header');
+                        
+                        addResult(`📋 Elements found - App Container: ${!!appContainer}, Cards Container: ${!!cardsContainer}, Header: ${!!header}`, 'info');
+                    } else {
+                        addResult('❌ Cannot access iframe content (CORS restriction)', 'warning');
+                    }
+                } catch (e) {
+                    addResult('❌ Error accessing main page: ' + e.message, 'error');
+                }
+                document.body.removeChild(iframe);
+            };
+            
+            iframe.onerror = function() {
+                addResult('❌ Failed to load main page in iframe', 'error');
+                document.body.removeChild(iframe);
+            };
+            
+            document.body.appendChild(iframe);
+        }
+        
+        function testCSS() {
+            addResult('🎨 Testing CSS loading...', 'info');
+            
+            // Test if we can load the main CSS file
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = '/styles.css';
+            
+            link.onload = function() {
+                addResult('✅ Main CSS file loaded successfully', 'success');
+                document.head.removeChild(link);
+            };
+            
+            link.onerror = function() {
+                addResult('❌ Failed to load main CSS file', 'error');
+                document.head.removeChild(link);
+            };
+            
+            document.head.appendChild(link);
+        }
+        
+        function testServer() {
+            addResult('🌐 Testing server API...', 'info');
+            
+            // Test server API endpoint
+            fetch('/api/stripe-config')
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                })
+                .then(data => {
+                    addResult('✅ Server API working - Response: <pre>' + JSON.stringify(data, null, 2) + '</pre>', 'success');
+                })
+                .catch(error => {
+                    addResult('❌ Server API failed: ' + error.message, 'error');
+                });
+            
+            // Test if main page returns content
+            fetch('/')
+                .then(response => {
+                    if (response.ok) {
+                        return response.text();
+                    } else {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                })
+                .then(html => {
+                    const length = html.length;
+                    const hasAppContainer = html.includes('app-container');
+                    const hasCardsContainer = html.includes('cards-container');
+                    addResult(`✅ Main page HTML loaded - ${length} characters, Contains app-container: ${hasAppContainer}, Contains cards-container: ${hasCardsContainer}`, 'success');
+                    
+                    if (length < 1000) {
+                        addResult('⚠️ Main page HTML seems unusually short', 'warning');
+                    }
+                })
+                .catch(error => {
+                    addResult('❌ Failed to fetch main page: ' + error.message, 'error');
+                });
+        }
+    </script>
+</body>
+</html>

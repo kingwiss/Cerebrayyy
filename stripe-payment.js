@@ -13,13 +13,18 @@ class StripePaymentProcessor {
 
     async initializeStripe() {
         try {
+            console.log('🔄 Fetching Stripe configuration...');
             const response = await fetch('/api/stripe-config');
             const config = await response.json();
+            console.log('✅ Stripe config loaded:', config);
             this.stripe = Stripe(config.publishableKey);
+            console.log('✅ Stripe initialized with publishable key');
         } catch (error) {
-            console.error('Failed to load Stripe configuration:', error);
+            console.error('❌ Failed to load Stripe configuration:', error);
             // Fallback to hardcoded key if server is unavailable
+            console.log('🔄 Using fallback Stripe key...');
             this.stripe = Stripe('pk_live_51RbXymG32OfZ6BeqvQJGxKzP4uJJJ2ng');
+            console.log('✅ Stripe initialized with fallback key');
         }
         this.cardExpiry = null;
         this.cardCvc = null;
@@ -67,6 +72,7 @@ class StripePaymentProcessor {
     }
     
     setupElements() {
+        console.log('🔧 Setting up Stripe elements...');
         // Create Elements instance with custom styling
         this.elements = this.stripe.elements({
             appearance: {
@@ -85,6 +91,7 @@ class StripePaymentProcessor {
         });
         
         // Create individual card elements
+        console.log('🔧 Creating individual card elements...');
         this.cardNumber = this.elements.create('cardNumber', {
             style: {
                 base: {
@@ -133,25 +140,140 @@ class StripePaymentProcessor {
             placeholder: '123'
         });
         
+        console.log('✅ All Stripe elements created:', {
+            cardNumber: !!this.cardNumber,
+            cardExpiry: !!this.cardExpiry,
+            cardCvc: !!this.cardCvc
+        });
+        
         // Mount elements to DOM
-        this.cardNumber.mount('#card-number');
-        this.cardExpiry.mount('#card-expiry');
-        this.cardCvc.mount('#card-cvc');
+        console.log('🔧 Mounting Stripe elements...');
+        
+        // Check if DOM elements exist
+        const cardNumberEl = document.getElementById('card-number');
+        const cardExpiryEl = document.getElementById('card-expiry');
+        const cardCvcEl = document.getElementById('card-cvc');
+        
+        console.log('DOM elements check:', {
+            cardNumber: !!cardNumberEl,
+            cardExpiry: !!cardExpiryEl,
+            cardCvc: !!cardCvcEl
+        });
+        
+        try {
+            if (cardNumberEl) {
+                this.cardNumber.mount('#card-number');
+                console.log('✅ Card number element mounted');
+            } else {
+                console.error('❌ Card number DOM element not found');
+            }
+            
+            if (cardExpiryEl) {
+                this.cardExpiry.mount('#card-expiry');
+                console.log('✅ Card expiry element mounted');
+            } else {
+                console.error('❌ Card expiry DOM element not found');
+            }
+            
+            if (cardCvcEl) {
+                this.cardCvc.mount('#card-cvc');
+                console.log('✅ Card CVC element mounted');
+            } else {
+                console.error('❌ Card CVC DOM element not found');
+            }
+        } catch (error) {
+            console.error('❌ Error mounting Stripe elements:', error);
+        }
         
         // Setup error handling for each element
         this.cardNumber.on('change', (event) => {
+            console.log('🔄 Card number changed:', event);
             this.handleElementChange(event, 'card-number-errors');
         });
         
+        this.cardNumber.on('ready', () => {
+            console.log('✅ Card number element is ready and interactive');
+        });
+        
+        this.cardNumber.on('focus', () => {
+            console.log('🎯 Card number element focused');
+        });
+        
+        this.cardNumber.on('blur', () => {
+            console.log('👋 Card number element blurred');
+        });
+        
         this.cardExpiry.on('change', (event) => {
+            console.log('🔄 Card expiry changed:', event);
             this.handleElementChange(event, 'card-expiry-errors');
         });
         
+        this.cardExpiry.on('ready', () => {
+            console.log('✅ Card expiry element is ready and interactive');
+        });
+        
         this.cardCvc.on('change', (event) => {
+            console.log('🔄 Card CVC changed:', event);
             this.handleElementChange(event, 'card-cvc-errors');
         });
         
+        this.cardCvc.on('ready', () => {
+            console.log('✅ Card CVC element is ready and interactive');
+        });
+        
         console.log('✅ Stripe Elements created and mounted');
+        
+        // Add visual debugging indicator and test button
+        setTimeout(() => {
+            const debugDiv = document.createElement('div');
+            debugDiv.id = 'stripe-debug-info';
+            debugDiv.style.cssText = `
+                position: fixed;
+                top: 10px;
+                right: 10px;
+                background: #333;
+                color: white;
+                padding: 10px;
+                border-radius: 5px;
+                font-size: 12px;
+                z-index: 10002;
+                max-width: 300px;
+            `;
+            debugDiv.innerHTML = `
+                <strong>Stripe Debug Info:</strong><br>
+                Stripe: ${!!this.stripe ? '✅' : '❌'}<br>
+                Elements: ${!!this.elements ? '✅' : '❌'}<br>
+                Card Number: ${!!this.cardNumber ? '✅' : '❌'}<br>
+                Card Expiry: ${!!this.cardExpiry ? '✅' : '❌'}<br>
+                Card CVC: ${!!this.cardCvc ? '✅' : '❌'}<br>
+                <button onclick="this.testStripeElements()" style="margin-top: 10px; padding: 5px; background: #667eea; color: white; border: none; border-radius: 3px; cursor: pointer;">Test Elements</button>
+            `;
+            document.body.appendChild(debugDiv);
+            
+            // Add test function to window
+            window.testStripeElements = () => {
+                console.log('🧪 Testing Stripe elements...');
+                if (this.cardNumber) {
+                    this.cardNumber.focus();
+                    console.log('🎯 Attempted to focus card number element');
+                }
+                
+                // Test if elements are ready
+                const cardNumberEl = document.getElementById('card-number');
+                const iframe = cardNumberEl ? cardNumberEl.querySelector('iframe') : null;
+                console.log('Card number iframe found:', !!iframe);
+                
+                if (iframe) {
+                    console.log('Iframe dimensions:', {
+                        width: iframe.offsetWidth,
+                        height: iframe.offsetHeight,
+                        display: getComputedStyle(iframe).display,
+                        visibility: getComputedStyle(iframe).visibility,
+                        pointerEvents: getComputedStyle(iframe).pointerEvents
+                    });
+                }
+            };
+        }, 1000);
     }
     
     handleElementChange(event, errorElementId) {
@@ -467,15 +589,48 @@ class StripePaymentProcessor {
 
 // Initialize payment processor when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('🔄 DOM loaded, initializing payment processor...');
+    
+    // Check if Stripe is available
+    if (typeof Stripe === 'undefined') {
+        console.error('❌ Stripe library not loaded!');
+        const errorDiv = document.createElement('div');
+        errorDiv.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #dc3545;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            z-index: 10003;
+        `;
+        errorDiv.innerHTML = '❌ Stripe library failed to load. Please refresh the page.';
+        document.body.appendChild(errorDiv);
+        return;
+    }
+    
+    console.log('✅ Stripe library is available');
+    
     // Only initialize if we're on a page with payment form elements
     const paymentForm = document.getElementById('payment-form');
     const cardNumberElement = document.getElementById('card-number');
     
     if (paymentForm && cardNumberElement) {
         console.log('🚀 Initializing Stripe Payment System...');
-        new StripePaymentProcessor();
+        const processor = new StripePaymentProcessor();
     } else {
         console.log('ℹ️ Stripe payment elements not found - skipping initialization');
+    }
+    
+    // Handle back button
+    const backBtn = document.querySelector('.back-btn');
+    if (backBtn) {
+        backBtn.addEventListener('click', () => {
+            window.history.back();
+        });
     }
 });
 

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cerebray - Debug Version</title>
+    
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://js.stripe.com https://cdnjs.cloudflare.com https://unpkg.com https://formsubmit.co https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://unpkg.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https: blob:; connect-src 'self' https: wss:; frame-src 'self' https:; object-src 'none'; base-uri 'self';">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="premium-popup.css">
+    <link rel="stylesheet" href="stripe-payment.css">
+    <link rel="stylesheet" href="auth-modal.css">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="header-top">
+                <div class="header-left">
+                    <h1><i class="fas fa-gamepad"></i> Cerebray</h1>
+                </div>
+                
+                <div class="header-right">
+                    <button id="premiumToggleBtn" class="control-btn premium-toggle" title="Toggle Premium Mode (Testing)">
+                        <i class="fas fa-crown"></i>
+                        <span class="premium-label">Premium</span>
+                    </button>
+
+                    <button id="musicToggleBtn" class="control-btn music-toggle" title="Toggle background music">
+                        <i class="fas fa-music"></i>
+                    </button>
+                    
+                    <button id="signinBtn" class="signin-btn">
+                        <i class="fas fa-sign-in-alt"></i> Sign In
+                    </button>
+                    
+                    <div id="userInfo" class="user-info">
+                        <span id="usernameDisplay" class="username-display"></span>
+                        <button id="logoutBtn" class="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="header-nav">
+                <nav class="main-nav">
+                    <a href="index.html" class="nav-link active" id="homeTab">
+                        <i class="fas fa-home"></i> Home
+                    </a>
+                    <a href="blog.html" class="nav-link" id="blogTab">
+                        <i class="fas fa-blog"></i> Blog
+                    </a>
+                    <button class="nav-link saved-cards-btn" id="savedCardsBtn">
+                        <i class="fas fa-bookmark"></i> Saved Cards
+                    </button>
+                    <button class="nav-link contact-btn" id="contactBtn">
+                        <i class="fas fa-envelope"></i> Contact Us
+                    </button>
+                </nav>
+            </div>
+        </header>
+
+        <div class="cards-container" id="cardsContainer">
+            <div class="card">
+                <div class="card-content">
+                    <h3>🎯 Quick Activity</h3>
+                    <p>Do 10 jumping jacks right now!</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-content">
+                    <h3>🧠 Brain Teaser</h3>
+                    <p>What has keys but no locks, space but no room, and you can enter but not go inside?</p>
+                </div>
+            </div>
+        </div>
+
+        <button class="refresh-btn floating-refresh-btn" id="refreshBtn">
+            <i class="fas fa-sync-alt"></i> New Cards
+        </button>
+
+        <div class="instructions">
+            <p><i class="fas fa-hand-pointer"></i> Debug version - Basic functionality test!</p>
+        </div>
+
+        <footer class="app-footer">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="privacy-policy.html" class="footer-link">
+                        <i class="fas fa-shield-alt"></i> Privacy Policy
+                    </a>
+                    <span class="footer-separator">|</span>
+                    <a href="terms-of-service.html" class="footer-link">
+                        <i class="fas fa-file-contract"></i> Terms of Service
+                    </a>
+                </div>
+                <div class="footer-copyright">
+                    <p>&copy; 2024 Cerebray. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        console.log('🚀 Debug version loaded successfully!');
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('✅ DOM loaded, basic functionality working');
+            
+            // Simple refresh button functionality
+            const refreshBtn = document.getElementById('refreshBtn');
+            if (refreshBtn) {
+                refreshBtn.addEventListener('click', function() {
+                    console.log('🔄 Refresh button clicked');
+                    alert('Debug: Refresh button works!');
+                });
+            }
+            
+            // Test if cards are visible
+            const cards = document.querySelectorAll('.card');
+            console.log('📋 Found', cards.length, 'cards');
+            
+            // Test if styles are loaded
+            const container = document.querySelector('.app-container');
+            if (container) {
+                const styles = window.getComputedStyle(container);
+                console.log('🎨 Container max-width:', styles.maxWidth);
+                console.log('🎨 Container display:', styles.display);
+            }
+        });
+    </script>
+</body>
+</html>

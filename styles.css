@@ -12,6 +12,10 @@ html {
     -ms-text-size-adjust: 100%;
     -webkit-tap-highlight-color: rgba(0,0,0,0);
     scroll-behavior: smooth;
+    /* Prevent horizontal overflow on mobile */
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
 }
 
 /* Global performance optimizations */
@@ -93,6 +97,10 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeSpeed;
+    /* Mobile viewport optimizations */
+    width: 100%;
+    max-width: 100vw;
+    position: relative;
     /* Prevent unwanted touch behaviors */
     touch-action: manipulation;
     -webkit-touch-callout: none;
@@ -341,6 +349,9 @@ body {
     overflow: visible; /* Ensure cards remain visible at all widths */
     max-width: 100vw; /* Prevent overflow beyond viewport */
     width: 100%;
+    /* Ensure the container takes up the available space properly */
+    height: 100%;
+    max-height: calc(100vh - 200px); /* Account for header and footer */
 }
 
 .card {
@@ -379,25 +390,33 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) translate3d(0, 0, 0) !important; /* Responsive centering */
+    /* Force proper centering */
+    margin: 0 !important;
+    position: absolute !important;
 }
 
 /* Reset any unwanted transforms on card initialization */
 .card:not(.swiped):not([style*="transition"]) {
-    transform: translate3d(0, 0, 0) !important;
+    transform: translate(-50%, -50%) translate3d(0, 0, 0) !important;
 }
 
-/* Hide background cards completely - only show the top card */
+/* Show only the top card - hide background cards but ensure they can become visible when needed */
 .card:nth-child(n+2):not(.swiped) {
-    opacity: 0 !important;
-    pointer-events: none !important;
-    visibility: hidden !important;
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+    /* Allow cards to become visible when they move to top position */
+    transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 /* Ensure the top card is always visible and interactive */
-.card:nth-child(1):not(.swiped) {
+.card:nth-child(1):not(.swiped),
+.card:first-child:not(.swiped) {
     opacity: 1 !important;
     pointer-events: auto !important;
     visibility: visible !important;
+    /* Ensure mobile cards are always visible */
+    display: block !important;
 }
 
 .card:nth-child(1) {
@@ -1787,7 +1806,12 @@ button.touch-active,
         margin-top: -10px !important; /* Negative margin to bring cards even closer to header */
         height: calc(100vh - 80px) !important; /* Increased height for taller cards */
         min-height: calc(100vh - 80px) !important;
-        padding: 0 10px !important; /* Add horizontal padding to prevent cards from touching edges */
+        padding: 0 !important; /* Remove padding to ensure perfect centering */
+        /* Ensure container is properly positioned for centering */
+        position: relative !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
     }
     
     .card {
@@ -1796,6 +1820,30 @@ button.touch-active,
         min-width: 280px !important; /* Minimum usable width */
         height: calc(100vh - 140px) !important; /* Increased height for better content display */
         min-height: calc(100vh - 140px) !important; /* Ensure cards fit in viewport */
+        /* Ensure proper centering on small mobile screens */
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) translate3d(0, 0, 0) !important;
+        position: absolute !important;
+        margin: 0 !important; /* Remove margin to ensure perfect centering */
+    }
+    
+    /* Ensure all small mobile cards maintain proper centering */
+    .cards-container .card:nth-child(1),
+    .cards-container .card:nth-child(2),
+    .cards-container .card:nth-child(3),
+    .cards-container .card:nth-child(4),
+    .cards-container .card:nth-child(5) {
+        transform: translate(-50%, -50%) translate3d(0px, 0px, 0) !important;
+    }
+    
+    /* Ensure top card is always visible on small mobile screens */
+    .card:nth-child(1):not(.swiped),
+    .card:first-child:not(.swiped) {
+        opacity: 1 !important;
+        visibility: visible !important;
+        display: block !important;
+        pointer-events: auto !important;
     }
     
     .card-content {
@@ -2036,7 +2084,12 @@ button:active::before, .btn:active::before, .control-btn:active::before, .refres
         min-width: 320px !important; /* Minimum width enforced */
         height: calc(100vh - 200px) !important; /* Compact height to fit screen without scrolling */
         min-height: calc(100vh - 200px) !important; /* Ensure cards fit in viewport */
-        margin: 15px;
+        margin: 0 !important; /* Remove margin to ensure perfect centering */
+        /* Ensure proper centering on mobile */
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) translate3d(0, 0, 0) !important;
+        position: absolute !important;
     }
     
     .card-content {
@@ -2049,6 +2102,29 @@ button:active::before, .btn:active::before, .control-btn:active::before, .refres
     .cards-container {
         height: calc(100vh - 160px) !important; /* Container height to match cards */
         min-height: calc(100vh - 160px) !important;
+        /* Ensure container is properly positioned for centering */
+        position: relative !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+    
+    /* Ensure all mobile cards maintain proper centering */
+    .cards-container .card:nth-child(1),
+    .cards-container .card:nth-child(2),
+    .cards-container .card:nth-child(3),
+    .cards-container .card:nth-child(4),
+    .cards-container .card:nth-child(5) {
+        transform: translate(-50%, -50%) translate3d(0px, 0px, 0) !important;
+    }
+    
+    /* Ensure top card is always visible on mobile */
+    .card:nth-child(1):not(.swiped),
+    .card:first-child:not(.swiped) {
+        opacity: 1 !important;
+        visibility: visible !important;
+        display: block !important;
+        pointer-events: auto !important;
     }
     
     /* Larger chess board for mobile */
@@ -2528,7 +2604,7 @@ canvas {
     
     .cards-container {
         margin-top: 35px; /* Adjusted for ultra-compact button positioning */
-        padding: 0 5px !important; /* Prevent cards from touching screen edges */
+        padding: 0 !important; /* Remove padding to ensure perfect centering */
     }
     
     .card {

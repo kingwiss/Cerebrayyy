@@ -120,8 +120,18 @@ class AuthSystem {
         const signinBtn = document.getElementById('signinBtn');
         const logoutBtn = document.getElementById('logoutBtn');
         
+        console.log('Setting up event listeners...');
+        console.log('signinBtn found:', !!signinBtn);
+        console.log('logoutBtn found:', !!logoutBtn);
+        
         if (signinBtn) {
-            signinBtn.addEventListener('click', () => this.showModal());
+            signinBtn.addEventListener('click', () => {
+                console.log('Sign in button clicked!');
+                this.showModal();
+            });
+            console.log('Sign in event listener attached');
+        } else {
+            console.error('signinBtn not found!');
         }
         
         if (logoutBtn) {
@@ -448,8 +458,14 @@ class AuthSystem {
 // Initialize authentication system when DOM is loaded
 let authSystem;
 document.addEventListener('DOMContentLoaded', () => {
-    authSystem = new AuthSystem();
-    window.authSystem = authSystem; // Make globally accessible
+    console.log('DOM loaded, initializing AuthSystem...');
+    try {
+        authSystem = new AuthSystem();
+        window.authSystem = authSystem; // Make globally accessible
+        console.log('AuthSystem initialized successfully');
+    } catch (error) {
+        console.error('Error initializing AuthSystem:', error);
+    }
 });
 
 // Export for use in other scripts

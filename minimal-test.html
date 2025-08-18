@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Minimal Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 20px;
+            padding: 20px;
+        }
+        .test-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .test-card {
+            background-color: #e3f2fd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 4px solid #2196f3;
+        }
+        .success {
+            color: #4caf50;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Minimal Test Page</h1>
+        <p class="success">✅ If you can see this, basic HTML and CSS are working!</p>
+        
+        <div class="test-card">
+            <h3>Test Card 1</h3>
+            <p>This is a test card with inline styles.</p>
+        </div>
+        
+        <div class="test-card">
+            <h3>Test Card 2</h3>
+            <p>Another test card to verify layout.</p>
+        </div>
+        
+        <button onclick="testClick()" style="background: #2196f3; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Test Button</button>
+        
+        <div id="output" style="margin-top: 20px; padding: 10px; background: #f5f5f5; border-radius: 5px;"></div>
+    </div>
+    
+    <script>
+        console.log('🚀 Minimal test page loaded');
+        
+        function testClick() {
+            document.getElementById('output').innerHTML = '<p class="success">✅ JavaScript is working! Button clicked at ' + new Date().toLocaleTimeString() + '</p>';
+            console.log('✅ Button click test successful');
+        }
+        
+        // Test DOM ready
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('✅ DOM loaded successfully');
+            document.getElementById('output').innerHTML = '<p>🔄 Page loaded at ' + new Date().toLocaleTimeString() + '</p>';
+        });
+        
+        // Test if we can access the server
+        fetch('/api/stripe-config')
+            .then(response => response.json())
+            .then(data => {
+                console.log('✅ Server API accessible:', data);
+                document.getElementById('output').innerHTML += '<br><p class="success">✅ Server API is accessible</p>';
+            })
+            .catch(error => {
+                console.log('❌ Server API error:', error);
+                document.getElementById('output').innerHTML += '<br><p style="color: red;">❌ Server API error: ' + error.message + '</p>';
+            });
+    </script>
+</body>
+</html>

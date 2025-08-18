@@ -157,6 +157,11 @@ body {
     min-height: 48px;
     display: flex;
     align-items: center;
+    pointer-events: auto !important;
+    user-select: auto !important;
+    -webkit-user-select: auto !important;
+    -moz-user-select: auto !important;
+    -ms-user-select: auto !important;
 }
 
 .stripe-element:focus-within {
@@ -164,10 +169,16 @@ body {
     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
-/* Ensure Stripe iframes are properly sized */
+/* Ensure Stripe iframes are properly sized and interactive */
 .stripe-element iframe {
     height: 20px !important;
     min-height: 20px !important;
+    pointer-events: auto !important;
+    user-select: auto !important;
+    -webkit-user-select: auto !important;
+    -moz-user-select: auto !important;
+    -ms-user-select: auto !important;
+    touch-action: auto !important;
 }
 
 /* Error messages */

@@ -1,5 +1,6 @@
 require('dotenv').config();
 const http = require('http');
+const https = require('https');
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
@@ -11,7 +12,47 @@ const sgMail = require('@sendgrid/mail');
 const crypto = require('crypto');
 
 const app = express();
-const server = http.createServer(app);
+
+// HTTPS Configuration for local development
+let server;
+const useHTTPS = process.env.USE_HTTPS === 'true' || process.env.NODE_ENV === 'production';
+
+if (useHTTPS) {
+    try {
+        // Try to use SSL certificates if they exist
+        const privateKey = fs.readFileSync(path.join(__dirname, 'ssl', 'private-key.pem'), 'utf8');
+        const certificate = fs.readFileSync(path.join(__dirname, 'ssl', 'certificate.pem'), 'utf8');
+        const credentials = { key: privateKey, cert: certificate };
+        server = https.createServer(credentials, app);
+        console.log('🔒 HTTPS server configured with SSL certificates');
+    } catch (error) {
+        console.log('SSL certificate files not found, creating self-signed certificate...');
+        
+        try {
+            // Create self-signed certificate in memory for development
+            const selfsigned = require('selfsigned');
+            const attrs = [{ name: 'commonName', value: 'localhost' }];
+            const pems = selfsigned.generate(attrs, { days: 365 });
+            
+            const credentials = {
+                key: pems.private,
+                cert: pems.cert
+            };
+            
+            server = https.createServer(credentials, app);
+            console.log('🔒 HTTPS server running with temporary self-signed certificate');
+            console.log('⚠️  Browser will show security warning - this is normal for local development');
+        } catch (selfSignedError) {
+            console.log('Failed to create self-signed certificate, falling back to HTTP:', selfSignedError.message);
+            server = http.createServer(app);
+            console.log('🔓 Using HTTP server for local development');
+        }
+    }
+} else {
+    server = http.createServer(app);
+    console.log('⚠️  HTTP server - Payment forms require HTTPS for security');
+    console.log('💡 Set USE_HTTPS=true in .env to enable HTTPS');
+}
 
 // Middleware
 app.use(cors());
@@ -598,9 +639,20 @@ app.post('/api/logout', authenticateToken, (req, res) => {
 });
 
 const PORT = process.env.PORT || 8000;
+const protocol = useHTTPS ? 'https' : 'http';
+
+console.log('Starting server...');
+console.log('USE_HTTPS:', process.env.USE_HTTPS);
+console.log('useHTTPS:', useHTTPS);
+console.log('Protocol:', protocol);
+
 server.listen(PORT, async () => {
     await initializeUsersFile();
-    console.log(`🚀 Server running at http://localhost:${PORT}/`);
+    console.log(`🚀 Server running at ${protocol}://localhost:${PORT}/`);
     console.log('📱 Open this URL in your browser to test the app');
+    if (useHTTPS) {
+        console.log('🔒 HTTPS is enabled - payment forms will work securely');
+        console.log('⚠️  You may need to accept the security warning for the self-signed certificate');
+    }
     console.log('🔄 Press Ctrl+C to stop the server');
 });
