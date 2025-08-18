@@ -21,10 +21,10 @@ class StripePaymentProcessor {
             console.log('✅ Stripe initialized with publishable key');
         } catch (error) {
             console.error('❌ Failed to load Stripe configuration:', error);
-            // Fallback to hardcoded key if server is unavailable
-            console.log('🔄 Using fallback Stripe key...');
-            this.stripe = Stripe('pk_live_51RbXymG32OfZ6BeqvQJGxKzP4uJJJ2ng');
-            console.log('✅ Stripe initialized with fallback key');
+            // Fallback to test key if server is unavailable
+            console.log('🔄 Using fallback test Stripe key...');
+            this.stripe = Stripe('pk_test_51RbXymG32OfZ6BeqvQJGxKzP4uJJJ2ng');
+            console.log('✅ Stripe initialized with fallback test key');
         }
         this.cardExpiry = null;
         this.cardCvc = null;

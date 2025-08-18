@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stripe Elements Test</title>
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .stripe-element {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 10px;
+            background: white;
+            min-height: 40px;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        #debug {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-family: monospace;
+            white-space: pre-line;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #5a67d8;
+        }
+    </style>
+</head>
+<body>
+    <h1>Stripe Elements Test Page</h1>
+    
+    <div id="debug">Initializing...</div>
+    
+    <div class="form-group">
+        <label for="card-number">Card Number</label>
+        <div id="card-number" class="stripe-element"></div>
+        <div id="card-number-errors" class="error"></div>
+    </div>
+    
+    <div class="form-group">
+        <label for="card-expiry">Expiry Date</label>
+        <div id="card-expiry" class="stripe-element"></div>
+        <div id="card-expiry-errors" class="error"></div>
+    </div>
+    
+    <div class="form-group">
+        <label for="card-cvc">CVC</label>
+        <div id="card-cvc" class="stripe-element"></div>
+        <div id="card-cvc-errors" class="error"></div>
+    </div>
+    
+    <button onclick="testFocus()">Test Focus Card Number</button>
+    <button onclick="testElementsReady()">Check Elements Status</button>
+    <button onclick="clearDebug()">Clear Debug</button>
+    
+    <script>
+        let stripe = null;
+        let elements = null;
+        let cardNumber = null;
+        let cardExpiry = null;
+        let cardCvc = null;
+        
+        function log(message) {
+            const debug = document.getElementById('debug');
+            const timestamp = new Date().toLocaleTimeString();
+            debug.textContent += `[${timestamp}] ${message}\n`;
+            console.log(message);
+        }
+        
+        function clearDebug() {
+            document.getElementById('debug').textContent = '';
+        }
+        
+        async function initializeStripe() {
+            try {
+                log('🔄 Fetching Stripe configuration...');
+                
+                // Try to fetch from server first
+                try {
+                    const response = await fetch('/api/stripe-config');
+                    if (response.ok) {
+                        const config = await response.json();
+                        log('✅ Server config loaded: ' + JSON.stringify(config));
+                        stripe = Stripe(config.publishableKey);
+                    } else {
+                        throw new Error('Server config failed');
+                    }
+                } catch (error) {
+                    log('⚠️ Server config failed, using test key: ' + error.message);
+                    stripe = Stripe('pk_test_51RbXymG32OfZ6BeqvQJGxKzP4uJJJ2ng');
+                }
+                
+                log('✅ Stripe initialized');
+                
+                // Create elements
+                elements = stripe.elements({
+                    appearance: {
+                        theme: 'stripe',
+                        variables: {
+                            colorPrimary: '#667eea',
+                            colorBackground: '#ffffff',
+                            colorText: '#333333'
+                        }
+                    }
+                });
+                
+                log('✅ Elements created');
+                
+                // Create individual elements
+                cardNumber = elements.create('cardNumber', {
+                    placeholder: '1234 1234 1234 1234'
+                });
+                
+                cardExpiry = elements.create('cardExpiry', {
+                    placeholder: 'MM / YY'
+                });
+                
+                cardCvc = elements.create('cardCvc', {
+                    placeholder: '123'
+                });
+                
+                log('✅ Card elements created');
+                
+                // Mount elements
+                cardNumber.mount('#card-number');
+                cardExpiry.mount('#card-expiry');
+                cardCvc.mount('#card-cvc');
+                
+                log('✅ Elements mounted to DOM');
+                
+                // Add event listeners
+                cardNumber.on('ready', () => log('🎯 Card number ready'));
+                cardNumber.on('focus', () => log('🎯 Card number focused'));
+                cardNumber.on('blur', () => log('👋 Card number blurred'));
+                cardNumber.on('change', (event) => {
+                    log(`🔄 Card number changed - Complete: ${event.complete}, Error: ${event.error ? event.error.message : 'none'}`);
+                    const errorElement = document.getElementById('card-number-errors');
+                    errorElement.textContent = event.error ? event.error.message : '';
+                });
+                
+                cardExpiry.on('ready', () => log('🎯 Card expiry ready'));
+                cardExpiry.on('focus', () => log('🎯 Card expiry focused'));
+                cardExpiry.on('change', (event) => {
+                    log(`🔄 Card expiry changed - Complete: ${event.complete}`);
+                    const errorElement = document.getElementById('card-expiry-errors');
+                    errorElement.textContent = event.error ? event.error.message : '';
+                });
+                
+                cardCvc.on('ready', () => log('🎯 Card CVC ready'));
+                cardCvc.on('focus', () => log('🎯 Card CVC focused'));
+                cardCvc.on('change', (event) => {
+                    log(`🔄 Card CVC changed - Complete: ${event.complete}`);
+                    const errorElement = document.getElementById('card-cvc-errors');
+                    errorElement.textContent = event.error ? event.error.message : '';
+                });
+                
+                log('✅ All event listeners added');
+                log('🚀 Stripe Elements initialization complete!');
+                
+            } catch (error) {
+                log('❌ Error initializing Stripe: ' + error.message);
+                console.error('Stripe initialization error:', error);
+            }
+        }
+        
+        function testFocus() {
+            log('🧪 Testing focus on card number...');
+            if (cardNumber) {
+                cardNumber.focus();
+                log('✅ Focus command sent');
+            } else {
+                log('❌ Card number element not available');
+            }
+        }
+        
+        function testElementsReady() {
+            log('🧪 Checking elements status...');
+            log(`Stripe: ${!!stripe}`);
+            log(`Elements: ${!!elements}`);
+            log(`Card Number: ${!!cardNumber}`);
+            log(`Card Expiry: ${!!cardExpiry}`);
+            log(`Card CVC: ${!!cardCvc}`);
+            
+            // Check DOM elements
+            const cardNumberEl = document.getElementById('card-number');
+            const cardExpiryEl = document.getElementById('card-expiry');
+            const cardCvcEl = document.getElementById('card-cvc');
+            
+            log(`DOM - Card Number: ${!!cardNumberEl}`);
+            log(`DOM - Card Expiry: ${!!cardExpiryEl}`);
+            log(`DOM - Card CVC: ${!!cardCvcEl}`);
+            
+            // Check for iframes
+            if (cardNumberEl) {
+                const iframe = cardNumberEl.querySelector('iframe');
+                log(`Card Number iframe: ${!!iframe}`);
+                if (iframe) {
+                    log(`Iframe dimensions: ${iframe.offsetWidth}x${iframe.offsetHeight}`);
+                    log(`Iframe display: ${getComputedStyle(iframe).display}`);
+                    log(`Iframe visibility: ${getComputedStyle(iframe).visibility}`);
+                }
+            }
+        }
+        
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            log('🔄 DOM loaded, starting initialization...');
+            initializeStripe();
+        });
+    </script>
+</body>
+</html>
