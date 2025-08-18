@@ -340,6 +340,7 @@ body {
     align-items: center;
     overflow: visible; /* Ensure cards remain visible at all widths */
     max-width: 100vw; /* Prevent overflow beyond viewport */
+    width: 100%;
 }
 
 .card {
@@ -377,8 +378,7 @@ body {
 .cards-container .card {
     top: 50%;
     left: 50%;
-    margin: -310px 0 0 -160px; /* Center the card properly */
-    transform: translate3d(0, 0, 0) !important; /* Override any dynamic transforms when at rest */
+    transform: translate(-50%, -50%) translate3d(0, 0, 0) !important; /* Responsive centering */
 }
 
 /* Reset any unwanted transforms on card initialization */
@@ -402,36 +402,36 @@ body {
 
 .card:nth-child(1) {
     z-index: 100;
-    transform: translate3d(0px, 0px, 0);
+    transform: translate(-50%, -50%) translate3d(0px, 0px, 0);
     will-change: transform;
 }
 
 .card:nth-child(2) {
     z-index: 99;
-    transform: translate3d(0px, 0px, 0);
+    transform: translate(-50%, -50%) translate3d(0px, 0px, 0);
     will-change: transform;
 }
 
 .card:nth-child(3) {
     z-index: 98;
-    transform: translate3d(0px, 0px, 0);
+    transform: translate(-50%, -50%) translate3d(0px, 0px, 0);
     will-change: transform;
 }
 
 .card:nth-child(4) {
     z-index: 97;
-    transform: translate3d(0px, 0px, 0);
+    transform: translate(-50%, -50%) translate3d(0px, 0px, 0);
     will-change: transform;
 }
 
 .card:nth-child(5) {
     z-index: 96;
-    transform: translate3d(0px, 0px, 0);
+    transform: translate(-50%, -50%) translate3d(0px, 0px, 0);
     will-change: transform;
 }
 
 .card:hover:not(.swiped) {
-    transform: translate3d(0, -10px, 0);
+    transform: translate(-50%, -50%) translate3d(0, -10px, 0);
     z-index: 10 !important;
     box-shadow: 0 25px 45px rgba(0,0,0,0.2);
     transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease-out;
@@ -1787,15 +1787,15 @@ button.touch-active,
         margin-top: -10px !important; /* Negative margin to bring cards even closer to header */
         height: calc(100vh - 80px) !important; /* Increased height for taller cards */
         min-height: calc(100vh - 80px) !important;
+        padding: 0 10px !important; /* Add horizontal padding to prevent cards from touching edges */
     }
     
     .card {
-        width: 320px !important; /* Fixed width - never gets slimmer */
-        max-width: 450px !important; /* Maximum width cap */
-        min-width: 320px !important; /* Minimum width enforced */
+        width: min(320px, calc(100vw - 20px)) !important; /* Responsive width that fits in viewport */
+        max-width: calc(100vw - 20px) !important; /* Never exceed viewport width minus padding */
+        min-width: 280px !important; /* Minimum usable width */
         height: calc(100vh - 140px) !important; /* Increased height for better content display */
         min-height: calc(100vh - 140px) !important; /* Ensure cards fit in viewport */
-        margin: 0 auto !important; /* Center the cards */
     }
     
     .card-content {
@@ -1804,29 +1804,29 @@ button.touch-active,
         overflow-y: auto !important; /* Enable scrolling if needed */
     }
     
-    /* Clean card stacking - cards directly behind each other */
-    .card:nth-child(1) {
-        transform: translate3d(0px, 0px, 0) !important;
+    /* Clean card stacking - cards directly behind each other with responsive centering */
+    .cards-container .card:nth-child(1) {
+        transform: translate(-50%, -50%) translate3d(0px, 0px, 0) !important;
         z-index: 100 !important;
     }
     
-    .card:nth-child(2) {
-        transform: translate3d(0px, 0px, 0) !important;
+    .cards-container .card:nth-child(2) {
+        transform: translate(-50%, -50%) translate3d(0px, 0px, 0) !important;
         z-index: 99 !important;
     }
     
-    .card:nth-child(3) {
-        transform: translate3d(0px, 0px, 0) !important;
+    .cards-container .card:nth-child(3) {
+        transform: translate(-50%, -50%) translate3d(0px, 0px, 0) !important;
         z-index: 98 !important;
     }
     
-    .card:nth-child(4) {
-        transform: translate3d(0px, 0px, 0) !important;
+    .cards-container .card:nth-child(4) {
+        transform: translate(-50%, -50%) translate3d(0px, 0px, 0) !important;
         z-index: 97 !important;
     }
     
-    .card:nth-child(5) {
-        transform: translate3d(0px, 0px, 0) !important;
+    .cards-container .card:nth-child(5) {
+        transform: translate(-50%, -50%) translate3d(0px, 0px, 0) !important;
         z-index: 96 !important;
     }
     
@@ -2528,6 +2528,13 @@ canvas {
     
     .cards-container {
         margin-top: 35px; /* Adjusted for ultra-compact button positioning */
+        padding: 0 5px !important; /* Prevent cards from touching screen edges */
+    }
+    
+    .card {
+        width: min(280px, calc(100vw - 10px)) !important; /* Even more compact for tiny screens */
+        max-width: calc(100vw - 10px) !important;
+        min-width: 260px !important;
     }
     
     /* Enhanced extra small mobile game responsiveness */
@@ -2601,29 +2608,29 @@ canvas {
     
     /* Cards maintain desktop dimensions - no responsive sizing */
     
-    /* Clean card stacking for very small screens */
-    .card:nth-child(1) {
-        transform: translate3d(0px, 0px, 0) !important;
+    /* Clean card stacking for very small screens with responsive centering */
+    .cards-container .card:nth-child(1) {
+        transform: translate(-50%, -50%) translate3d(0px, 0px, 0) !important;
         z-index: 100 !important;
     }
     
-    .card:nth-child(2) {
-        transform: translate3d(0px, 0px, 0) !important;
+    .cards-container .card:nth-child(2) {
+        transform: translate(-50%, -50%) translate3d(0px, 0px, 0) !important;
         z-index: 99 !important;
     }
     
-    .card:nth-child(3) {
-        transform: translate3d(0px, 0px, 0) !important;
+    .cards-container .card:nth-child(3) {
+        transform: translate(-50%, -50%) translate3d(0px, 0px, 0) !important;
         z-index: 98 !important;
     }
     
-    .card:nth-child(4) {
-        transform: translate3d(0px, 0px, 0) !important;
+    .cards-container .card:nth-child(4) {
+        transform: translate(-50%, -50%) translate3d(0px, 0px, 0) !important;
         z-index: 97 !important;
     }
     
-    .card:nth-child(5) {
-        transform: translate3d(0px, 0px, 0) !important;
+    .cards-container .card:nth-child(5) {
+        transform: translate(-50%, -50%) translate3d(0px, 0px, 0) !important;
         z-index: 96 !important;
     }
 }
@@ -2633,6 +2640,12 @@ canvas {
     .cards-container {
         margin-top: 20px !important;
         padding: 0 5px !important;
+    }
+    
+    .card {
+        width: min(260px, calc(100vw - 10px)) !important; /* Ultra-compact for tiny screens */
+        max-width: calc(100vw - 10px) !important;
+        min-width: 240px !important;
     }
     
     /* Flappy Bird ultra-small screen optimization */
@@ -2650,26 +2663,24 @@ canvas {
         min-width: 80px !important;
     }
     
-    /* Cards maintain desktop dimensions - no responsive sizing */
-    
-    /* Clean card stacking for ultra-small screens */
-    .card:nth-child(1) {
-        transform: translate3d(0px, 0px, 0) !important;
+    /* Clean card stacking for ultra-small screens with responsive centering */
+    .cards-container .card:nth-child(1) {
+        transform: translate(-50%, -50%) translate3d(0px, 0px, 0) !important;
         z-index: 100 !important;
     }
     
-    .card:nth-child(2) {
-        transform: translate3d(0px, 0px, 0) !important;
+    .cards-container .card:nth-child(2) {
+        transform: translate(-50%, -50%) translate3d(0px, 0px, 0) !important;
         z-index: 99 !important;
     }
     
-    .card:nth-child(3) {
-        transform: translate3d(0px, 0px, 0) !important;
+    .cards-container .card:nth-child(3) {
+        transform: translate(-50%, -50%) translate3d(0px, 0px, 0) !important;
         z-index: 98 !important;
     }
     
-    .card:nth-child(4) {
-        transform: translate3d(0px, 0px, 0) !important;
+    .cards-container .card:nth-child(4) {
+        transform: translate(-50%, -50%) translate3d(0px, 0px, 0) !important;
         z-index: 97 !important;
     }
     
