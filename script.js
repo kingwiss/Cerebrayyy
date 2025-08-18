@@ -4077,9 +4077,9 @@ class BoredomBusterApp {
             if (animationIndex < this.currentCards.length) {
                 const card = this.currentCards[animationIndex];
                 
-                // Use CSS transitions for better performance
+                // Use CSS transitions for better performance - ensure clean positioning
                 card.style.opacity = '1';
-                card.style.transform = card.style.transform.replace('translateY(100px)', 'translateY(0px)');
+                card.style.transform = 'translate3d(0, 0, 0)';
                 
                 // Play swoosh sound (throttled)
                 if (animationIndex === 0) {
@@ -4777,7 +4777,8 @@ class BoredomBusterApp {
         // Performance optimization: Create card with minimal DOM operations
         const card = document.createElement('div');
         card.className = 'card';
-        card.style.cssText = 'opacity: 0; transform: translateY(100px); will-change: transform, opacity;';
+        // Clean initial positioning - no offsets or tilts
+        card.style.cssText = 'opacity: 0; transform: translate3d(0, 100px, 0); will-change: transform, opacity;';
         
         // Store activity data efficiently
         card.setAttribute('data-activity', JSON.stringify(activity));
@@ -4886,92 +4887,152 @@ class BoredomBusterApp {
             
             let touchStarted = false;
             let touchMoved = false;
+            let touchStartTime = 0;
+            let touchStartX = 0;
+            let touchStartY = 0;
             
-            // Add click event for desktop
+            // Create expanded touch zone for better button accessibility
+            const createExpandedTouchZone = () => {
+                const rect = element.getBoundingClientRect();
+                const expandedZone = 50; // 50px buffer for easier touching
+                return {
+                    left: rect.left - expandedZone,
+                    right: rect.right + expandedZone,
+                    top: rect.top - expandedZone,
+                    bottom: rect.bottom + expandedZone
+                };
+            };
+            
+            // Add click event for desktop with complete isolation
             element.addEventListener('click', (e) => {
                 // Prevent duplicate events from touch devices
                 if (touchStarted) {
                     touchStarted = false;
                     return;
                 }
+                // Always prevent propagation for button clicks
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
                 handler(e);
-            });
+            }, { capture: true });
             
-            // Enhanced touch event handling for mobile devices
+            // Enhanced touch event handling with complete isolation from card swipe
             element.addEventListener('touchstart', (e) => {
                 touchStarted = true;
                 touchMoved = false;
+                touchStartTime = Date.now();
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
                 
                 // Add visual feedback
                 element.classList.add('touch-active');
                 
-                // Always prevent default and stop propagation for button touches
-                // This ensures the button gets priority over swipe detection
-                if (element.classList.contains('game-play-btn') || 
-                    element.classList.contains('play-btn') ||
-                    element.classList.contains('show-answer-btn') ||
-                    element.classList.contains('card-back-btn') ||
-                    element.classList.contains('card-save-btn')) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                }
-            }, { passive: false });
+                // ALWAYS prevent default and stop ALL propagation for button touches
+                // This creates complete isolation from card swipe system
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                
+                // Mark this element as having an active button touch
+                element.setAttribute('data-button-touch-active', 'true');
+                
+            }, { passive: false, capture: true }); // Use capture phase for priority
             
             element.addEventListener('touchmove', (e) => {
-                touchMoved = true;
-                // Remove visual feedback if finger moves away
-                const touch = e.touches[0];
-                const rect = element.getBoundingClientRect();
-                const isInside = touch.clientX >= rect.left && 
-                               touch.clientX <= rect.right && 
-                               touch.clientY >= rect.top && 
-                               touch.clientY <= rect.bottom;
+                // Calculate movement distance
+                const deltaX = Math.abs(e.touches[0].clientX - touchStartX);
+                const deltaY = Math.abs(e.touches[0].clientY - touchStartY);
+                const totalMovement = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
                 
-                if (!isInside) {
-                    element.classList.remove('touch-active');
+                // Allow small movements (up to 20px) without canceling button press
+                if (totalMovement > 20) {
+                    touchMoved = true;
                 }
-            });
+                
+                // Check if still within expanded touch zone
+                const expandedZone = createExpandedTouchZone();
+                const touch = e.touches[0];
+                const isInExpandedZone = touch.clientX >= expandedZone.left && 
+                                       touch.clientX <= expandedZone.right && 
+                                       touch.clientY >= expandedZone.top && 
+                                       touch.clientY <= expandedZone.bottom;
+                
+                if (!isInExpandedZone) {
+                    element.classList.remove('touch-active');
+                    touchMoved = true;
+                }
+                
+                // Always prevent propagation during button touch
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                
+            }, { passive: false, capture: true });
             
             element.addEventListener('touchend', (e) => {
                 element.classList.remove('touch-active');
+                element.removeAttribute('data-button-touch-active');
                 
-                // Only trigger if touch didn't move significantly
-                if (!touchMoved) {
-                    // Always prevent default and stop propagation for button touches
-                    // This ensures the button gets priority over swipe detection
-                    if (element.classList.contains('game-play-btn') || 
-                        element.classList.contains('play-btn') ||
-                        element.classList.contains('show-answer-btn') ||
-                        element.classList.contains('card-back-btn') ||
-                        element.classList.contains('card-save-btn')) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                    }
+                // Calculate touch duration
+                const touchDuration = Date.now() - touchStartTime;
+                const isQuickTouch = touchDuration < 600; // Less than 600ms
+                
+                // Only trigger if touch didn't move significantly and was reasonably quick
+                if (!touchMoved && isQuickTouch) {
+                    // ALWAYS prevent default and stop ALL propagation for button actions
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+                    
+                    // Execute button handler
                     handler(e);
+                } else {
+                    // Still prevent propagation even if not executing handler
+                    e.preventDefault();
+                    e.stopPropagation();
                 }
                 
                 // Reset flags after a delay to prevent click event
                 setTimeout(() => {
                     touchStarted = false;
                     touchMoved = false;
-                }, 100);
-            });
+                }, 150);
+                
+            }, { passive: false, capture: true });
             
             element.addEventListener('touchcancel', (e) => {
                 element.classList.remove('touch-active');
+                element.removeAttribute('data-button-touch-active');
                 touchStarted = false;
                 touchMoved = false;
-            });
+                
+                // Always prevent propagation
+                e.preventDefault();
+                e.stopPropagation();
+            }, { passive: false, capture: true });
+            
+            // Additional mouse events for desktop with isolation
+            element.addEventListener('mousedown', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                element.classList.add('touch-active');
+            }, { capture: true });
+            
+            element.addEventListener('mouseup', (e) => {
+                element.classList.remove('touch-active');
+                // Don't call handler here - let click event handle it
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+            }, { capture: true });
         };
 
+        // Show answer buttons are now handled by event delegation
+        // No individual event listeners needed - delegation handles all answer buttons
         if (showAnswerBtn) {
-            addTouchOptimizedListener(showAnswerBtn, (e) => {
-                e.stopPropagation();
-                this.userHasInteracted = true;
-                const answer = activity.answer || activity.solution || '';
-                const solution = activity.solution || activity.explanation || activity.answer || '';
-                this.showSolutionInline(card, answer, solution);
-            });
+            console.log('💡 Found show answer button (handled by delegation)');
         }
 
         if (soundToggle) {
@@ -5014,15 +5075,13 @@ class BoredomBusterApp {
             });
         }
 
-        // Add touch-optimized listener for game play buttons
+        // Game play buttons are now handled by event delegation
+        // No individual event listeners needed - delegation handles all play buttons
         const gamePlayBtn = card.querySelector('.game-play-btn');
         if (gamePlayBtn) {
-            addTouchOptimizedListener(gamePlayBtn, (e) => {
-                e.stopPropagation();
-                this.userHasInteracted = true;
-                const gameType = gamePlayBtn.getAttribute('data-game-type');
-                const gameTitle = gamePlayBtn.getAttribute('data-game-title');
-                this.openGame(gameType, gameTitle);
+            console.log('🎮 Found game play button (handled by delegation):', {
+                gameType: gamePlayBtn.getAttribute('data-game-type'),
+                gameTitle: gamePlayBtn.getAttribute('data-game-title')
             });
         }
 
@@ -5177,8 +5236,10 @@ class BoredomBusterApp {
 
         // Add card back button event listener
         const cardBackBtn = card.querySelector('.card-back-btn');
+        console.log('Setting up back button for card:', cardBackBtn ? 'found' : 'not found');
         if (cardBackBtn) {
             cardBackBtn.addEventListener('click', (e) => {
+                console.log('Back button clicked!');
                 e.stopPropagation(); // Prevent card swiping
                 this.userHasInteracted = true; // Mark that user has interacted
                 this.bringBackLastCard();
@@ -5335,20 +5396,151 @@ class BoredomBusterApp {
             
             // Check if the touch started on a button or interactive element
             const target = e.target;
-            const isButton = target.matches('button, .btn, .card-back-btn, .card-save-btn, .play-btn, .game-play-btn, .sound-toggle, .show-answer-btn') || 
-                           target.closest('button, .btn, .card-back-btn, .card-save-btn, .play-btn, .game-play-btn, .sound-toggle, .show-answer-btn');
+            const clientX = e.type === 'mousedown' ? e.clientX : e.touches[0].clientX;
+            const clientY = e.type === 'mousedown' ? e.clientY : e.touches[0].clientY;
             
-            // Don't handle swipe if touching a button
-            if (isButton) {
+            // Define touch zones for the card
+            const defineSwipeSafeZones = () => {
+                const cardRect = card.getBoundingClientRect();
+                const cardContent = card.querySelector('.card-content');
+                const cardBody = card.querySelector('.card-body');
+                const cardDescription = card.querySelector('.card-description');
+                const cardImageContainer = card.querySelector('.card-image-container');
+                
+                // Define safe swipe zones (areas where swiping is allowed)
+                const safeZones = [];
+                
+                // Main content area (excluding top 80px for header buttons)
+                if (cardContent) {
+                    const contentRect = cardContent.getBoundingClientRect();
+                    safeZones.push({
+                        left: contentRect.left + 20, // 20px margin from edges
+                        right: contentRect.right - 20,
+                        top: contentRect.top + 80, // Exclude header area with buttons
+                        bottom: contentRect.bottom - 60, // Exclude bottom area
+                        name: 'content-area'
+                    });
+                }
+                
+                // Card description area (text content is safe for swiping)
+                if (cardDescription) {
+                    const descRect = cardDescription.getBoundingClientRect();
+                    safeZones.push({
+                        left: descRect.left,
+                        right: descRect.right,
+                        top: descRect.top,
+                        bottom: descRect.bottom,
+                        name: 'description-area'
+                    });
+                }
+                
+                // Image area (safe for swiping, but exclude if it contains interactive elements)
+                if (cardImageContainer && !cardImageContainer.querySelector('button, .btn, [onclick]')) {
+                    const imageRect = cardImageContainer.getBoundingClientRect();
+                    safeZones.push({
+                        left: imageRect.left + 10,
+                        right: imageRect.right - 10,
+                        top: imageRect.top + 10,
+                        bottom: imageRect.bottom - 10,
+                        name: 'image-area'
+                    });
+                }
+                
+                return safeZones;
+            };
+            
+            // Define button exclusion zones (areas where swiping is NOT allowed)
+            const defineButtonExclusionZones = () => {
+                const exclusionZones = [];
+                const expandedZone = 60; // 60px buffer around buttons for safety
+                
+                // Get all buttons and interactive elements
+                const allButtons = card.querySelectorAll('button, .btn, .card-back-btn, .card-save-btn, .play-btn, .game-play-btn, .sound-toggle, .show-answer-btn, .control-btn, .game-btn, [onclick], [data-action], [data-game-type], [role="button"]');
+                
+                allButtons.forEach(button => {
+                    const rect = button.getBoundingClientRect();
+                    exclusionZones.push({
+                        left: rect.left - expandedZone,
+                        right: rect.right + expandedZone,
+                        top: rect.top - expandedZone,
+                        bottom: rect.bottom + expandedZone,
+                        element: button,
+                        name: button.className || button.tagName
+                    });
+                });
+                
+                // Add header area as exclusion zone (top 80px of card)
+                const cardRect = card.getBoundingClientRect();
+                exclusionZones.push({
+                    left: cardRect.left,
+                    right: cardRect.right,
+                    top: cardRect.top,
+                    bottom: cardRect.top + 80,
+                    name: 'header-exclusion-zone'
+                });
+                
+                // Add bottom action area as exclusion zone (bottom 80px of card)
+                exclusionZones.push({
+                    left: cardRect.left,
+                    right: cardRect.right,
+                    top: cardRect.bottom - 80,
+                    bottom: cardRect.bottom,
+                    name: 'action-exclusion-zone'
+                });
+                
+                return exclusionZones;
+            };
+            
+            // Check if touch point is in any exclusion zone
+            const isInExclusionZone = (x, y, exclusionZones) => {
+                return exclusionZones.some(zone => 
+                    x >= zone.left && x <= zone.right && y >= zone.top && y <= zone.bottom
+                );
+            };
+            
+            // Check if touch point is in any safe zone
+            const isInSafeZone = (x, y, safeZones) => {
+                return safeZones.some(zone => 
+                    x >= zone.left && x <= zone.right && y >= zone.top && y <= zone.bottom
+                );
+            };
+            
+            // Get zones
+            const safeZones = defineSwipeSafeZones();
+            const exclusionZones = defineButtonExclusionZones();
+            
+            // Check if touch started in an exclusion zone
+            if (isInExclusionZone(clientX, clientY, exclusionZones)) {
+                console.log('🚫 Touch started in button exclusion zone - blocking swipe');
                 return;
             }
+            
+            // Check if touch started in a safe zone
+            if (!isInSafeZone(clientX, clientY, safeZones)) {
+                console.log('🚫 Touch started outside safe swipe zones - blocking swipe');
+                return;
+            }
+            
+            // Additional safety checks for interactive elements
+            const isButton = target.matches('button, .btn, .card-back-btn, .card-save-btn, .play-btn, .game-play-btn, .sound-toggle, .show-answer-btn, .control-btn, .game-btn, .number-btn, .key-btn, .reset-game-btn, .chess-new-puzzle-btn, .chess-show-solution-btn, .chess-show-stats-btn, .chess-test-drag-btn, .submit-btn, .cancel-btn, .auth-submit-btn, .plan-btn, .refresh-btn, .floating-refresh-btn, .upgrade-btn, .premium-toggle, .music-toggle, .signin-btn, .logout-btn, .nav-link, .saved-cards-btn, .contact-btn, .social-btn, .sign-out-btn, .comment-btn, .delete-btn, .reply-btn, .post-reply-btn, .cancel-reply-btn, .read-more-btn, .comments-btn, .change-name-btn, .post-comment-btn, .delete-comment-btn, .mobile-keyboard-btn, .backspace-btn, .hide-keyboard-btn, .auto-move, .hint, .new-game') || 
+                           target.closest('button, .btn, .card-back-btn, .card-save-btn, .play-btn, .game-play-btn, .sound-toggle, .show-answer-btn, .control-btn, .game-btn, .number-btn, .key-btn, .reset-game-btn, .chess-new-puzzle-btn, .chess-show-solution-btn, .chess-show-stats-btn, .chess-test-drag-btn, .submit-btn, .cancel-btn, .auth-submit-btn, .plan-btn, .refresh-btn, .floating-refresh-btn, .upgrade-btn, .premium-toggle, .music-toggle, .signin-btn, .logout-btn, .nav-link, .saved-cards-btn, .contact-btn, .social-btn, .sign-out-btn, .comment-btn, .delete-btn, .reply-btn, .post-reply-btn, .cancel-reply-btn, .read-more-btn, .comments-btn, .change-name-btn, .post-comment-btn, .delete-comment-btn, .mobile-keyboard-btn, .backspace-btn, .hide-keyboard-btn, .auto-move, .hint, .new-game');
+            
+            const hasClickHandler = target.onclick || target.getAttribute('onclick');
+            const isInteractive = target.hasAttribute('data-action') || target.hasAttribute('data-game-type') || target.hasAttribute('data-answer') || target.hasAttribute('data-solution');
+            const isClickable = target.style.cursor === 'pointer' || getComputedStyle(target).cursor === 'pointer';
+            const hasButtonRole = target.getAttribute('role') === 'button';
+            
+            // Final safety check - don't handle swipe if touching any interactive element
+            if (isButton || hasClickHandler || isInteractive || isClickable || hasButtonRole) {
+                console.log('🚫 Touch started on interactive element - blocking swipe');
+                return;
+            }
+            
+            console.log('✅ Touch started in safe swipe zone - allowing swipe');
             
             // Check if the touch started on a scrollable area
             const cardContent = card.querySelector('.card-content');
             const isOnScrollableContent = cardContent && cardContent.contains(target);
-            
-            const clientX = e.type === 'mousedown' ? e.clientX : e.touches[0].clientX;
-            const clientY = e.type === 'mousedown' ? e.clientY : e.touches[0].clientY;
             
             startX = clientX;
             startY = clientY;
@@ -5367,14 +5559,8 @@ class BoredomBusterApp {
                 animationFrame = null;
             }
             
-            // For touch events, only prevent default if not on scrollable content
-            if (e.type === 'touchstart' && !isOnScrollableContent) {
-                e.preventDefault();
-                card.style.transition = 'none';
-                card.style.cursor = 'grabbing';
-                card.style.zIndex = '100';
-                card.style.willChange = 'transform, opacity';
-            }
+            // Don't immediately set dragging styles - wait for actual movement
+            // This prevents accidental visual changes on simple taps
         };
         
         const handleMove = (e) => {
@@ -5389,50 +5575,61 @@ class BoredomBusterApp {
             const absDeltaX = Math.abs(deltaX);
             const absDeltaY = Math.abs(deltaY);
             
-            // Determine if this is a scroll gesture or swipe gesture
+            // Determine if this is a scroll gesture or swipe gesture with much higher thresholds
             if (!isDragging && !isScrolling) {
                 const timeSinceStart = Date.now() - scrollStartTime;
                 
-                // For mouse events, require more movement to prevent accidental drags
+                // Require significant movement before considering any gesture
+                const minMovementThreshold = 25; // Increased from 5px to 25px
+                const strongHorizontalThreshold = 40; // Strong horizontal movement threshold
+                const strongVerticalThreshold = 30; // Strong vertical movement threshold
+                
+                // Wait for more decisive movement before making any decisions
+                if (absDeltaX < minMovementThreshold && absDeltaY < minMovementThreshold) {
+                    return; // Not enough movement to determine intent
+                }
+                
+                // For mouse events, require even more movement to prevent accidental drags
                 if (e.type === 'mousemove') {
-                    if (absDeltaX < 15 && absDeltaY < 15) {
+                    if (absDeltaX < 35 && absDeltaY < 35) {
                         return; // Not enough movement to start dragging
+                    }
+                    
+                    // Clear vertical scroll preference
+                    if (absDeltaY > absDeltaX * 1.5 && absDeltaY > strongVerticalThreshold) {
+                        isScrolling = true;
+                        return; // Let the browser handle scrolling
+                    }
+                    // Only start horizontal dragging with strong horizontal movement
+                    else if (absDeltaX > strongHorizontalThreshold && absDeltaX > absDeltaY * 1.5) {
+                        isDragging = true;
+                        card.style.transition = 'none';
+                        card.style.cursor = 'grabbing';
+                        card.style.zIndex = '100';
+                        card.style.willChange = 'transform, opacity';
+                    }
+                    else if (timeSinceStart < 200) {
+                        return; // Wait longer to determine intent
                     }
                 }
                 
-                // Enhanced gesture detection for touch events
+                // Enhanced gesture detection for touch events with higher thresholds
                 if (e.type === 'touchmove') {
-                    // For touch events, be more aggressive about preventing vertical scrolling during horizontal swipes
-                    if (absDeltaX > 5) {
-                        // This is likely a horizontal swipe, prevent vertical scrolling
+                    // Require strong horizontal movement before considering it a swipe
+                    if (absDeltaX > strongHorizontalThreshold && absDeltaX > absDeltaY * 1.8) {
+                        // This is clearly a horizontal swipe
                         isDragging = true;
                         e.preventDefault(); // Prevent vertical scrolling
                         card.style.transition = 'none';
                         card.style.cursor = 'grabbing';
                         card.style.zIndex = '100';
                         card.style.willChange = 'transform, opacity';
-                    } else if (absDeltaY > 15 && absDeltaY > absDeltaX * 2) {
+                    } else if (absDeltaY > strongVerticalThreshold && absDeltaY > absDeltaX * 2) {
                         // Clear vertical scroll, allow it
                         isScrolling = true;
                         return;
-                    } else if (timeSinceStart < 50) {
-                        // Wait a bit more to determine gesture direction
-                        return;
-                    }
-                } else {
-                    // Mouse gesture detection (original logic)
-                    if (absDeltaY > absDeltaX && absDeltaY > 8) {
-                        isScrolling = true;
-                        return; // Let the browser handle scrolling
-                    }
-                    else if (absDeltaX > 10 || (absDeltaX > absDeltaY && absDeltaX > 5)) {
-                        isDragging = true;
-                        card.style.transition = 'none';
-                        card.style.cursor = 'grabbing';
-                        card.style.zIndex = '100';
-                        card.style.willChange = 'transform, opacity';
-                    }
-                    else if (timeSinceStart < 100) {
+                    } else if (timeSinceStart < 150) {
+                        // Wait longer to determine gesture direction
                         return;
                     }
                 }
@@ -5479,11 +5676,17 @@ class BoredomBusterApp {
             isDragging = false;
             
             const deltaX = currentX - startX;
-            const swipeThreshold = 100; // Reduced threshold for more responsive swiping
-            const velocityThreshold = 0.4; // Slightly reduced for easier swiping
+            const swipeThreshold = 200; // Increased threshold to prevent accidental swipes
+            const velocityThreshold = 1.2; // Much higher velocity threshold
+            const minimumSwipeDistance = 150; // Minimum distance regardless of velocity
             
-            // Consider both distance and velocity for swipe detection
-            const shouldSwipe = Math.abs(deltaX) > swipeThreshold || Math.abs(velocity) > velocityThreshold;
+            // Require both significant distance AND velocity for swipe detection
+            const hasEnoughDistance = Math.abs(deltaX) > swipeThreshold;
+            const hasEnoughVelocity = Math.abs(velocity) > velocityThreshold;
+            const hasMinimumDistance = Math.abs(deltaX) > minimumSwipeDistance;
+            
+            // Only swipe if we have both distance and velocity, or very strong distance
+            const shouldSwipe = (hasEnoughDistance && hasEnoughVelocity) || (Math.abs(deltaX) > 300);
             
             card.style.cursor = 'grab';
             card.style.willChange = 'auto'; // Reset will-change to save memory
@@ -5542,9 +5745,9 @@ class BoredomBusterApp {
                     }, 200); // Reduced delay for faster audio response
                 }, 600); // Reduced from 800ms for faster card replacement
             } else {
-                // Optimized snap back animation without scale to prevent blurriness
+                // Optimized snap back animation - ensure completely clean positioning
                 card.style.transition = 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease-out';
-                card.style.transform = 'translate3d(0, 0, 0) rotate(0deg)';
+                card.style.transform = 'translate3d(0, 0, 0)';
                 card.style.opacity = '1';
                 card.style.zIndex = '';
                 
@@ -5601,17 +5804,17 @@ class BoredomBusterApp {
         
         const newCard = this.createCard(randomActivity, 0);
         
-        // Position it at the back
+        // Position it at the back with clean stacking
         newCard.style.zIndex = '1';
-        newCard.style.transform = 'translateX(-60px) translateY(30px) rotate(0deg) translateY(100px)';
+        newCard.style.transform = 'translate3d(0, 100px, 0)';
         newCard.style.opacity = '0';
         
         this.cardsContainer.appendChild(newCard);
         
-        // Animate in
+        // Animate in with clean positioning
         setTimeout(() => {
             newCard.style.opacity = '1';
-            newCard.style.transform = 'translateX(-60px) translateY(30px) rotate(0deg)';
+            newCard.style.transform = 'translate3d(0, 0, 0)';
             
             // Play swoosh sound as new card animates in
             this.playSwooshSound();
@@ -5700,6 +5903,7 @@ class BoredomBusterApp {
     // Add a card to the swiped cards history
     addToSwipedHistory(cardData) {
         // Store the card data (not the DOM element)
+        console.log('Adding card to swipe history:', cardData);
         this.swipedCardsHistory.push(cardData);
         
         // Keep only the last 10 swiped cards to prevent memory issues
@@ -5707,12 +5911,15 @@ class BoredomBusterApp {
             this.swipedCardsHistory.shift();
         }
         
+        console.log('Swipe history now has', this.swipedCardsHistory.length, 'cards');
+        
         // Update back button visibility on all cards
         this.updateBackButtonVisibility();
     }
 
     // Bring back the last swiped card
     bringBackLastCard() {
+        console.log('bringBackLastCard called, history length:', this.swipedCardsHistory.length);
         if (this.swipedCardsHistory.length === 0) {
             console.log('No cards to bring back');
             return;
@@ -5720,25 +5927,38 @@ class BoredomBusterApp {
         
         // Get the last swiped card data
         const lastCardData = this.swipedCardsHistory.pop();
+        console.log('Restoring card data:', lastCardData);
         
         // Create a new card with the same data
         const restoredCard = this.createCard(lastCardData, 0);
+        console.log('Created restored card:', restoredCard);
+        console.log('Card element classes:', restoredCard.className);
+        console.log('Card element style:', restoredCard.style.cssText);
         
         // Position it prominently at the top of the stack
         const cards = this.cardsContainer.querySelectorAll('.card:not(.swiped)');
         const topZIndex = Math.max(...Array.from(cards).map(card => parseInt(card.style.zIndex) || 0));
         restoredCard.style.zIndex = Math.max(topZIndex + 10, 100); // Ensure it's well above other cards
         
-        // Start with animation from the right side
-        restoredCard.style.transform = 'translateX(100%) translateY(0) rotate(0deg)';
+        // Start with clean animation from the right side
+        restoredCard.style.transform = 'translate3d(100%, 0, 0)';
         restoredCard.style.opacity = '0';
         
-        this.cardsContainer.appendChild(restoredCard);
+        console.log('Cards container:', this.cardsContainer);
+        console.log('Inserting restored card as first child');
+        // Insert as first child so it becomes the visible top card
+        this.cardsContainer.insertBefore(restoredCard, this.cardsContainer.firstChild);
+        console.log('Card inserted. Container children count:', this.cardsContainer.children.length);
+        console.log('Restored card parent:', restoredCard.parentElement);
+        console.log('Restored card in DOM:', document.contains(restoredCard));
+        console.log('Restored card computed style display:', window.getComputedStyle(restoredCard).display);
+        console.log('Restored card computed style visibility:', window.getComputedStyle(restoredCard).visibility);
         
-        // Animate in from the right
+        // Animate in from the right with clean positioning
         setTimeout(() => {
+            console.log('Starting animation for restored card');
             restoredCard.style.transition = 'all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-            restoredCard.style.transform = 'translateX(0) translateY(0) rotate(0deg)';
+            restoredCard.style.transform = 'translate3d(0, 0, 0)';
             restoredCard.style.opacity = '1';
             
             // Play a subtle restoration sound
@@ -5791,12 +6011,19 @@ class BoredomBusterApp {
     updateBackButtonVisibility() {
         // Update visibility for all card back buttons
         const cardBackBtns = document.querySelectorAll('.card-back-btn');
+        console.log('Back button debug:', {
+            historyLength: this.swipedCardsHistory.length,
+            buttonsFound: cardBackBtns.length,
+            history: this.swipedCardsHistory
+        });
         cardBackBtns.forEach(btn => {
             if (this.swipedCardsHistory.length > 0) {
                 btn.style.display = 'flex';
                 btn.title = `Bring back last card (${this.swipedCardsHistory.length} available)`;
+                console.log('Showing back button');
             } else {
                 btn.style.display = 'none';
+                console.log('Hiding back button');
             }
         });
     }
@@ -5879,6 +6106,9 @@ class BoredomBusterApp {
         this.refreshBtn.addEventListener('click', () => {
             this.generateCards();
         });
+
+        // Set up event delegation for dynamically generated play buttons
+        this.setupPlayButtonDelegation();
 
 
         
@@ -6032,6 +6262,115 @@ class BoredomBusterApp {
         }
     }
 
+    // Set up event delegation for play buttons to handle dynamically generated cards
+    setupPlayButtonDelegation() {
+        // Remove any existing delegation listener to prevent duplicates
+        if (this.playButtonDelegationHandler) {
+            this.cardsContainer.removeEventListener('click', this.playButtonDelegationHandler);
+        }
+
+        // Create the delegation handler
+        this.playButtonDelegationHandler = (e) => {
+            console.log('🔍 Event delegation triggered:', {
+                target: e.target,
+                targetClasses: e.target.className,
+                eventType: e.type
+            });
+            
+            // Check if clicked element is a play button, show answer button, or reset button
+            const actionBtn = e.target.closest('.game-play-btn, .show-answer-btn, .reset-game-btn');
+            
+            console.log('🔍 Action button found:', {
+                actionBtn: actionBtn,
+                classes: actionBtn ? actionBtn.className : 'none',
+                isShowAnswer: actionBtn ? actionBtn.classList.contains('show-answer-btn') : false
+            });
+            
+            if (!actionBtn) {
+                console.log('❌ No action button found, returning');
+                return;
+            }
+
+            // Prevent event bubbling
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+
+            // Mark user interaction
+            this.userHasInteracted = true;
+
+            // Handle game play buttons
+            if (actionBtn.classList.contains('game-play-btn')) {
+                const gameType = actionBtn.getAttribute('data-game-type');
+                const gameTitle = actionBtn.getAttribute('data-game-title');
+                console.log('🎮 Game play button clicked via delegation:', { gameType, gameTitle });
+                this.openGame(gameType, gameTitle);
+            }
+            // Handle show answer buttons
+            else if (actionBtn.classList.contains('show-answer-btn')) {
+                console.log('💡 Show answer button clicked via delegation');
+                console.log('🔍 Show answer button details:', {
+                    button: actionBtn,
+                    buttonClasses: actionBtn.className,
+                    dataAnswer: actionBtn.getAttribute('data-answer'),
+                    dataSolution: actionBtn.getAttribute('data-solution')
+                });
+                
+                const card = actionBtn.closest('.card');
+                console.log('🔍 Card found:', {
+                    card: card,
+                    hasActivityData: card ? !!card.activityData : false,
+                    activityData: card ? card.activityData : null
+                });
+                
+                if (card && card.activityData) {
+                    const activity = card.activityData;
+                    const answer = activity.answer || activity.solution || '';
+                    const solution = activity.solution || activity.explanation || activity.answer || '';
+                    console.log('✅ Calling showSolutionInline with:', { answer, solution });
+                    this.showSolutionInline(card, answer, solution);
+                } else {
+                    console.warn('❌ Could not find card or activity data for show answer button');
+                    // Try to get data from button attributes as fallback
+                    const answer = actionBtn.getAttribute('data-answer') || '';
+                    const solution = actionBtn.getAttribute('data-solution') || '';
+                    if (answer || solution) {
+                        console.log('🔄 Using fallback data from button attributes:', { answer, solution });
+                        this.showSolutionInline(card, answer, solution);
+                    }
+                }
+            }
+            // Handle reset game buttons
+            else if (actionBtn.classList.contains('reset-game-btn')) {
+                const action = actionBtn.getAttribute('data-action');
+                console.log('🔄 Reset button clicked via delegation:', action);
+                console.log('🔍 Button element:', actionBtn);
+                console.log('🔍 Button classes:', actionBtn.className);
+                
+                if (action === 'reset-tictactoe') {
+                    console.log('🎯 Calling resetTicTacToe()');
+                    this.resetTicTacToe();
+                } else if (action === 'reset-connect4') {
+                    console.log('🎯 Calling resetConnect4()');
+                    this.resetConnect4();
+                } else {
+                    console.warn('⚠️ Unknown reset action:', action);
+                }
+            }
+        };
+
+        // Add the delegation listener to the cards container
+        this.cardsContainer.addEventListener('click', this.playButtonDelegationHandler, { capture: true });
+        
+        // Also add event delegation to the game modal for reset buttons inside games
+        if (this.gameModal) {
+            this.gameModal.addEventListener('click', this.playButtonDelegationHandler, { capture: true });
+            console.log('✅ Game modal event delegation set up successfully');
+        }
+        
+        console.log('✅ Play button event delegation set up successfully');
+    }
+
     cleanupGames() {
         // Clean up Flappy Bird resources
         if (this.flappyCleanup) {
@@ -6045,7 +6384,17 @@ class BoredomBusterApp {
     }
 
     openGame(gameType, title) {
+        console.log('🎮 openGame called with:', { gameType, title });
+        console.log('🎮 gameModal element:', this.gameModal);
+        console.log('🎮 gameContent element:', this.gameContent);
+        
+        if (!this.gameModal || !this.gameContent) {
+            console.error('❌ Game modal elements not found!');
+            return;
+        }
+        
         this.gameContent.innerHTML = `<h2>${title}</h2>`;
+        console.log('🎮 Game content set, opening modal...');
         
         // Check if it's a premium game
         const premiumGameTypes = ['sudoku', 'crossword', 'pacman', 'tetris', 'galaga', 'snake', 'breakout', 'memory', 'wordsearch', 'solitaire', 'minesweeper'];
@@ -6068,30 +6417,62 @@ class BoredomBusterApp {
             premiumGames.addTouchSupport();
         } else {
             // Handle regular games
+            console.log('🎮 Handling regular game:', gameType);
             switch(gameType) {
                 case 'tictactoe':
+                    console.log('🎮 Creating Tic Tac Toe');
                     this.createTicTacToe();
                     break;
                 case 'connect4':
+                    console.log('🎮 Creating Connect 4');
                     this.createConnect4();
                     break;
                 case 'chess':
+                    console.log('🎮 Creating Chess Puzzle');
                     this.createChessPuzzle();
                     break;
                 case 'flappy':
+                    console.log('🎮 Creating Flappy Bird');
                     this.createFlappyBird();
+                    break;
+                default:
+                    console.error('🎮 Unknown game type:', gameType);
+                    this.gameContent.innerHTML = `
+                        <div style="text-align: center; padding: 40px;">
+                            <h2>🎮 Game Not Found</h2>
+                            <p>Sorry, the game "${gameType}" is not available.</p>
+                            <button class="play-btn" onclick="app.closeModal()">Back to Activities</button>
+                        </div>
+                    `;
                     break;
             }
         }
         
+        console.log('🎮 Setting modal display to block...');
+        console.log('🎮 Modal element before:', this.gameModal);
+        console.log('🎮 Modal current display:', this.gameModal.style.display);
         this.gameModal.style.display = 'block';
+        console.log('🎮 Modal display after setting:', this.gameModal.style.display);
+        console.log('🎮 Modal computed style:', window.getComputedStyle(this.gameModal).display);
+        
+        // Additional check to see if modal is visible
+        setTimeout(() => {
+            const rect = this.gameModal.getBoundingClientRect();
+            console.log('🎮 Modal position and size:', rect);
+            console.log('🎮 Modal visibility check:', {
+                display: window.getComputedStyle(this.gameModal).display,
+                visibility: window.getComputedStyle(this.gameModal).visibility,
+                opacity: window.getComputedStyle(this.gameModal).opacity,
+                zIndex: window.getComputedStyle(this.gameModal).zIndex
+            });
+        }, 100);
     }
 
     createTicTacToe() {
         const gameHtml = `
             <div class="game-status" id="ticTacStatus">Your turn (X) - Click a square!</div>
             <div class="game-board tic-tac-toe" id="ticTacBoard"></div>
-            <button class="reset-game-btn" onclick="app.resetTicTacToe()">Reset Game</button>
+            <button class="reset-game-btn" data-action="reset-tictactoe">Reset Game</button>
         `;
         
         this.gameContent.innerHTML += gameHtml;
@@ -6196,7 +6577,7 @@ class BoredomBusterApp {
         const gameHtml = `
             <div class="game-status" id="connect4Status">Your turn (Red) - Click a column!</div>
             <div class="game-board connect4" id="connect4Board"></div>
-            <button class="reset-game-btn" onclick="app.resetConnect4()">Reset Game</button>
+            <button class="reset-game-btn" data-action="reset-connect4">Reset Game</button>
         `;
         
         this.gameContent.innerHTML += gameHtml;
@@ -7931,6 +8312,7 @@ class BoredomBusterApp {
     }
 
     resetTicTacToe() {
+        console.log('🔄 resetTicTacToe() called');
         this.ticTacToeBoard = Array(9).fill('');
         this.currentPlayer = 'X';
         this.gameOver = false;
@@ -7938,9 +8320,11 @@ class BoredomBusterApp {
         // Clear existing game content and recreate
         this.gameContent.innerHTML = '<h2>Tic Tac Toe</h2>';
         this.createTicTacToe();
+        console.log('✅ Tic Tac Toe reset completed');
     }
 
     resetConnect4() {
+        console.log('🔄 resetConnect4() called');
         this.connect4Board = Array(6).fill().map(() => Array(7).fill(''));
         this.connect4CurrentPlayer = 'red';
         this.connect4GameOver = false;
@@ -7948,6 +8332,7 @@ class BoredomBusterApp {
         // Clear existing game content and recreate
         this.gameContent.innerHTML = '<h2>Connect 4</h2>';
         this.createConnect4();
+        console.log('✅ Connect 4 reset completed');
     }
 
     showSolutionInline(card, answer, solution) {
@@ -8970,7 +9355,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Add page visibility handler (respects user sound preference)
         document.addEventListener('visibilitychange', () => {
-            if (!document.hidden && app.soundEnabled) {
+            if (!document.hidden && app && app.soundEnabled) {
                 console.log('🚀 PAGE VISIBLE - INITIALIZING AUDIO...');
                 setTimeout(() => {
                     app.initializeAudioImmediately();
@@ -8981,7 +9366,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Add focus handler (respects user sound preference)
         window.addEventListener('focus', () => {
-            if (app.soundEnabled) {
+            if (app && app.soundEnabled) {
                 console.log('🚀 WINDOW FOCUSED - INITIALIZING AUDIO...');
                 setTimeout(() => {
                     app.initializeAudioImmediately();

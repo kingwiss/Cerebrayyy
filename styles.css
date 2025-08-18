@@ -354,7 +354,7 @@ body {
     cursor: grab;
     transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease-out;
     transform-style: preserve-3d;
-    transform: translate3d(0, 0, 0); /* Force hardware acceleration */
+    transform: translate3d(0, 0, 0); /* Force hardware acceleration - clean positioning only */
     overflow: hidden; /* Let card-content handle scrolling */
     user-select: none;
     will-change: transform, opacity;
@@ -365,36 +365,68 @@ body {
     touch-action: auto; /* Allow both horizontal and vertical touch actions for swipe and scroll */
     -webkit-tap-highlight-color: rgba(0,0,0,0);
     -webkit-touch-callout: none;
+    /* Ensure clean stacking - prevent any unwanted rotations or tilts */
+    rotate: none;
 }
 
 .card:active {
     cursor: grabbing;
 }
 
+/* Ensure all cards are properly centered and positioned */
+.cards-container .card {
+    top: 50%;
+    left: 50%;
+    margin: -310px 0 0 -160px; /* Center the card properly */
+    transform: translate3d(0, 0, 0) !important; /* Override any dynamic transforms when at rest */
+}
+
+/* Reset any unwanted transforms on card initialization */
+.card:not(.swiped):not([style*="transition"]) {
+    transform: translate3d(0, 0, 0) !important;
+}
+
+/* Hide background cards completely - only show the top card */
+.card:nth-child(n+2):not(.swiped) {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+}
+
+/* Ensure the top card is always visible and interactive */
+.card:nth-child(1):not(.swiped) {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    visibility: visible !important;
+}
+
 .card:nth-child(1) {
-    z-index: 4;
-    transform: translate3d(0px, 0px, 0) rotate(0deg);
+    z-index: 100;
+    transform: translate3d(0px, 0px, 0);
     will-change: transform;
 }
 
 .card:nth-child(2) {
-    z-index: 3;
-    transform: translate3d(min(-20px, -2vw), 10px, 0) rotate(0deg);
-    transition-delay: 0.02s; /* Faster stacking */
+    z-index: 99;
+    transform: translate3d(0px, 0px, 0);
     will-change: transform;
 }
 
 .card:nth-child(3) {
-    z-index: 2;
-    transform: translate3d(min(-40px, -4vw), 20px, 0) rotate(0deg);
-    transition-delay: 0.04s; /* Faster stacking */
+    z-index: 98;
+    transform: translate3d(0px, 0px, 0);
     will-change: transform;
 }
 
 .card:nth-child(4) {
-    z-index: 1;
-    transform: translate3d(min(-60px, -6vw), 30px, 0) rotate(0deg);
-    transition-delay: 0.06s; /* Faster stacking */
+    z-index: 97;
+    transform: translate3d(0px, 0px, 0);
+    will-change: transform;
+}
+
+.card:nth-child(5) {
+    z-index: 96;
+    transform: translate3d(0px, 0px, 0);
     will-change: transform;
 }
 
@@ -1772,21 +1804,30 @@ button.touch-active,
         overflow-y: auto !important; /* Enable scrolling if needed */
     }
     
-    /* Optimized card stacking for mobile with hardware acceleration - all cards upright */
+    /* Clean card stacking - cards directly behind each other */
     .card:nth-child(1) {
-        transform: translate3d(0px, 0px, 0) rotate(0deg) !important; /* Front card always upright */
+        transform: translate3d(0px, 0px, 0) !important;
+        z-index: 100 !important;
     }
     
     .card:nth-child(2) {
-        transform: translate3d(-15px, 8px, 0) rotate(0deg) !important; /* Keep upright */
+        transform: translate3d(0px, 0px, 0) !important;
+        z-index: 99 !important;
     }
     
     .card:nth-child(3) {
-        transform: translate3d(-30px, 16px, 0) rotate(0deg) !important; /* Keep upright */
+        transform: translate3d(0px, 0px, 0) !important;
+        z-index: 98 !important;
     }
     
     .card:nth-child(4) {
-        transform: translate3d(-45px, 24px, 0) rotate(0deg) !important; /* Keep upright */
+        transform: translate3d(0px, 0px, 0) !important;
+        z-index: 97 !important;
+    }
+    
+    .card:nth-child(5) {
+        transform: translate3d(0px, 0px, 0) !important;
+        z-index: 96 !important;
     }
     
     .card-title {
@@ -2560,21 +2601,30 @@ canvas {
     
     /* Cards maintain desktop dimensions - no responsive sizing */
     
-    /* Override card positioning for very small screens - all cards upright */
+    /* Clean card stacking for very small screens */
     .card:nth-child(1) {
-        transform: translateX(0px) translateY(0px) rotate(0deg) !important;
+        transform: translate3d(0px, 0px, 0) !important;
+        z-index: 100 !important;
     }
     
     .card:nth-child(2) {
-        transform: translateX(-5px) translateY(5px) rotate(0deg) !important; /* Keep upright */
+        transform: translate3d(0px, 0px, 0) !important;
+        z-index: 99 !important;
     }
     
     .card:nth-child(3) {
-        transform: translateX(-10px) translateY(10px) rotate(0deg) !important; /* Keep upright */
+        transform: translate3d(0px, 0px, 0) !important;
+        z-index: 98 !important;
     }
     
     .card:nth-child(4) {
-        transform: translateX(-15px) translateY(15px) rotate(0deg) !important; /* Keep upright */
+        transform: translate3d(0px, 0px, 0) !important;
+        z-index: 97 !important;
+    }
+    
+    .card:nth-child(5) {
+        transform: translate3d(0px, 0px, 0) !important;
+        z-index: 96 !important;
     }
 }
 
@@ -2602,21 +2652,30 @@ canvas {
     
     /* Cards maintain desktop dimensions - no responsive sizing */
     
-    /* Ensure all cards are centered with minimal offset - all cards upright */
+    /* Clean card stacking for ultra-small screens */
     .card:nth-child(1) {
-        transform: translateX(0px) translateY(0px) rotate(0deg) !important;
+        transform: translate3d(0px, 0px, 0) !important;
+        z-index: 100 !important;
     }
     
     .card:nth-child(2) {
-        transform: translateX(-2px) translateY(2px) rotate(0deg) !important; /* Keep upright */
+        transform: translate3d(0px, 0px, 0) !important;
+        z-index: 99 !important;
     }
     
     .card:nth-child(3) {
-        transform: translateX(-4px) translateY(4px) rotate(0deg) !important; /* Keep upright */
+        transform: translate3d(0px, 0px, 0) !important;
+        z-index: 98 !important;
     }
     
     .card:nth-child(4) {
-        transform: translateX(-6px) translateY(6px) rotate(0deg) !important; /* Keep upright */
+        transform: translate3d(0px, 0px, 0) !important;
+        z-index: 97 !important;
+    }
+    
+    .card:nth-child(5) {
+        transform: translate3d(0px, 0px, 0) !important;
+        z-index: 96 !important;
     }
     
     .card-content {
@@ -3609,17 +3668,25 @@ canvas {
         gap: 8px;
     }
     
-    /* Improved card stack spacing on touch devices */
+    /* Clean card stacking on touch devices */
     .card:nth-child(2) {
-        transform: translate3d(-25px, 12px, 0) rotate(0deg);
+        transform: translate3d(0px, 0px, 0);
+        z-index: 99;
     }
     
     .card:nth-child(3) {
-        transform: translate3d(-50px, 24px, 0) rotate(0deg);
+        transform: translate3d(0px, 0px, 0);
+        z-index: 98;
     }
     
     .card:nth-child(4) {
-        transform: translate3d(-75px, 36px, 0) rotate(0deg);
+        transform: translate3d(0px, 0px, 0);
+        z-index: 97;
+    }
+    
+    .card:nth-child(5) {
+        transform: translate3d(0px, 0px, 0);
+        z-index: 96;
     }
 
     .footer-separator {
