@@ -251,8 +251,8 @@ class PremiumPopup {
             // Track payment initiation
             this.trackEvent('premium_payment_initiated');
             
-            // Redirect to real Stripe payment page
-            console.log('🚀 Redirecting to Stripe payment page...');
+            // Redirect to PayPal payment page
+            console.log('🚀 Redirecting to PayPal payment page...');
             window.location.href = 'payment.html';
             
         } catch (error) {
@@ -390,7 +390,7 @@ class PaymentProcessor {
 
     async processPayment(paymentData) {
         // Simulate payment processing for demo
-        // Replace this with real payment gateway integration (Stripe, PayPal, etc.)
+        // Replace this with real payment gateway integration (PayPal)
         
         return new Promise((resolve) => {
             setTimeout(() => {
@@ -415,10 +415,10 @@ class PaymentProcessor {
         });
     }
 
-    // Real payment gateway integration example (Stripe)
-    async processStripePayment(paymentData) {
+    // Real payment gateway integration example (PayPal)
+    async processPayPalPayment(paymentData) {
         try {
-            const response = await fetch(this.apiEndpoint + '/stripe', {
+            const response = await fetch(this.apiEndpoint + '/paypal', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

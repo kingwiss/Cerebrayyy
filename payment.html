@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cerebray Premium - Payment</title>
-    <script src="https://www.paypal.com/sdk/js?client-id=AU0wG24em8WTPFJPe2uchMR_zbyjPf9EykqV_IKUpESVdmPQbAUe8cZAwvZ82mcCzUG8DdiukyHFjULz&vault=true&intent=subscription"></script>
+    <!-- PayPal SDK will be loaded dynamically with correct client ID -->
     <style>
         * {
             margin: 0;
@@ -239,8 +239,8 @@
             body {
                 padding: 10px;
             }
-            
-            .header {
+             
+             .header {
                 padding: 20px;
             }
             
@@ -325,14 +325,88 @@
         class PayPalPaymentProcessor {
             constructor() {
                 this.email = '';
+                this.clientId = '';
+                this.planId = '';
                 this.isProcessing = false;
                 this.init();
             }
 
-            init() {
-                console.log('🚀 Initializing PayPal payment system...');
+            async init() {
+                console.log('🔄 Initializing PayPal Payment Processor...');
+                
+                // Load PayPal configuration from server
+                await this.loadPayPalConfig();
+                
+                // Load PayPal SDK dynamically
+                await this.loadPayPalSDK();
+                
+                // Wait for PayPal SDK to load
+                await this.waitForPayPal();
+                
+                // Setup email validation
                 this.setupEmailValidation();
+                
+                // Render PayPal button
                 this.renderPayPalButton();
+                
+                console.log('✅ PayPal Payment Processor initialized');
+            }
+
+            async loadPayPalConfig() {
+                try {
+                    console.log('🔄 Loading PayPal configuration from server...');
+                    const response = await fetch('/api/paypal-config');
+                    if (!response.ok) {
+                        throw new Error('Failed to load PayPal configuration');
+                    }
+                    const config = await response.json();
+                    this.clientId = config.clientId;
+                    this.planId = config.planId;
+                    console.log('✅ PayPal configuration loaded:', {
+                        clientId: this.clientId ? 'Present' : 'Missing',
+                        planId: this.planId ? 'Present' : 'Missing'
+                    });
+                } catch (error) {
+                    console.error('❌ Failed to load PayPal configuration:', error);
+                    // Fallback to hardcoded sandbox values for development
+                    this.clientId = 'AU0wG24em8WTPFJPe2uchMR_zbyjPf9EykqV_IKUpESVdmPQbAUe8cZAwvZ82mcCzUG8DdiukyHFjULz';
+                    this.planId = 'P-2BW31317971447626NCRS6WI';
+                    console.log('⚠️ Using fallback sandbox PayPal configuration');
+                }
+            }
+
+            async loadPayPalSDK() {
+                return new Promise((resolve, reject) => {
+                    console.log('🔄 Loading PayPal SDK...');
+                    const script = document.createElement('script');
+                    script.src = `https://www.paypal.com/sdk/js?client-id=${this.clientId}&vault=true&intent=subscription`;
+                    script.onload = () => {
+                        console.log('✅ PayPal SDK loaded successfully');
+                        resolve();
+                    };
+                    script.onerror = () => {
+                        console.error('❌ Failed to load PayPal SDK');
+                        reject(new Error('Failed to load PayPal SDK'));
+                    };
+                    document.head.appendChild(script);
+                });
+            }
+
+            async waitForPayPal() {
+                console.log('🔄 Waiting for PayPal to be available...');
+                let attempts = 0;
+                const maxAttempts = 50;
+                
+                while (typeof paypal === 'undefined' && attempts < maxAttempts) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    attempts++;
+                }
+                
+                if (typeof paypal === 'undefined') {
+                    throw new Error('PayPal SDK failed to load');
+                }
+                
+                console.log('✅ PayPal SDK is ready');
             }
 
             setupEmailValidation() {
@@ -388,7 +462,7 @@
                         this.showLoading();
 
                         return actions.subscription.create({
-                            'plan_id': 'P-2BW31317971447626NCRS6WI', // Your PayPal plan ID
+                            'plan_id': this.planId, // PayPal plan ID from server config
                             'subscriber': {
                                 'email_address': this.email
                             },
@@ -420,7 +494,7 @@
                                 body: JSON.stringify({
                                     subscriptionId: data.subscriptionID,
                                     email: this.email,
-                                    planId: 'P-2BW31317971447626NCRS6WI'
+                                    planId: this.planId
                                 })
                             });
 
@@ -483,7 +557,7 @@
                     email: this.email,
                     activatedAt: new Date().toISOString(),
                     provider: 'paypal',
-                    planId: 'P-2BW31317971447626NCRS6WI'
+                    planId: this.planId
                 };
 
                 localStorage.setItem('cerebrayPremium', JSON.stringify(premiumData));

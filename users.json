@@ -37,5 +37,17 @@
     "password": "$2b$10$.iUDhyT9q1IfhfAaC..nCe69ZrQNzTtQndV41rU10dD3m1VxKssYi",
     "tier": "basic",
     "createdAt": "2025-08-16T18:12:46.323Z"
+  },
+  {
+    "id": "1755627531938",
+    "email": "test@example.com",
+    "username": "test",
+    "password": "",
+    "tier": "premium",
+    "paypalSubscriptionId": "I-TEST123456789",
+    "planId": "P-2BW31317971447626NCRS6WI",
+    "premiumActivatedAt": "2025-08-19T18:18:51.939Z",
+    "paymentProvider": "paypal",
+    "createdAt": "2025-08-19T18:18:51.939Z"
   }
 ]

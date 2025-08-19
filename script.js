@@ -4050,12 +4050,7 @@ class BoredomBusterApp {
         console.log('🔍 cardsContainer display style:', window.getComputedStyle(this.cardsContainer).display);
         console.log('🔍 cardsContainer visibility:', window.getComputedStyle(this.cardsContainer).visibility);
         
-        // Check if user has reached daily card limit
-        if (this.userTierManager && this.userTierManager.hasReachedDailyLimit()) {
-            console.log('⚠️ User has reached daily card limit');
-            this.showDailyLimitReachedMessage();
-            return;
-        }
+        // Cards will recycle when daily limit is reached - no need to block generation
         
         // Get selected activities based on mode
         let selectedActivities;
@@ -4659,144 +4654,7 @@ class BoredomBusterApp {
         }, 3000);
     }
 
-    // Show daily limit reached message
-    showDailyLimitReachedMessage() {
-        if (!this.userTierManager) return;
-        
-        const currentTier = this.userTierManager.getCurrentTier();
-        const dailyLimit = this.userTierManager.getDailyCardLimit();
-        const cardsUsed = this.userTierManager.getCardsUsedToday();
-
-        // Clear existing cards
-        this.cardsContainer.innerHTML = '';
-
-        // Create limit reached message
-        const limitMessage = document.createElement('div');
-        limitMessage.className = 'daily-limit-message';
-        limitMessage.innerHTML = `
-            <div class="limit-content">
-                <div class="limit-icon">
-                    <i class="fas fa-clock"></i>
-                </div>
-                <h3>Daily Limit Reached</h3>
-                <p>You've used all ${dailyLimit} cards for today as a ${currentTier} user.</p>
-                <div class="limit-stats">
-                    <div class="stat">
-                        <span class="stat-label">Cards Used:</span>
-                        <span class="stat-value">${cardsUsed}/${dailyLimit}</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-label">Tier:</span>
-                        <span class="stat-value">${currentTier.charAt(0).toUpperCase() + currentTier.slice(1)}</span>
-                    </div>
-                </div>
-                ${currentTier === 'basic' ? `
-                    <div class="upgrade-prompt">
-                        <p>Upgrade to Premium for 100 daily cards!</p>
-                        <button class="upgrade-btn" onclick="app.togglePremiumMode()">
-                            <i class="fas fa-crown"></i> Upgrade to Premium
-                        </button>
-                    </div>
-                ` : `
-                    <div class="reset-info">
-                        <p>Your cards will reset tomorrow at midnight.</p>
-                    </div>
-                `}
-            </div>
-        `;
-
-        // Add styles
-        limitMessage.style.cssText = `
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 400px;
-            padding: 20px;
-        `;
-
-        // Add CSS for the limit message
-        if (!document.querySelector('#daily-limit-styles')) {
-            const styles = document.createElement('style');
-            styles.id = 'daily-limit-styles';
-            styles.textContent = `
-                .limit-content {
-                    text-align: center;
-                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                    color: white;
-                    padding: 40px 30px;
-                    border-radius: 20px;
-                    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-                    max-width: 400px;
-                    width: 100%;
-                }
-                .limit-icon {
-                    font-size: 3rem;
-                    margin-bottom: 20px;
-                    opacity: 0.8;
-                }
-                .limit-content h3 {
-                    margin: 0 0 15px 0;
-                    font-size: 1.8rem;
-                    font-weight: 700;
-                }
-                .limit-content p {
-                    margin: 0 0 20px 0;
-                    opacity: 0.9;
-                    line-height: 1.5;
-                }
-                .limit-stats {
-                    display: flex;
-                    justify-content: space-around;
-                    margin: 20px 0;
-                    padding: 20px;
-                    background: rgba(255,255,255,0.1);
-                    border-radius: 10px;
-                }
-                .stat {
-                    text-align: center;
-                }
-                .stat-label {
-                    display: block;
-                    font-size: 0.9rem;
-                    opacity: 0.8;
-                    margin-bottom: 5px;
-                }
-                .stat-value {
-                    display: block;
-                    font-size: 1.2rem;
-                    font-weight: 700;
-                }
-                .upgrade-prompt {
-                    margin-top: 25px;
-                    padding-top: 20px;
-                    border-top: 1px solid rgba(255,255,255,0.2);
-                }
-                .upgrade-btn {
-                    background: linear-gradient(135deg, #ffd700 0%, #ffb347 100%);
-                    color: #333;
-                    border: none;
-                    padding: 12px 24px;
-                    border-radius: 25px;
-                    font-weight: 700;
-                    cursor: pointer;
-                    transition: transform 0.2s ease;
-                    margin-top: 10px;
-                }
-                .upgrade-btn:hover {
-                    transform: translateY(-2px);
-                }
-                .reset-info {
-                    margin-top: 20px;
-                    padding-top: 20px;
-                    border-top: 1px solid rgba(255,255,255,0.2);
-                    opacity: 0.8;
-                }
-            `;
-            document.head.appendChild(styles);
-        }
-
-        this.cardsContainer.appendChild(limitMessage);
-    }
+    // Daily limit message removed - cards now recycle instead of showing limit
 
     createCardOptimized(activity, index) {
         // Performance optimization: Create card with minimal DOM operations

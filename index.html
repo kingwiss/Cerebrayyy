@@ -14,7 +14,7 @@
     <!-- <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin"> -->
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="premium-popup.css">
-    <link rel="stylesheet" href="stripe-payment.css">
+
     <link rel="stylesheet" href="auth-modal.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -25,8 +25,7 @@
     
 
     
-    <!-- Stripe JavaScript SDK -->
-    <script src="https://js.stripe.com/v3/"></script>
+
     
     <!-- Appwrite SDK -->
     <script src="https://cdn.jsdelivr.net/npm/appwrite@13.0.0"></script>
@@ -63,6 +62,14 @@
                     <button id="musicToggleBtn" class="control-btn music-toggle" title="Toggle background music">
                         <i class="fas fa-music"></i>
                     </button>
+                    
+                    <!-- Donation Button -->
+                    <a href="https://www.paypal.com/donate/?hosted_button_id=F43AMH37AFXCE" 
+                       target="_blank" 
+                       class="control-btn donation-button" 
+                       title="Support Cerebray Development">
+                        <i class="fas fa-heart"></i>
+                    </a>
                     
                     <!-- Authentication Controls -->
                     <button id="signinBtn" class="signin-btn">
@@ -219,8 +226,7 @@
     <link rel="stylesheet" href="premium-games.css">
     <script src="premium-games.js"></script>
     
-    <!-- Stripe Payment System -->
-    <script src="stripe-payment.js"></script>
+    
     
     <!-- Premium Popup System -->
     <script src="premium-popup.js"></script>
@@ -232,6 +238,7 @@
     <script src="web-vitals-tracker.js"></script>
     <script src="performance-optimizer.js"></script>
     
+
 
 </body>
 </html>

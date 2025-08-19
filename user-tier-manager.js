@@ -200,18 +200,16 @@ class UserTierManager {
     }
 
     trackCardUsage(count = 1) {
-        if (this.hasReachedDailyLimit()) {
-            throw new Error('Daily card limit reached');
-        }
-        
+        // Always allow card usage - cards will recycle when limit is reached
         this.cardsUsedToday += count;
         this.totalCardsGenerated += count;
         this.saveUserData();
         
         return {
             cardsUsed: this.cardsUsedToday,
-            remainingCards: this.dailyCardLimit - this.cardsUsedToday,
-            dailyLimit: this.dailyCardLimit
+            remainingCards: Math.max(0, this.dailyCardLimit - this.cardsUsedToday),
+            dailyLimit: this.dailyCardLimit,
+            isRecycling: this.cardsUsedToday > this.dailyCardLimit
         };
     }
 

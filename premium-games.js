@@ -293,6 +293,7 @@ class PremiumGames {
                         <div class="control-row">
                             <button class="game-btn" onclick="premiumGames.startTetris()">Start</button>
                             <button class="game-btn" onclick="premiumGames.pauseTetris()">Pause</button>
+                            <button class="game-btn" onclick="premiumGames.newTetrisGame()">New Game</button>
                         </div>
                     </div>
                 </div>
@@ -386,6 +387,7 @@ class PremiumGames {
                         </div>
                         <div class="control-row">
                             <button class="game-btn" onclick="premiumGames.startPacman()">Start</button>
+                            <button class="game-btn" onclick="premiumGames.newPacmanGame()">New Game</button>
                         </div>
                     </div>
                 </div>
@@ -520,6 +522,7 @@ class PremiumGames {
                         </div>
                         <div class="control-row">
                             <button class="game-btn" onclick="premiumGames.startSnake()">Start</button>
+                            <button class="game-btn" onclick="premiumGames.newSnakeGame()">New Game</button>
                         </div>
                     </div>
                 </div>
@@ -1964,6 +1967,7 @@ class PremiumGames {
                         <div class="control-row">
                             <button class="game-btn" onclick="premiumGames.startGalaga()">Start</button>
                             <button class="game-btn" onclick="premiumGames.pauseGalaga()">Pause</button>
+                            <button class="game-btn" onclick="premiumGames.newGalagaGame()">New Game</button>
                         </div>
                     </div>
                 </div>
@@ -2260,6 +2264,7 @@ class PremiumGames {
                         <div class="control-row">
                             <button class="game-btn" onclick="premiumGames.startBreakout()">Start</button>
                             <button class="game-btn" onclick="premiumGames.pauseBreakout()">Pause</button>
+                            <button class="game-btn" onclick="premiumGames.newBreakoutGame()">New Game</button>
                         </div>
                     </div>
                 </div>
@@ -3753,6 +3758,83 @@ class PremiumGames {
         document.getElementById('mineStatus').textContent = 'Playing';
         document.getElementById('mineCount').textContent = this.mineCount;
         this.setupMinesweeper();
+    }
+    
+    newTetrisGame() {
+        this.addHapticFeedback('medium');
+        clearInterval(this.tetrisInterval);
+        this.tetrisInterval = null;
+        this.tetrisBoard = Array(20).fill().map(() => Array(10).fill(0));
+        this.tetrisScore = 0;
+        this.tetrisLevel = 1;
+        this.tetrisLines = 0;
+        this.tetrisGameOver = false;
+        this.tetrisPaused = false;
+        this.currentPiece = null;
+        this.nextPiece = null;
+        this.setupTetris();
+    }
+    
+    newPacmanGame() {
+        this.addHapticFeedback('medium');
+        clearInterval(this.pacmanInterval);
+        this.pacmanInterval = null;
+        this.pacmanScore = 0;
+        this.pacmanLives = 3;
+        this.pacmanLevel = 1;
+        this.pacmanGameOver = false;
+        this.pacmanPaused = false;
+        this.pacmanPosition = { x: 9, y: 15 };
+        this.pacmanDirection = { x: 0, y: 0 };
+        this.ghosts = [];
+        this.setupPacman();
+    }
+    
+    newSnakeGame() {
+        this.addHapticFeedback('medium');
+        clearInterval(this.snakeInterval);
+        this.snakeInterval = null;
+        this.snake = [{ x: 10, y: 10 }];
+        this.snakeDirection = { x: 0, y: 0 };
+        this.snakeFood = { x: 15, y: 15 };
+        this.snakeScore = 0;
+        this.snakeGameOver = false;
+        this.snakePaused = false;
+        this.setupSnake();
+        this.generateSnakeFood();
+    }
+    
+    newGalagaGame() {
+        this.addHapticFeedback('medium');
+        clearInterval(this.galagaInterval);
+        this.galagaInterval = null;
+        this.galagaScore = 0;
+        this.galagaLives = 3;
+        this.galagaLevel = 1;
+        this.galagaGameOver = false;
+        this.galagaPaused = false;
+        this.galagaShip = { x: 375, y: 550 };
+        this.galagaBullets = [];
+        this.galagaEnemies = [];
+        this.galagaEnemyBullets = [];
+        this.setupGalaga();
+        this.createEnemies();
+    }
+    
+    newBreakoutGame() {
+        this.addHapticFeedback('medium');
+        clearInterval(this.breakoutInterval);
+        this.breakoutInterval = null;
+        this.breakoutScore = 0;
+        this.breakoutLives = 3;
+        this.breakoutLevel = 1;
+        this.breakoutGameOver = false;
+        this.breakoutPaused = false;
+        this.breakoutBall = { x: 400, y: 300, dx: 4, dy: -4 };
+        this.breakoutPaddle = { x: 350, y: 580, width: 100, height: 10 };
+        this.breakoutBricks = [];
+        this.setupBreakout();
+        this.createBricks();
     }
     
     toggleMineMode() {

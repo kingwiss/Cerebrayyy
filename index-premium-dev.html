@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌟 Boredom Buster - PREMIUM DEV MODE</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="premium-styles.css">
+    <style>
+        /* Premium Dev Mode Styles */
+        .premium-dev-banner {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7);
+            background-size: 300% 300%;
+            animation: gradientShift 3s ease infinite;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-weight: bold;
+            font-size: 18px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .premium-badge {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #333;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+        }
+        
+        .premium-card {
+            border: 2px solid #ffd700;
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.2);
+            background: linear-gradient(135deg, #fff 0%, #fffef7 100%);
+        }
+        
+        .premium-btn {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .premium-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        
+        .dev-info {
+            background: #f8f9fa;
+            border: 2px dashed #6c757d;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Premium Dev Mode Banner -->
+    <div class="premium-dev-banner">
+        🌟 PREMIUM DEVELOPMENT MODE ACTIVE 🌟
+        <br>
+        <small>All premium features unlocked for testing and development</small>
+    </div>
+    
+    <!-- Dev Info Panel -->
+    <div class="dev-info">
+        <strong>🔧 Development Information:</strong><br>
+        • Premium Mode: ENABLED<br>
+        • Daily Limits: DISABLED<br>
+        • Payment Gates: BYPASSED<br>
+        • All Premium Content: ACCESSIBLE<br>
+        • Server Port: 6000 (Premium Dev)<br>
+        • Regular Server: Port 5000 (Still Running)
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1>🌟 Boredom Buster Premium</h1>
+            <p class="subtitle">Development Mode - All Features Unlocked</p>
+        </header>
+        
+        <div class="controls">
+            <button id="refreshBtn" class="btn premium-btn">🔄 Refresh Premium Content</button>
+            <div class="premium-status">
+                <span class="premium-badge">🌟 PREMIUM ACTIVE</span>
+            </div>
+        </div>
+        
+        <div id="cardsContainer" class="cards-container">
+            <!-- Premium cards will be loaded here -->
+        </div>
+        
+        <div class="loading" id="loading" style="display: none;">
+            <div class="spinner"></div>
+            <p>Loading premium content...</p>
+        </div>
+    </div>
+    
+    <!-- Game Modal -->
+    <div id="gameModal" class="modal">
+        <div class="modal-content premium-modal">
+            <span class="close" id="closeModal">&times;</span>
+            <div id="gameContent">
+                <!-- Premium game content will be loaded here -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Premium Popup (if needed) -->
+    <div id="premiumPopup" class="premium-popup" style="display: none;">
+        <div class="premium-popup-content">
+            <h2>🌟 Premium Features Active!</h2>
+            <p>You have access to all premium content in development mode.</p>
+            <button onclick="closePremiumPopup()" class="premium-btn">Continue</button>
+        </div>
+    </div>
+    
+    <!-- Load backend systems -->
+    <script src="daily-content-backend.js"></script>
+    <script src="premium-content-backend.js"></script>
+    <!-- user-tier-manager.js removed due to ES6 import conflicts - using mock instead -->
+    <script src="premium-games.js"></script>
+    
+    <!-- Load the PREMIUM DEVELOPMENT script instead of regular script -->
+    <script src="script-premium-dev.js?v=2"></script>
+    
+    <script>
+        // Premium dev mode utilities
+        function closePremiumPopup() {
+            document.getElementById('premiumPopup').style.display = 'none';
+        }
+        
+        // Override any remaining premium checks
+        window.addEventListener('load', function() {
+            console.log('🌟 Premium Dev Mode - Page loaded, ensuring all premium features are active');
+            
+            // Force premium status in localStorage
+            localStorage.setItem('premiumMode', 'true');
+            localStorage.setItem('userTier', 'premium');
+            localStorage.setItem('dailyCardLimit', '1000');
+            localStorage.setItem('cardsUsedToday', '0');
+            
+            // Override any global premium check functions
+            if (typeof window.userTierManager !== 'undefined') {
+                const originalIsPremium = window.userTierManager.isPremium;
+                window.userTierManager.isPremium = () => true;
+                window.userTierManager.isPremiumUser = () => true;
+                window.userTierManager.canAccessPremiumContent = () => true;
+                window.userTierManager.hasReachedDailyLimit = () => false;
+                console.log('🌟 Overrode userTierManager premium checks');
+            }
+            
+            // Show premium status
+            console.log('🌟 PREMIUM DEV MODE STATUS:');
+            console.log('  • Premium Mode:', localStorage.getItem('premiumMode'));
+            console.log('  • User Tier:', localStorage.getItem('userTier'));
+            console.log('  • Daily Limit:', localStorage.getItem('dailyCardLimit'));
+            console.log('  • Cards Used Today:', localStorage.getItem('cardsUsedToday'));
+        });
+        
+        // Add premium dev mode indicator to console
+        console.log('%c🌟 PREMIUM DEVELOPMENT MODE ACTIVE 🌟', 'background: linear-gradient(45deg, #ff6b6b, #4ecdc4); color: white; padding: 10px; font-size: 16px; font-weight: bold;');
+        console.log('All premium features are unlocked for testing and development.');
+    </script>
+</body>
+</html>

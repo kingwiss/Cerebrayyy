@@ -59,6 +59,15 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
+// SEO Routes - Serve sitemap and robots.txt
+app.get('/sitemap.xml', (req, res) => {
+    res.sendFile(path.join(__dirname, 'sitemap.xml'));
+});
+
+app.get('/robots.txt', (req, res) => {
+    res.sendFile(path.join(__dirname, 'robots.txt'));
+});
+
 const JWT_SECRET = 'your-super-secret-jwt-key-change-in-production';
 const USERS_FILE = path.join(__dirname, 'users.json');
 const RESET_TOKENS_FILE = path.join(__dirname, 'reset-tokens.json');
@@ -76,10 +85,13 @@ async function initializeUsersFile() {
     }
 }
 
-// Stripe configuration endpoint (keeping for backward compatibility)
-app.get('/api/stripe-config', (req, res) => {
+
+
+// PayPal configuration endpoint
+app.get('/api/paypal-config', (req, res) => {
     res.json({
-        publishableKey: process.env.STRIPE_PUBLISHABLE_KEY
+        clientId: process.env.PAYPAL_CLIENT_ID,
+        planId: process.env.PAYPAL_PLAN_ID
     });
 });
 

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Debug - Localhost:6001</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .debug-section {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .success { color: #28a745; }
+        .error { color: #dc3545; }
+        .warning { color: #ffc107; }
+        .info { color: #17a2b8; }
+        pre {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .banner {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="banner">
+        <h1>🔍 Premium Debug Tool - Port 6001</h1>
+        <p>Diagnosing premium feature status</p>
+    </div>
+    
+    <div class="debug-section">
+        <h2>🌐 Page Information</h2>
+        <div id="page-info"></div>
+    </div>
+    
+    <div class="debug-section">
+        <h2>📦 Local Storage</h2>
+        <div id="localStorage-info"></div>
+    </div>
+    
+    <div class="debug-section">
+        <h2>🔧 Global Functions</h2>
+        <div id="global-functions"></div>
+    </div>
+    
+    <div class="debug-section">
+        <h2>👤 User Tier Manager</h2>
+        <div id="tier-manager"></div>
+    </div>
+    
+    <div class="debug-section">
+        <h2>📜 Console Logs</h2>
+        <button onclick="showConsoleLogs()">Capture Console Logs</button>
+        <div id="console-logs"></div>
+    </div>
+    
+    <div class="debug-section">
+        <h2>🧪 Live Tests</h2>
+        <button onclick="runLiveTests()">Run Premium Tests</button>
+        <div id="live-tests"></div>
+    </div>
+    
+    <script>
+        // Capture console logs
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+        const logs = [];
+        
+        console.log = function(...args) {
+            logs.push({type: 'log', message: args.join(' '), timestamp: new Date().toISOString()});
+            originalLog.apply(console, args);
+        };
+        
+        console.error = function(...args) {
+            logs.push({type: 'error', message: args.join(' '), timestamp: new Date().toISOString()});
+            originalError.apply(console, args);
+        };
+        
+        console.warn = function(...args) {
+            logs.push({type: 'warn', message: args.join(' '), timestamp: new Date().toISOString()});
+            originalWarn.apply(console, args);
+        };
+        
+        function updatePageInfo() {
+            const info = document.getElementById('page-info');
+            info.innerHTML = `
+                <p><strong>URL:</strong> ${window.location.href}</p>
+                <p><strong>Port:</strong> ${window.location.port}</p>
+                <p><strong>Protocol:</strong> ${window.location.protocol}</p>
+                <p><strong>User Agent:</strong> ${navigator.userAgent}</p>
+                <p><strong>Page Load Time:</strong> ${new Date().toISOString()}</p>
+            `;
+        }
+        
+        function updateLocalStorage() {
+            const info = document.getElementById('localStorage-info');
+            let html = '<table border="1" style="width:100%; border-collapse: collapse;">';
+            html += '<tr><th>Key</th><th>Value</th><th>Status</th></tr>';
+            
+            const expectedValues = {
+                'premiumMode': 'true',
+                'userTier': 'premium',
+                'dailyCardLimit': '1000',
+                'cardsUsedToday': '0'
+            };
+            
+            for (let key in expectedValues) {
+                const value = localStorage.getItem(key);
+                const expected = expectedValues[key];
+                const status = value === expected ? '✅ Correct' : '❌ Wrong';
+                const statusClass = value === expected ? 'success' : 'error';
+                html += `<tr><td>${key}</td><td>${value || 'null'}</td><td class="${statusClass}">${status}</td></tr>`;
+            }
+            
+            // Show all other localStorage items
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (!expectedValues.hasOwnProperty(key)) {
+                    const value = localStorage.getItem(key);
+                    html += `<tr><td>${key}</td><td>${value}</td><td class="info">ℹ️ Other</td></tr>`;
+                }
+            }
+            
+            html += '</table>';
+            info.innerHTML = html;
+        }
+        
+        function updateGlobalFunctions() {
+            const info = document.getElementById('global-functions');
+            const functions = ['isPremium', 'canAccessPremiumContent', 'hasReachedDailyLimit'];
+            let html = '<ul>';
+            
+            functions.forEach(func => {
+                if (typeof window[func] === 'function') {
+                    try {
+                        const result = window[func]();
+                        html += `<li class="success">✅ ${func}(): ${result}</li>`;
+                    } catch (e) {
+                        html += `<li class="error">❌ ${func}(): Error - ${e.message}</li>`;
+                    }
+                } else {
+                    html += `<li class="error">❌ ${func}: Not found</li>`;
+                }
+            });
+            
+            html += '</ul>';
+            info.innerHTML = html;
+        }
+        
+        function updateTierManager() {
+            const info = document.getElementById('tier-manager');
+            let html = '';
+            
+            if (typeof window.userTierManager !== 'undefined') {
+                html += '<p class="success">✅ userTierManager found</p>';
+                
+                const methods = [
+                    'isPremium', 'isPremiumUser', 'getCurrentTier', 
+                    'getDailyCardLimit', 'getCardsUsedToday', 'hasReachedDailyLimit',
+                    'canAccessPremiumContent', 'getRemainingCards'
+                ];
+                
+                html += '<ul>';
+                methods.forEach(method => {
+                    if (typeof window.userTierManager[method] === 'function') {
+                        try {
+                            const result = window.userTierManager[method]();
+                            html += `<li class="success">✅ ${method}(): ${JSON.stringify(result)}</li>`;
+                        } catch (e) {
+                            html += `<li class="error">❌ ${method}(): Error - ${e.message}</li>`;
+                        }
+                    } else {
+                        html += `<li class="warning">⚠️ ${method}: Not a function</li>`;
+                    }
+                });
+                html += '</ul>';
+            } else {
+                html += '<p class="error">❌ userTierManager not found</p>';
+            }
+            
+            info.innerHTML = html;
+        }
+        
+        function showConsoleLogs() {
+            const info = document.getElementById('console-logs');
+            let html = '<pre>';
+            
+            logs.forEach(log => {
+                const className = log.type === 'error' ? 'error' : log.type === 'warn' ? 'warning' : 'info';
+                html += `<div class="${className}">[${log.timestamp}] ${log.type.toUpperCase()}: ${log.message}</div>`;
+            });
+            
+            html += '</pre>';
+            info.innerHTML = html;
+        }
+        
+        function runLiveTests() {
+            const info = document.getElementById('live-tests');
+            let html = '<h3>🧪 Running Live Premium Tests...</h3>';
+            
+            // Test 1: Check if premium script is loaded
+            if (typeof BoredomBusterApp !== 'undefined') {
+                html += '<p class="success">✅ BoredomBusterApp class found</p>';
+            } else {
+                html += '<p class="error">❌ BoredomBusterApp class not found</p>';
+            }
+            
+            // Test 2: Check if premium development script console message appeared
+            const premiumScriptLoaded = logs.some(log => 
+                log.message.includes('PREMIUM DEVELOPMENT SCRIPT LOADED')
+            );
+            if (premiumScriptLoaded) {
+                html += '<p class="success">✅ Premium development script loaded</p>';
+            } else {
+                html += '<p class="error">❌ Premium development script not detected</p>';
+            }
+            
+            // Test 3: Check for premium mode console messages
+            const premiumModeMessages = logs.filter(log => 
+                log.message.includes('PREMIUM DEV') || log.message.includes('🌟')
+            );
+            if (premiumModeMessages.length > 0) {
+                html += `<p class="success">✅ Found ${premiumModeMessages.length} premium mode messages</p>`;
+                html += '<details><summary>Show Messages</summary><ul>';
+                premiumModeMessages.forEach(msg => {
+                    html += `<li>${msg.message}</li>`;
+                });
+                html += '</ul></details>';
+            } else {
+                html += '<p class="error">❌ No premium mode console messages found</p>';
+            }
+            
+            info.innerHTML = html;
+        }
+        
+        // Initialize all sections
+        function initializeDebug() {
+            updatePageInfo();
+            updateLocalStorage();
+            updateGlobalFunctions();
+            updateTierManager();
+        }
+        
+        // Run initialization after a delay to let other scripts load
+        window.addEventListener('load', function() {
+            setTimeout(initializeDebug, 2000);
+        });
+        
+        // Auto-refresh every 5 seconds
+        setInterval(initializeDebug, 5000);
+    </script>
+</body>
+</html>

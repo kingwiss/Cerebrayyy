@@ -1,0 +1,42 @@
+User-agent: *
+Allow: /
+
+# Disallow development and test files
+Disallow: /test-*
+Disallow: /debug-*
+Disallow: /minimal-test.html
+Disallow: /mobile-test.html
+Disallow: /manual-card-test.html
+Disallow: /premium-test.html
+Disallow: /index-debug.html
+Disallow: /index-premium-dev.html
+
+# Disallow backend files and configuration
+Disallow: /*.js$
+Disallow: /*.json$
+Disallow: /.env
+Disallow: /package.json
+Disallow: /server.js
+Disallow: /auth-server.js
+Disallow: /premium-content-backend.js
+Disallow: /daily-content-backend.js
+Disallow: /user-tier-manager.js
+Disallow: /users.json
+Disallow: /reset-tokens.json
+
+# Disallow email templates (not public pages)
+Disallow: /email-templates/
+
+# Disallow SSL directory
+Disallow: /ssl/
+
+# Allow important directories
+Allow: /images/
+Allow: /*.css$
+Allow: /favicon.svg
+
+# Sitemap location
+Sitemap: https://yourdomain.com/sitemap.xml
+
+# Crawl delay (optional - helps prevent server overload)
+Crawl-delay: 1

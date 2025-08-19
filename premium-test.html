@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Feature Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-result {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌟 Premium Feature Test Page</h1>
+    <p>This page tests if premium features are properly enabled on localhost:6001</p>
+    
+    <button onclick="testPremiumFeatures()">Test Premium Features</button>
+    <button onclick="testLocalStorage()">Check Local Storage</button>
+    <button onclick="testGlobalFunctions()">Test Global Functions</button>
+    
+    <div id="results"></div>
+    
+    <script>
+        function addResult(message, type = 'info') {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.innerHTML = message;
+            results.appendChild(div);
+        }
+        
+        function testPremiumFeatures() {
+            document.getElementById('results').innerHTML = '';
+            addResult('🧪 Testing Premium Features...', 'info');
+            
+            // Test localStorage values
+            const premiumMode = localStorage.getItem('premiumMode');
+            const userTier = localStorage.getItem('userTier');
+            const dailyLimit = localStorage.getItem('dailyCardLimit');
+            
+            addResult(`Premium Mode: ${premiumMode}`, premiumMode === 'true' ? 'success' : 'error');
+            addResult(`User Tier: ${userTier}`, userTier === 'premium' ? 'success' : 'error');
+            addResult(`Daily Limit: ${dailyLimit}`, dailyLimit === '1000' ? 'success' : 'error');
+            
+            // Test global functions
+            if (typeof window.isPremium === 'function') {
+                const isPremiumResult = window.isPremium();
+                addResult(`window.isPremium(): ${isPremiumResult}`, isPremiumResult ? 'success' : 'error');
+            } else {
+                addResult('window.isPremium() not found', 'error');
+            }
+            
+            // Test userTierManager
+            if (typeof window.userTierManager !== 'undefined') {
+                const isPremiumUser = window.userTierManager.isPremiumUser();
+                const canAccess = window.userTierManager.canAccessPremiumContent();
+                const hasReachedLimit = window.userTierManager.hasReachedDailyLimit();
+                
+                addResult(`userTierManager.isPremiumUser(): ${isPremiumUser}`, isPremiumUser ? 'success' : 'error');
+                addResult(`userTierManager.canAccessPremiumContent(): ${canAccess}`, canAccess ? 'success' : 'error');
+                addResult(`userTierManager.hasReachedDailyLimit(): ${hasReachedLimit}`, !hasReachedLimit ? 'success' : 'error');
+            } else {
+                addResult('window.userTierManager not found', 'error');
+            }
+        }
+        
+        function testLocalStorage() {
+            document.getElementById('results').innerHTML = '';
+            addResult('📦 Local Storage Contents:', 'info');
+            
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const value = localStorage.getItem(key);
+                addResult(`${key}: ${value}`, 'info');
+            }
+        }
+        
+        function testGlobalFunctions() {
+            document.getElementById('results').innerHTML = '';
+            addResult('🌐 Global Functions Test:', 'info');
+            
+            const functions = ['isPremium', 'canAccessPremiumContent', 'hasReachedDailyLimit'];
+            functions.forEach(func => {
+                if (typeof window[func] === 'function') {
+                    try {
+                        const result = window[func]();
+                        addResult(`${func}(): ${result}`, 'success');
+                    } catch (e) {
+                        addResult(`${func}(): Error - ${e.message}`, 'error');
+                    }
+                } else {
+                    addResult(`${func}: Not found`, 'error');
+                }
+            });
+            
+            // Test userTierManager methods
+            if (window.userTierManager) {
+                const methods = ['isPremium', 'isPremiumUser', 'getCurrentTier', 'getDailyCardLimit'];
+                methods.forEach(method => {
+                    if (typeof window.userTierManager[method] === 'function') {
+                        try {
+                            const result = window.userTierManager[method]();
+                            addResult(`userTierManager.${method}(): ${result}`, 'success');
+                        } catch (e) {
+                            addResult(`userTierManager.${method}(): Error - ${e.message}`, 'error');
+                        }
+                    } else {
+                        addResult(`userTierManager.${method}: Not found`, 'error');
+                    }
+                });
+            }
+        }
+        
+        // Auto-run tests on page load
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                testPremiumFeatures();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

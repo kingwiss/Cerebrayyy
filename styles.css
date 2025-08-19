@@ -1581,6 +1581,35 @@ button.touch-active,
         box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4) !important;
         background: linear-gradient(135deg, #5a67d8 0%, #667eea 100%) !important;
     }
+    
+    /* Donation button - circular matching music toggle */
+    .donation-button {
+        width: 32px !important;
+        height: 32px !important;
+        padding: 0 !important;
+        font-size: 12px !important;
+        border-radius: 50% !important;
+        position: relative;
+        margin-right: 10px;
+        z-index: 1001;
+        box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+        min-width: auto;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%) !important;
+        border: none !important;
+        color: white !important;
+        cursor: pointer !important;
+        transition: all 0.3s ease !important;
+        text-decoration: none !important;
+    }
+    
+    .donation-button:hover {
+        transform: scale(1.1) !important;
+        box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4) !important;
+        background: linear-gradient(135deg, #ee5a24 0%, #ff6b6b 100%) !important;
+    }
 
     /* Floating New Cards Button for Desktop */
     .floating-refresh-btn {
@@ -1721,6 +1750,14 @@ button.touch-active,
     
     /* Smaller circular music toggle for small screens */
     .music-toggle {
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 10px !important;
+        margin-right: 8px !important;
+    }
+    
+    /* Smaller circular donation button for small screens */
+    .donation-button {
         width: 28px !important;
         height: 28px !important;
         font-size: 10px !important;
@@ -2589,6 +2626,14 @@ canvas {
     
     /* Ultra-compact circular music toggle for tiny screens */
     .music-toggle {
+        width: 24px !important;
+        height: 24px !important;
+        font-size: 8px !important;
+        margin-right: 6px !important;
+    }
+    
+    /* Ultra-compact circular donation button for tiny screens */
+    .donation-button {
         width: 24px !important;
         height: 24px !important;
         font-size: 8px !important;
@@ -3802,5 +3847,44 @@ canvas {
     .footer-link {
         font-size: 0.8rem;
         padding: 0.3rem 0.6rem;
+    }
+}
+
+/* Donation Button - Circular style matching music toggle */
+.donation-button {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(255, 107, 107, 0.3);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+}
+
+.donation-button:hover {
+    background: linear-gradient(135deg, #ee5a24 0%, #ff6b6b 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(255, 107, 107, 0.4);
+}
+
+.donation-button i {
+    font-size: 14px;
+    animation: heartbeat 2s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
     }
 }
